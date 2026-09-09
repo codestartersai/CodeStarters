@@ -1,0 +1,1327 @@
+{
+  "roles": [
+    {
+      "id": 2,
+      "title": "Vice-President",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Vice-President (Leadership)\nRESPONSIBILITIES: Assists the President with overseeing operations, partnerships, public relations, event coordination, and keeping the org professional and on-track.\nEXPECTATIONS: Strong organizational skills, reliable follow-through, comfortable representing CodeStarters to partners and the community, able to coordinate across CS, AI, marketing, and events teams.",
+      "created_at": "2026-06-11T20:47:39.649Z"
+    },
+    {
+      "id": 3,
+      "title": "Head of Marketing",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Head of Marketing (Leadership)\nRESPONSIBILITIES: Oversees all marketing and social media. The primary person (besides VPs and President) with access to CodeStarters accounts.\nEXPECTATIONS: Owns brand voice across platforms, promotes bootcamps and Fire Hacks, coordinates marketing team members, plans campaigns that reach students, parents, and local businesses.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    },
+    {
+      "id": 4,
+      "title": "Head of CS",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Head of CS (Leadership)\nRESPONSIBILITIES: Ensures all CS bootcamps have lesson plans ready and helps CS mentors prepare for sessions.\nEXPECTATIONS: Oversees Basic CS and Advanced CS mentor tracks; maintains curriculum quality; supports mentors before sessions; keeps year-round CS education on schedule.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    },
+    {
+      "id": 5,
+      "title": "Head of AI",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Head of AI (Leadership)\nRESPONSIBILITIES: Keeps AI bootcamps on track, oversees small business website projects, and supports AI mentors.\nEXPECTATIONS: Owns AI Development & Agent Engineering curriculum (agents, OpenClaw/Hermes, OpenCode workflows, responsible AI use); coordinates summer AI bootcamp; mentors AI mentors; helps scope student-built business websites.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    },
+    {
+      "id": 6,
+      "title": "AI Mentor",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: AI Mentor\nRESPONSIBILITIES: Creates AI lesson plans, leads bootcamp sessions, and helps build websites for local Cupertino businesses.\nEXPECTATIONS: Can teach AI literacy, prompting, and agent workflows to students; runs hands-on sessions; collaborates on free business website projects; explains responsible AI use in age-appropriate ways.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    },
+    {
+      "id": 7,
+      "title": "Advanced CS Mentor",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Advanced CS Mentor\nRESPONSIBILITIES: Creates lesson plans and leads Advanced CS bootcamps, teaching algorithms and advanced problem-solving.\nEXPECTATIONS: Strong CS fundamentals; designs challenging but approachable lessons for motivated students; leads sessions with clear explanations and practice problems; supports students beyond intro level.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    },
+    {
+      "id": 8,
+      "title": "Basic CS Mentor",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Basic CS Mentor\nRESPONSIBILITIES: Creates lesson plans and runs Basic CS bootcamps, introducing younger students to foundational coding concepts.\nEXPECTATIONS: Patient teaching style for beginners; breaks down concepts simply; runs engaging hands-on activities; helps students who may be new to programming feel confident.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    },
+    {
+      "id": 10,
+      "title": "Marketing Team Member",
+      "description": "CodeStarters is a student-led nonprofit in Cupertino that teaches CS and AI to younger students and builds free websites for local businesses. Programs include: CS & AI Education (intro AI, AI literacy & safety, web basics), AI Development & Agent Engineering (OpenClaw + Hermes, agent workflows + OpenCode), summer bootcamps, Fire Hacks hackathon, and free websites for Cupertino businesses.\n\nROLE: Marketing Team Member\nRESPONSIBILITIES: Manages social media accounts and posts, draws attention to hackathons, and advertises CodeStarters programs to the community.\nEXPECTATIONS: Creates consistent posts, helps promote Fire Hacks and bootcamps, understands CodeStarters mission, works with Head of Marketing on campaigns, engages students and local community online.",
+      "created_at": "2026-06-11T20:47:39.650Z"
+    }
+  ],
+  "questions": [
+    {
+      "id": 13,
+      "role_id": 3,
+      "question": "Can you describe a time when you successfully managed a marketing campaign from start to finish? What were the key strategies you used?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Clearly states the goals and target audience\n- Talks about specific tactics and channels used\n- Shares measurable results or outcomes\nSTRONG:\n- Shows creativity in their approach\nRED FLAGS:\n- Does not mention any specific campaign or results",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:53:26.697Z"
+    },
+    {
+      "id": 14,
+      "role_id": 3,
+      "question": "Imagine you are tasked with promoting a new summer bootcamp. What steps would you take to create an effective marketing plan?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Identifies the target audience (students, parents, community)\n- Lists key marketing channels (social media, email, outreach)\n- Mentions budget or resource planning\nSTRONG:\n- Includes ways to measure success\nRED FLAGS:\n- Lacks a clear plan or focus on the target audience",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 15,
+      "role_id": 3,
+      "question": "As the Head of Marketing, how would you ensure that the brand voice remains consistent across different platforms?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Shows understanding of brand voice\n- Outlines how the team communicates and reviews content\n- Gives an example of managing brand consistency\nSTRONG:\n- Talks about training or resources for team members\nRED FLAGS:\n- Shows misunderstanding of brand consistency",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 16,
+      "role_id": 3,
+      "question": "What metrics do you believe are most important to track for evaluating the success of marketing efforts in a nonprofit organization?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Identifies important metrics (engagement, reach, conversion)\n- Discusses why both qualitative and quantitative data matter\n- Provides an example of using metrics for decisions\nSTRONG:\n- Mentions regular reporting and analysis\nRED FLAGS:\n- Does not mention any specific metrics or their importance",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 17,
+      "role_id": 3,
+      "question": "How would you approach building relationships with local businesses to promote CodeStarters' services?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Identifies strategies for outreach (networking, partnerships, events)\n- Discusses the importance of mutual benefits\n- Gives an example of a successful partnership\nSTRONG:\n- Suggests follow-up strategies to keep relationships strong\nRED FLAGS:\n- Lacks a clear strategy for building relationships",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 18,
+      "role_id": 3,
+      "question": "Tell me about a time when you had to lead a team through a challenging project. How did you motivate and guide your team?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Describes the challenge and the team's initial response\n- Shares specific techniques used to motivate the team\n- Discusses outcomes and team growth\nSTRONG:\n- Reflects on personal growth as a leader\nRED FLAGS:\n- Does not provide a specific example or outcome",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 19,
+      "role_id": 3,
+      "question": "In your opinion, what role does storytelling play in nonprofit marketing, and how would you implement it at CodeStarters?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Explains why storytelling is important for connecting with audiences\n- Provides examples of effective storytelling methods (case studies, testimonials)\n- Discusses how to use storytelling in campaigns\nSTRONG:\n- Suggests platforms for sharing stories\nRED FLAGS:\n- Does not connect storytelling to marketing effectiveness",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 20,
+      "role_id": 3,
+      "question": "How do you stay updated on the latest marketing trends and technologies, and how would you apply this knowledge at CodeStarters?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Mentions specific resources (blogs, courses, events)\n- Discusses how to apply new trends in a nonprofit\n- Gives an example of using a trend in the past\nSTRONG:\n- Reflects on the importance of ongoing learning\nRED FLAGS:\n- Shows no awareness of current trends or resources",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 21,
+      "role_id": 3,
+      "question": "Describe a time you had to adapt a marketing strategy based on feedback or data. What changes did you make?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Provides a clear example of feedback received\n- Discusses specific changes made to the strategy\n- Shares results from the changes\nSTRONG:\n- Reflects on the value of responding to feedback\nRED FLAGS:\n- Does not provide a concrete example or shows no adaptability",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 22,
+      "role_id": 3,
+      "question": "What strategies would you implement to engage parents in our programs, especially regarding marketing bootcamps and workshops?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Identifies the target audience (parents) and their interests\n- Discusses specific strategies for engagement (workshops, newsletters)\n- Provides an example of past parent engagement\nSTRONG:\n- Mentions the importance of community feedback\nRED FLAGS:\n- Lacks clear strategies for engaging parents",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 23,
+      "role_id": 3,
+      "question": "How would you measure the impact of your marketing campaigns on CodeStarters' mission and goals?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Talks about specific metrics related to our mission (like student enrollment or community engagement).\n- Considers both numbers and personal stories in measuring impact.\n- Shares an example from past experiences where they measured impact.\nSTRONG:\n- Highlights the need for regular check-ins on impact.\nRED FLAGS:\n- Doesn't connect metrics to our mission.",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 24,
+      "role_id": 3,
+      "question": "What do you believe is the biggest challenge facing nonprofits in marketing today, and how would you address it in this role?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Names a real challenge nonprofits face in marketing (like funding or competition).\n- Discusses ways to tackle that challenge.\n- Shows they understand the nonprofit world.\nSTRONG:\n- Talks about being flexible and adapting to changes.\nRED FLAGS:\n- Doesn't identify a specific challenge or solution.",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 25,
+      "role_id": 3,
+      "question": "How would you foster a culture of creativity and innovation within the marketing team at CodeStarters?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Talks about ways to boost creativity (like brainstorming or giving feedback).\n- Shares examples from their past experiences.\n- Mentions how to celebrate team wins.\nSTRONG:\n- Emphasizes the value of taking risks to be creative.\nRED FLAGS:\n- Shows no understanding of how to encourage creativity in a team.",
+      "sort_order": 12,
+      "created_at": "2026-06-11T20:53:26.698Z"
+    },
+    {
+      "id": 26,
+      "role_id": 4,
+      "question": "Can you describe a time when you had to develop or improve a curriculum for a technical subject? What steps did you take?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Clearly explains why they needed to develop or improve a curriculum.\n- Details the steps they took in the process.\n- Talks about the results and how it affected learners.\nSTRONG:\n- Shows they worked with others during the process.\nRED FLAGS:\n- Doesn't provide a clear example or outcome.",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 27,
+      "role_id": 4,
+      "question": "Imagine one of your bootcamp sessions is not engaging students as expected. How would you handle this situation?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Recognizes that student engagement is an issue.\n- Outlines immediate steps to understand the problem (like asking for feedback).\n- Suggests a plan to make things better.\nSTRONG:\n- Includes ideas for keeping students engaged over time.\nRED FLAGS:\n- Offers no clear plan or ignores the problem.",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 28,
+      "role_id": 4,
+      "question": "What leadership style do you believe is most effective for mentoring and supporting a team of CS educators, and why?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Clearly states their leadership style.\n- Explains why this style works well for mentoring.\n- Gives examples of how they’ve used this style successfully.\nSTRONG:\n- Talks about adjusting their style based on the team's needs.\nRED FLAGS:\n- Lacks a clear leadership approach or examples.",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 29,
+      "role_id": 4,
+      "question": "What strategies would you implement to ensure that the curriculum remains up to date with current trends in CS and AI?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Talks about regularly checking the curriculum.\n- Discusses getting feedback from students and mentors.\n- Identifies where to find current trends (like industry contacts or research).\nSTRONG:\n- Suggests working with outside experts or organizations.\nRED FLAGS:\n- Doesn't mention any evaluation or feedback.",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 30,
+      "role_id": 4,
+      "question": "How would you support a mentor who is struggling to deliver a lesson effectively?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Understands the need to support mentors.\n- Outlines steps to figure out what challenges the mentor is facing.\n- Describes how to give helpful feedback and resources.\nSTRONG:\n- Talks about follow-up strategies to ensure improvement.\nRED FLAGS:\n- Suggests getting rid of the mentor or has no clear support plan.",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 31,
+      "role_id": 4,
+      "question": "What metrics would you track to evaluate the success of your CS bootcamps, and why are they important?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Identifies specific metrics to track (like student satisfaction or learning outcomes).\n- Explains why each metric matters.\n- Discusses how metrics can help improve the curriculum.\nSTRONG:\n- Mentions the importance of both numbers and personal feedback.\nRED FLAGS:\n- Suggests metrics that don't relate or fails to explain their importance.",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 32,
+      "role_id": 4,
+      "question": "Can you share your experience with training or onboarding new mentors? What are the key elements to cover?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gives an overview of their onboarding process for new mentors.\n- Identifies key topics or skills needed for new mentors.\n- Discusses how they check if mentors are ready.\nSTRONG:\n- Describes materials or resources used during onboarding.\nRED FLAGS:\n- Lacks a clear approach or misses key elements.",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 33,
+      "role_id": 4,
+      "question": "What role do you think community engagement plays in a nonprofit educational setting, and how would you encourage it?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Explains why community engagement is important.\n- Shares ways to build relationships with local businesses and schools.\n- Talks about how engagement helps the organization and students.\nSTRONG:\n- Gives examples of successful community projects.\nRED FLAGS:\n- Minimizes the importance of community engagement or has no clear ideas.",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 34,
+      "role_id": 4,
+      "question": "Describe a situation where you had to handle conflict within a team. What was your approach, and what was the outcome?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Clearly explains the conflict situation.\n- Describes how they tried to resolve it.\n- Shares the outcome and what they learned.\nSTRONG:\n- Shows good communication and problem-solving skills.\nRED FLAGS:\n- Avoids discussing conflict or shares a negative outcome without learning.",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 35,
+      "role_id": 4,
+      "question": "How do you ensure that all students, regardless of their background, feel included and supported in your programs?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identifies ways to make the classroom inclusive.\n- Talks about why diverse learning environments matter.\n- Gives examples of past initiatives.\nSTRONG:\n- Considers both social and academic support strategies.\nRED FLAGS:\n- Does not mention inclusivity or provides unclear strategies.",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 36,
+      "role_id": 4,
+      "question": "What is your vision for the future of CS education in community nonprofit settings, and how would you contribute to that vision in this role?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Clearly shares their vision for CS education.\n- Discusses how nonprofits can help achieve this vision.\n- Identifies specific contributions they would make in this role.\nSTRONG:\n- Thinks about working with other organizations.\nRED FLAGS:\n- Lacks a clear vision or connection to the role.",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 37,
+      "role_id": 4,
+      "question": "How would you handle a situation where a mentor is not following the established curriculum guidelines?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Recognizes why following curriculum guidelines is important.\n- Outlines steps to address the mentor’s actions.\n- Discusses how to support while holding accountable.\nSTRONG:\n- Suggests ways to prevent issues and keep communication open.\nRED FLAGS:\n- Suggests punishment without support or lacks a clear plan.",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:53:43.681Z"
+    },
+    {
+      "id": 38,
+      "role_id": 5,
+      "question": "Can you describe a time when you had to lead a team through a challenging AI project? What was your role, and what was the outcome?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Clearly describes their role in the project.\n- Explains the challenges faced and how they were handled.\n- Provides a specific outcome or impact of the project.\nSTRONG:\n- Shows effective leadership strategies.\nRED FLAGS:\n- Fails to describe their contributions or impact.",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 39,
+      "role_id": 5,
+      "question": "How would you ensure that the AI Development & Agent Engineering curriculum remains relevant and effective for students?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Discusses how to evaluate and get feedback on the curriculum.\n- Mentions working with industry experts or educators.\n- Considers student engagement and learning results.\nSTRONG:\n- Proposes creative ideas for updating the curriculum.\nRED FLAGS:\n- Lacks a clear plan for keeping the curriculum relevant.",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 40,
+      "role_id": 5,
+      "question": "What strategies would you use to mentor AI mentors effectively, and how would you assess their development?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Identifies specific mentoring strategies.\n- Discusses the need for ongoing assessment.\n- Emphasizes building relationships with mentees.\nSTRONG:\n- Describes tailored approaches for different mentor needs.\nRED FLAGS:\n- Does not address the importance of assessment or feedback.",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 41,
+      "role_id": 5,
+      "question": "Imagine a student-built website project is falling behind schedule. What steps would you take to get it back on track?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Identifies clear steps to assess the situation.\n- Discusses communication with the team and stakeholders.\n- Proposes solutions to fix delays.\nSTRONG:\n- Includes strategies to prevent future delays.\nRED FLAGS:\n- Fails to provide a clear plan of action.",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 42,
+      "role_id": 5,
+      "question": "What is your understanding of responsible AI use, and how would you incorporate this into your programs?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Clearly defines responsible AI use.\n- Discusses how to teach this effectively.\n- Addresses ethical issues.\nSTRONG:\n- Proposes specific examples or case studies.\nRED FLAGS:\n- Lacks a clear understanding of responsible AI practices.",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 43,
+      "role_id": 5,
+      "question": "How do you prioritize tasks and projects when managing multiple AI-related initiatives simultaneously?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Explains a clear way to prioritize tasks.\n- Mentions any tools used for managing tasks.\n- Shares an example of juggling competing priorities.\nSTRONG:\n- Talks about working with others to set priorities.\nRED FLAGS:\n- Doesn't show a clear method for prioritizing tasks.",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 44,
+      "role_id": 5,
+      "question": "If you were to design a summer AI bootcamp, what key components would you include to ensure its success?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Lists key components like curriculum and mentorship.\n- Thinks about how to engage students and measure learning.\n- Discusses planning and logistics.\nSTRONG:\n- Suggests creative activities or formats for the bootcamp.\nRED FLAGS:\n- Lacks a clear idea of what makes a bootcamp successful.",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 45,
+      "role_id": 5,
+      "question": "How do you evaluate the effectiveness of the AI education programs offered by CodeStarters?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Mentions specific ways to evaluate programs.\n- Talks about the value of student feedback.\n- Considers long-term results for participants.\nSTRONG:\n- Suggests a plan for ongoing improvement.\nRED FLAGS:\n- Doesn't mention any way to evaluate effectiveness.",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 46,
+      "role_id": 5,
+      "question": "Can you explain the importance of collaboration with local businesses for the website projects? How would you facilitate this collaboration?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Discusses benefits of working with local businesses.\n- Identifies ways to reach out and build relationships.\n- Addresses challenges and how to solve them.\nSTRONG:\n- Suggests creative ideas to improve collaboration.\nRED FLAGS:\n- Doesn't understand the value of collaboration.",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 47,
+      "role_id": 5,
+      "question": "What role do you believe AI literacy plays in the overall education of younger students, and how would you promote it?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Defines AI literacy and why it's important.\n- Explains how to include it in current programs.\n- Discusses ways to engage students.\nSTRONG:\n- Proposes specific initiatives to promote AI literacy.\nRED FLAGS:\n- Shows little understanding of AI literacy's importance.",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 48,
+      "role_id": 5,
+      "question": "Describe a time when you had to handle a conflict within a team. How did you resolve it?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Clearly describes the conflict and what happened.\n- Explains their role in resolving it.\n- Summarizes the outcome.\nSTRONG:\n- Shows good conflict resolution skills and emotional awareness.\nRED FLAGS:\n- Doesn't explain their involvement or how they resolved it.",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 49,
+      "role_id": 5,
+      "question": "What tools or technologies do you believe are essential for managing AI projects, and why?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Lists important tools or technologies for AI projects.\n- Explains how these tools help in project management.\n- Discusses how they improve teamwork and efficiency.\nSTRONG:\n- Shows knowledge of new tools in the field.\nRED FLAGS:\n- Lacks understanding of key project management tools.",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:54:04.358Z"
+    },
+    {
+      "id": 50,
+      "role_id": 6,
+      "question": "Can you describe a time when you had to explain a complex AI concept to someone who had no background in the subject? How did you ensure they understood?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gives a specific example of a complex AI concept.\n- Explains how they taught it.\n- Mentions feedback or results from their explanation.\nSTRONG:\n- Shows flexibility in their teaching style.\nRED FLAGS:\n- Struggles to provide a clear example.",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 51,
+      "role_id": 6,
+      "question": "Imagine you need to create a lesson plan for introducing AI literacy to a group of middle school students. What key topics would you include and why?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Identifies at least three key topics to cover.\n- Explains why these topics matter for middle schoolers.\n- Mentions a teaching strategy or activity.\nSTRONG:\n- Provides a clear outline for the lesson plan.\nRED FLAGS:\n- Gives vague or unrelated topics.",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 52,
+      "role_id": 6,
+      "question": "How would you handle a situation where a student is struggling to grasp the concept of prompting in AI? What steps would you take to assist them?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Recognizes the student is struggling.\n- Suggests specific ways to help them.\n- Stresses the importance of patience and understanding.\nSTRONG:\n- Offers multiple ways to support the student.\nRED FLAGS:\n- Provides no clear strategies to help.",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 53,
+      "role_id": 6,
+      "question": "What do you believe are the most important ethical considerations when teaching AI to younger students?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Mentioned at least two important ethical issues\n- Explained why these issues matter in teaching\n- Shared how they would include these in lessons\nSTRONG:\n- Gave real-life examples of ethical challenges\nRED FLAGS:\n- Did not address ethics or gave vague answers",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 54,
+      "role_id": 6,
+      "question": "Describe a project you've worked on that involved collaboration with others. What role did you play, and what was the outcome?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Talked about a specific project done with others\n- Clarified their role and what they did\n- Shared the outcome and lessons learned\nSTRONG:\n- Mentioned good communication methods used\nRED FLAGS:\n- Could not identify a collaborative project",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 55,
+      "role_id": 6,
+      "question": "If you were to lead a bootcamp session on agent workflows, what key elements would you focus on to make it engaging for students?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Listed at least three key parts of agent workflows\n- Discussed ways to keep students engaged\n- Mentioned hands-on activities or tools\nSTRONG:\n- Shared examples from past successful sessions\nRED FLAGS:\n- Was not specific about key parts or engagement methods",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 56,
+      "role_id": 6,
+      "question": "How would you approach building a website for a local business that has little technical knowledge? What steps would you take to ensure they are involved in the process?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Outlined a clear plan for building a website\n- Stressed the need for client involvement\n- Mentioned tools or ways to communicate\nSTRONG:\n- Gave examples from similar past experiences\nRED FLAGS:\n- Provided a one-sided plan with no client input",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 57,
+      "role_id": 6,
+      "question": "What strategies would you use to ensure that your lessons on AI safety are age-appropriate and engaging for younger students?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identified at least two age-appropriate strategies\n- Discussed ways to engage students\n- Stressed the importance of AI safety\nSTRONG:\n- Gave examples of how to use these strategies\nRED FLAGS:\n- Ignored engagement or age-appropriateness",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 58,
+      "role_id": 6,
+      "question": "Can you provide an example of how you have used feedback to improve your teaching methods or lesson plans in the past?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Shared a specific time they received feedback\n- Explained how they made changes based on it\n- Discussed the results of those changes\nSTRONG:\n- Highlighted how student feedback played a role\nRED FLAGS:\n- Struggled to give a relevant example",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 59,
+      "role_id": 6,
+      "question": "What do you think is the biggest challenge in teaching AI concepts to younger audiences, and how would you address this challenge?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identified a specific challenge in teaching AI\n- Proposed ways to tackle that challenge\n- Discussed the potential effects of these strategies\nSTRONG:\n- Shared examples of similar challenges faced\nRED FLAGS:\n- Did not recognize any significant challenges",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 60,
+      "role_id": 6,
+      "question": "How would you ensure that your lessons promote inclusivity and diversity among students in your AI classes?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Mentioned specific ways to promote inclusivity\n- Discussed why diversity in tech is important\n- Proposed methods to create an inclusive classroom\nSTRONG:\n- Gave examples of how they have supported inclusivity\nRED FLAGS:\n- Ignored the importance of inclusivity or diversity",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 61,
+      "role_id": 6,
+      "question": "Can you describe a time when you had to adapt your teaching style to meet the needs of a diverse group of learners? What did you do?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gave a specific example of a diverse learning group\n- Explained how they adapted their teaching\n- Discussed the outcome of those adaptations\nSTRONG:\n- Highlighted the need for flexibility in teaching\nRED FLAGS:\n- Struggled to provide a relevant example",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:54:23.789Z"
+    },
+    {
+      "id": 62,
+      "role_id": 7,
+      "question": "Can you describe a situation where you had to explain a complex concept in computer science to a beginner? What was your approach?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Provided a clear example of a complex concept\n- Described the audience's background and knowledge\n- Explained how they simplified the concept\nSTRONG:\n- Included specific teaching techniques used\nRED FLAGS:\n- Could not provide a relevant example or approach",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:54:45.894Z"
+    },
+    {
+      "id": 63,
+      "role_id": 7,
+      "question": "How would you design a lesson plan for teaching algorithms to motivated high school students? What key elements would you include?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Named the algorithm to teach\n- Included a lesson structure (intro, practice, assessment)\n- Mentioned ways to engage students\nSTRONG:\n- Gave real-world examples of the algorithm\nRED FLAGS:\n- Did not mention key lesson plan components",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:54:45.894Z"
+    },
+    {
+      "id": 64,
+      "role_id": 7,
+      "question": "Describe a time when you faced a challenge while mentoring a student. How did you handle it?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Described the challenge faced\n- Explained how it was handled\n- Shared the outcome or resolution\nSTRONG:\n- Showed empathy for the student's feelings\nRED FLAGS:\n- Could not share a relevant mentoring experience",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 65,
+      "role_id": 7,
+      "question": "How would you approach a situation where a student is struggling with understanding a key concept in a lesson?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Named strategies to help the student\n- Talked about being patient and encouraging\n- Mentioned adapting teaching methods\nSTRONG:\n- Included follow-up plans to check understanding\nRED FLAGS:\n- Suggested a one-size-fits-all solution",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 66,
+      "role_id": 7,
+      "question": "What experience do you have with advanced problem-solving techniques in computer science? Can you give an example?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Described specific problem-solving techniques\n- Gave a clear example of how it was used\n- Discussed the outcome of the process\nSTRONG:\n- Explained why the technique was chosen\nRED FLAGS:\n- Did not provide enough detail in the example",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 67,
+      "role_id": 7,
+      "question": "As a mentor, how do you ensure that your lessons are inclusive and accessible to all students?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Named strategies for inclusivity\n- Showed awareness of different learning needs\n- Discussed adjustments for various learners\nSTRONG:\n- Gave examples of successful inclusive practices\nRED FLAGS:\n- Showed a lack of awareness about inclusivity",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 68,
+      "role_id": 7,
+      "question": "If a student proposes an unconventional approach to solving a problem, how would you respond?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Acknowledged the student's creativity\n- Talked about evaluating the approach\n- Mentioned guiding exploration\nSTRONG:\n- Included ways to encourage further discussion\nRED FLAGS:\n- Dismissed unconventional ideas without consideration",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 69,
+      "role_id": 7,
+      "question": "What strategies would you use to keep students motivated during a long coding session?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Named specific ways to motivate students\n- Talked about the importance of breaks\n- Mentioned engagement through challenges or games\nSTRONG:\n- Included real-world relevance of the coding task\nRED FLAGS:\n- Offered no strategies or only generic suggestions",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 70,
+      "role_id": 7,
+      "question": "How do you evaluate the effectiveness of your teaching methods after a bootcamp or lesson?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Mentioned evaluation methods (surveys, feedback)\n- Discussed reflecting on student outcomes\n- Identified areas for improvement\nSTRONG:\n- Gave examples of changes made from evaluations\nRED FLAGS:\n- Did not have a clear evaluation process",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 71,
+      "role_id": 7,
+      "question": "Describe a project you have worked on that involved collaboration with others. What role did you play?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gave details about the project and team\n- Described personal contributions\n- Explained the results of the collaboration\nSTRONG:\n- Highlighted skills used (communication, leadership)\nRED FLAGS:\n- Could not describe a relevant collaborative experience",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 72,
+      "role_id": 7,
+      "question": "What do you believe is the most important quality for an Advanced CS Mentor and why?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Named a specific quality\n- Explained why it matters in mentoring\n- Provided reasoning from personal experience\nSTRONG:\n- Linked the quality to successful mentoring\nRED FLAGS:\n- Gave a vague quality without explanation",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 73,
+      "role_id": 7,
+      "question": "How would you support a student who has a strong grasp of fundamentals but struggles with applying them in complex scenarios?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Gave specific ways to support the student\n- Talked about the need for practice and real-world application\n- Mentioned techniques to build the student's confidence\nSTRONG:\n- Provided examples of presenting complex scenarios\nRED FLAGS:\n- Did not suggest any clear support strategies",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 74,
+      "role_id": 7,
+      "question": "Explain a recent advancement in AI that you find exciting. How would you incorporate it into your teaching?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Described a specific AI advancement\n- Explained why it’s exciting or important\n- Gave practical ideas for using it in lessons\nSTRONG:\n- Discussed how it could engage students\nRED FLAGS:\n- Gave a vague or outdated example",
+      "sort_order": 12,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 75,
+      "role_id": 7,
+      "question": "How do you stay current with developments in computer science and AI, and how would you share this knowledge with your students?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Mentioned specific ways to stay updated on computer science and AI\n- Talked about why sharing knowledge with students is important\n- Gave examples of how to use new knowledge in lessons\nSTRONG:\n- Highlighted involvement in the CS community\nRED FLAGS:\n- Did not have a clear plan for staying current",
+      "sort_order": 13,
+      "created_at": "2026-06-11T20:54:45.895Z"
+    },
+    {
+      "id": 76,
+      "role_id": 8,
+      "question": "Can you describe a time when you had to explain a complex concept to someone who was unfamiliar with it? How did you ensure they understood?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gave a specific example from their experience\n- Showed understanding of the learner's perspective\n- Used clear and simple language in their explanation\nSTRONG:\n- Included feedback from the learner after the explanation\nRED FLAGS:\n- Did not provide a relevant example or mentioned a negative outcome",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 77,
+      "role_id": 8,
+      "question": "Imagine you are running a bootcamp, and half of the students are struggling with a particular coding concept. What steps would you take to address this?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Recognized the need to identify the specific issue\n- Suggested changing the teaching method or materials\n- Emphasized engaging students with hands-on activities\nSTRONG:\n- Mentioned getting feedback from students about their struggles\nRED FLAGS:\n- Suggested ignoring the issue or moving on without addressing it",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 78,
+      "role_id": 8,
+      "question": "What do you think are the most critical foundational coding concepts for beginners, and why?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Identified at least three key coding concepts\n- Explained why each concept is important for beginners\n- Showed a clear understanding of coding basics\nSTRONG:\n- Provided examples of how to teach these concepts\nRED FLAGS:\n- Listed concepts without explaining their relevance",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 79,
+      "role_id": 8,
+      "question": "How do you keep students engaged during a lesson, especially when they might be feeling overwhelmed?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Described specific techniques to keep students engaged\n- Acknowledged how students might feel overwhelmed\n- Emphasized creating a supportive learning space\nSTRONG:\n- Gave examples of successful engagement from past experiences\nRED FLAGS:\n- Did not address student engagement or relied only on traditional methods",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 80,
+      "role_id": 8,
+      "question": "Can you share an experience where you had to adapt your teaching style to meet the needs of different learners?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Provided a specific example of adapting their teaching\n- Identified different learning styles or needs\n- Described the results of adapting their style\nSTRONG:\n- Included feedback from learners about the changes\nRED FLAGS:\n- Did not provide a relevant example or failed to adapt",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 81,
+      "role_id": 8,
+      "question": "If you were tasked with creating a lesson plan for an introductory Basic CS class, what key components would you include?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Outlined at least three key parts of the lesson plan\n- Addressed learning goals and outcomes\n- Included ways to assess or give feedback\nSTRONG:\n- Mentioned hands-on activities or interactive parts\nRED FLAGS:\n- Did not provide a clear structure or missed key components",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 82,
+      "role_id": 8,
+      "question": "What strategies do you use to build confidence in students who are new to programming?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identified specific strategies to build student confidence\n- Emphasized positive reinforcement and encouragement\n- Recognized the value of small wins\nSTRONG:\n- Provided examples of how these strategies worked\nRED FLAGS:\n- Suggested an approach that could discourage students",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 83,
+      "role_id": 8,
+      "question": "How would you evaluate the effectiveness of a bootcamp you led, and what metrics would you consider?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Mentioned both types of metrics: qualitative and quantitative.\n- Talked about the importance of student feedback and assessments.\n- Identified areas that could be improved.\nSTRONG:\n- Included a plan for checking long-term retention.\nRED FLAGS:\n- Focused only on one metric or ignored feedback.",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 84,
+      "role_id": 8,
+      "question": "Describe a time when you had to work with a difficult student or group. How did you handle the situation?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gave a specific example of a difficult situation.\n- Explained steps taken to resolve the issue.\n- Highlighted the need for patience and understanding.\nSTRONG:\n- Discussed the outcome and how it helped the learning environment.\nRED FLAGS:\n- Did not provide a relevant example or blamed others.",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 85,
+      "role_id": 8,
+      "question": "What do you think is the role of a mentor in a learning environment, especially in tech education?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Clearly defined what a mentor does.\n- Emphasized support, guidance, and encouragement.\n- Talked about the importance of a growth mindset.\nSTRONG:\n- Gave examples of positive impacts mentorship can have.\nRED FLAGS:\n- Shared a narrow or self-serving view of mentorship.",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 86,
+      "role_id": 8,
+      "question": "How would you approach incorporating hands-on activities into your teaching to enhance comprehension?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Identified at least two specific hands-on activities.\n- Explained how these activities connect to the lessons.\n- Discussed expected outcomes from engaging students this way.\nSTRONG:\n- Mentioned possible challenges and how to handle them.\nRED FLAGS:\n- Suggested hands-on activities that don't relate or are too simple.",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 87,
+      "role_id": 8,
+      "question": "What do you think is the biggest challenge when teaching coding to beginners, and how would you address it?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identified a specific challenge in teaching beginners.\n- Proposed a clear strategy to tackle the challenge.\n- Recognized the emotional side of learning to code.\nSTRONG:\n- Discussed long-term solutions or ways to prevent issues.\nRED FLAGS:\n- Suggested ignoring the challenge or downplaying its importance.",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 88,
+      "role_id": 8,
+      "question": "Why do you want to be a Basic CS Mentor with CodeStarters, and what do you hope to achieve in this role?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Clearly stated why they want to apply.\n- Linked personal goals with CodeStarters' mission.\n- Showed understanding of the role's impact on students.\nSTRONG:\n- Included specific outcomes they want to achieve.\nRED FLAGS:\n- Provided vague or self-serving reasons for wanting the role.",
+      "sort_order": 12,
+      "created_at": "2026-06-11T20:55:08.241Z"
+    },
+    {
+      "id": 103,
+      "role_id": 10,
+      "question": "Can you describe a time when you successfully managed a social media account? What strategies did you use to engage your audience?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gave specific examples of managing social media.\n- Explained clear strategies for engaging the audience.\n- Showed understanding of the target audience.\nSTRONG:\n- Shared metrics or results that show success.\nRED FLAGS:\n- Did not provide concrete examples or strategies.",
+      "sort_order": 0,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 104,
+      "role_id": 10,
+      "question": "Imagine you are tasked with promoting the Fire Hacks hackathon. What steps would you take to create a social media campaign for it?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Identified key details for the campaign (e.g., dates, themes, prizes).\n- Mentioned platforms for promotion.\n- Proposed a timeline for the campaign.\nSTRONG:\n- Talked about targeting specific groups or communities.\nRED FLAGS:\n- Did not mention any specific strategies or platforms.",
+      "sort_order": 1,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 105,
+      "role_id": 10,
+      "question": "How do you ensure that your marketing efforts align with the mission of CodeStarters?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Showed understanding of CodeStarters' mission.\n- Described how to ensure marketing aligns with the mission (e.g., reviews, feedback).\n- Mentioned working with team members.\nSTRONG:\n- Provided examples of past alignment efforts.\nRED FLAGS:\n- Showed lack of knowledge about the organization’s mission.",
+      "sort_order": 2,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 106,
+      "role_id": 10,
+      "question": "What experience do you have with creating visual content for social media? Can you provide an example of a successful post?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Mentioned tools or software used for creating content.\n- Gave an example of a successful visual post.\n- Explained what made the post effective.\nSTRONG:\n- Discussed how to measure the success of visual content.\nRED FLAGS:\n- Lacked experience or specific examples.",
+      "sort_order": 3,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 107,
+      "role_id": 10,
+      "question": "How do you handle negative feedback or criticism on social media?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Described a specific time they received criticism.\n- Explained how they responded.\n- Emphasized the need for professionalism.\nSTRONG:\n- Talked about what they learned from the feedback.\nRED FLAGS:\n- Did not acknowledge the importance of handling criticism.",
+      "sort_order": 4,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 108,
+      "role_id": 10,
+      "question": "Can you outline a plan for increasing student engagement in our programs through social media?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Identified specific strategies for engagement (e.g., polls, contests).\n- Discussed how to measure engagement success.\n- Mentioned considerations for the target audience.\nSTRONG:\n- Included ideas for working with students.\nRED FLAGS:\n- Lacked clear strategies or understanding of the audience.",
+      "sort_order": 5,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 109,
+      "role_id": 10,
+      "question": "What role do you believe storytelling plays in marketing, especially for a nonprofit like CodeStarters?",
+      "category": "culture",
+      "rubric": "MUST-HAVE:\n- Explained why storytelling is important in marketing.\n- Discussed how storytelling connects with the community.\n- Mentioned how it relates to nonprofit goals.\nSTRONG:\n- Provided examples of effective storytelling in past roles.\nRED FLAGS:\n- Showed misunderstanding of storytelling's impact.",
+      "sort_order": 6,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 110,
+      "role_id": 10,
+      "question": "Describe a time when you had to work closely with a team to achieve a marketing goal. How did you contribute?",
+      "category": "behavioral",
+      "rubric": "MUST-HAVE:\n- Gave a specific example of teamwork.\n- Described their role and contributions.\n- Highlighted communication and collaboration.\nSTRONG:\n- Mentioned overcoming challenges as a team.\nRED FLAGS:\n- Did not provide a clear example of teamwork.",
+      "sort_order": 7,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 111,
+      "role_id": 10,
+      "question": "What strategies would you use to promote CodeStarters' bootcamps to the local community?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identified community channels for promotion.\n- Discussed how to target the audience.\n- Proposed specific promotional tactics (e.g., flyers, local events).\nSTRONG:\n- Mentioned potential partnerships with local organizations.\nRED FLAGS:\n- Lacked a clear strategy or understanding of community engagement.",
+      "sort_order": 8,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 112,
+      "role_id": 10,
+      "question": "How do you stay updated with the latest trends in social media marketing?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Mentioned sources or methods for staying updated.\n- Showed awareness of current social media trends.\n- Discussed the importance of adapting to changes.\nSTRONG:\n- Provided examples of using new trends in past roles.\nRED FLAGS:\n- Lacked knowledge of current trends or sources.",
+      "sort_order": 9,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 113,
+      "role_id": 10,
+      "question": "What do you think is the biggest challenge facing nonprofits in marketing today, and how would you address it?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Identified a key challenge in nonprofit marketing.\n- Suggested a clear way to tackle the challenge.\n- Showed understanding of how nonprofits operate.\nSTRONG:\n- Gave examples of nonprofits that have successfully dealt with similar challenges.\nRED FLAGS:\n- Did not identify any challenges or provide a thoughtful answer.",
+      "sort_order": 10,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 114,
+      "role_id": 10,
+      "question": "In your opinion, what makes a successful social media post for educational programs?",
+      "category": "technical",
+      "rubric": "MUST-HAVE:\n- Listed important parts of a successful social media post (like visuals and messaging).\n- Talked about how to engage the audience.\n- Related the post to educational goals.\nSTRONG:\n- Provided examples of effective educational social media posts.\nRED FLAGS:\n- Did not show a clear understanding of what makes posts successful.",
+      "sort_order": 11,
+      "created_at": "2026-06-11T20:55:44.410Z"
+    },
+    {
+      "id": 148,
+      "role_id": 2,
+      "question": "It's Monday 9am: our $8,500 title sponsor emails that they will pull funding in 72 hours unless we remove the OpenClaw agent module from summer curriculum because it 'promotes a competitor stack.' The President is in class until 4pm. The Head of AI says removing it guts the program. Marketing already scheduled a sponsor-logo post for Wednesday. Walk me through your first 6 hours — who you call, what you say to the sponsor (outline the email), what you tell the AI team, and what you postpone or cancel.",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Acknowledged the sponsor's email within 2 hours and proposed a specific next step (like a call or meeting).\n- Planned how to inform the President, assess the AI team's concerns, and pause the marketing post.\n- Listed at least 3 different messages for stakeholders (sponsor, AI team, marketing) with unique content.\n- Suggested negotiation ideas without removing the curriculum entirely.\n- Clearly stated the 72-hour deadline and checkpoints for decisions.\nSTRONG:\n- Provided a detailed plan for the first 6–24 hours with specific people responsible.\n- Drafted a sample email to the sponsor that acknowledges their concerns and requests a meeting without committing to removal.\nRED FLAGS:\n- Promised to remove the curriculum or keep funding without the President's approval.\n- Gave a vague response about communicating with everyone without specifics.",
+      "sort_order": 0,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 149,
+      "role_id": 2,
+      "question": "Fire Hacks finals: 118 participants, venue power fails 90 minutes before judging ends. Emergency lights only, two mentors report a student having a panic attack in the stairwell, and the venue manager says power may not return for 3+ hours. Sponsors are in the judging room. What is your command sequence in the first 30 minutes — safety, communications, judging integrity, and sponsor relations?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Prioritized safety first, including helping the student in distress and considering medical assistance.\n- Made a decision on whether to evacuate or stay put based on venue guidance.\n- Created a communication plan for participants within 15 minutes (like using PA, Slack, or group text).\n- Ensured judging integrity by pausing and documenting scores with a backup plan.\n- Briefed sponsors within the first 10 minutes to keep them informed.\nSTRONG:\n- Provided a minute-by-minute plan for the first 30 minutes with specific people assigned to tasks.\n- Suggested contingency plans like relocating judging or rescheduling finals.\nRED FLAGS:\n- Put judging or sponsors before student safety.\n- Had no plan to ensure fair judging if the event was disrupted.",
+      "sort_order": 1,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 150,
+      "role_id": 2,
+      "question": "A parent emails the school board and CodeStarters claiming their daughter was repeatedly called 'not technical enough' by the AI literacy mentor in front of peers — and demands the mentor be removed by Friday. The mentor denies it; two students partially corroborate tone issues but not the exact words. The President says 'handle it.' What do you do before Friday, including what you say to the parent, mentor, and class?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Treated the situation as a serious concern, not just a personality issue.\n- Gathered facts by interviewing the parent, students, and mentor before Friday.\n- Implemented interim measures for the student’s safety until the investigation is done.\n- Responded to the parent within 24 hours, acknowledging their concerns and outlining steps taken.\n- Planned for escalation if misconduct is confirmed (like mentor removal or retraining).\nSTRONG:\n- Outlined investigation steps with a neutral interviewer and kept written records.\n- Planned a private conversation with the mentor to discuss the issue without retaliation.\nRED FLAGS:\n- Removed the mentor without investigation or ignored the parent's concerns.",
+      "sort_order": 2,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 151,
+      "role_id": 2,
+      "question": "Mid-season Basic CS bootcamp: the lead mentor has missed 4 of 6 sessions without notice. Eight of twelve parents emailed demanding refunds or a new mentor. Replacement mentors are already at capacity. Session is tomorrow 4pm. What is your plan in the next 24 hours — including what students experience tomorrow and what you tell parents?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Contacted the absent mentor today with a deadline to respond or be replaced.\n- Ensured tomorrow's session is covered with a plan for who teaches and what curriculum is used.\n- Communicated honestly with parents today about the situation and timeline for a fix.\n- Assessed whether the mentor should be removed or if this is a one-time issue.\n- Created a plan for students to catch up on missed sessions (like recordings or extra office hours).\nSTRONG:\n- Named a substitute mentor and ensured they have prep time before the session.\n- Drafted an email to parents acknowledging the situation and outlining the plan.\nRED FLAGS:\n- Cancelled the session without a replacement or made false promises about the mentor showing up.",
+      "sort_order": 3,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 152,
+      "role_id": 2,
+      "question": "A TikTok with 40k views claims CodeStarters students 'cheated' on a free Cupertino business website by using ChatGPT and the business owner is 'humiliated.' The owner tags us angry in the comments. Head of Marketing wants to post a funny meme response. President is unreachable for 6 hours. What do you do in the first 2 hours — public response, owner outreach, internal student protection, and marketing lockdown?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Stopped or delayed the meme response, explaining why tone is important in a crisis.\n- Reached out to the business owner within 2 hours, outlining the conversation.\n- Conducted an internal fact check on the project and student compliance with AI policy.\n- Created a public holding statement or decided to pause public posts until facts are clear.\n- Ensured student protection by not revealing identities or blaming students publicly.\nSTRONG:\n- Provided a 2-hour timeline for actions like marketing lock and owner outreach.\n- Specified different messages for the TikTok audience, the owner, and students.\nRED FLAGS:\n- Posted a meme response or sarcastic reply to the accusation.\n- Ignored the business owner's concerns or let marketing handle it without oversight.",
+      "sort_order": 4,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 153,
+      "role_id": 2,
+      "question": "Cupertino Unified wants a partnership MOU signed today to promote bootcamps in schools. The President is at a conference with no phone access. The district liaison says if we don't sign by 5pm they move to another org. The MOU includes a clause letting the district review all curriculum materials and pause programs if parents complain. You have not read the full 12-page document. What do you do?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Did NOT sign the MOU without the President's approval.\n- Requested an extension or a letter of intent instead of signing the full MOU.\n- Identified risky clauses in the MOU and flagged them for review.\n- Named who will read the document and set a timeline for proper approval.\n- Communicated with the district to maintain a good relationship without binding the organization.\nSTRONG:\n- Drafted a script for contacting the liaison, expressing enthusiasm while needing the President's signature.\n- Summarized the top risks from the MOU for the President's review.\nRED FLAGS:\n- Signed the MOU to meet the deadline without the President's consent.",
+      "sort_order": 5,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 154,
+      "role_id": 2,
+      "question": "Finals week: six of fourteen bootcamp mentors ghost their sessions — all cite exams. You have ~200 student seats across CS and AI tracks tomorrow and only eight mentors available. Three sessions are merged sections already at 22 students. How do you allocate mentors, what sessions get cancelled or converted, and how do you communicate to parents by 8pm tonight?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Calculated the number of mentors and students to show class size tradeoffs.\n- Established prioritization rules for sessions based on student needs.\n- Communicated with parents by 8pm about session changes and access to materials.\n- Recruited emergency coverage from other mentors or planned for recorded sessions.\n- Informed the President and track heads before communicating with parents.\nSTRONG:\n- Created a detailed table for each session's status and format.\n- Ensured mentor reassignment was fair and did not overburden any single mentor.\nRED FLAGS:\n- Held unsafe sessions with too many students and no plan.\n- Canceled sessions without informing parents in advance.",
+      "sort_order": 6,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 155,
+      "role_id": 2,
+      "question": "A 7th grader reports that an AI mentor used screenshots of her chatbot project — including her name — in a public demo at a sponsor event without asking her or her parents. The mentor says it was 'educational promotion.' The sponsor posted photos on LinkedIn. Parents want the post deleted and mentor fired. President says mentor is 'essential.' Your move?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Treated the situation as a serious violation of student consent.\n- Immediately requested the sponsor to remove or blur the student's identifiable content.\n- Planned a conversation with the parent and student to apologize and explain changes.\n- Held the mentor accountable with a documented conversation about the policy violation.\n- Enforced internal policies to prevent similar issues in the future.\nSTRONG:\n- Created a 24–48 hour plan for follow-up and updates to the parent.\n- Named awareness of consent policies for minors in nonprofit settings.\nRED FLAGS:\n- Supported the mentor publicly without addressing the student's concerns.",
+      "sort_order": 7,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 156,
+      "role_id": 2,
+      "question": "A Cupertino bakery owner says their free website is 3 weeks late; their grand reopening is in 5 days and they CC'd the city small-business liaison on the email threatening to tell the community we 'scammed them.' The student team lead ghosted. Head of AI says reassigning engineers will delay two other business sites. What do you do this week — owner, city liaison, student team, and other clients?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Call the bakery owner today to apologize and give a clear delivery date before reopening, or explain if you can't meet it and suggest a temporary solution.\n- Respond to the city liaison professionally, sticking to the facts without blaming the owner.\n- Hold the student team lead accountable: document your contact, escalate to the Head of AI, and assign a replacement developer.\n- Decide what can be delivered in 5 days (like hours, menu, contact info) versus what will be delayed on other sites.\nSTRONG:\n- Create a day-by-day plan with a senior student or mentor overseeing and set checkpoints.\n- Communicate with other business clients about any timeline changes to keep them informed.\nRED FLAGS:\n- Blame the owner or say 'free work' in any written communication.\n- Promise a full site in 5 days without a plan for resources.\n- Ignore the city liaison's email or respond aggressively.\n- Launch a broken site on reopening day.",
+      "sort_order": 8,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 157,
+      "role_id": 2,
+      "question": "Fire Hacks: the winning team alleges the judge — who works for a title sponsor — ranked their competitor first because both teams used the sponsor's API and the judge coached the competitor privately. 200 people are still in the room. The sponsor judge denies it. The competitor team says they'll leave if results are overturned. How do you resolve this in the next 60 minutes without destroying the event or sponsor relationship?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Pause the announcement of results and acknowledge the concern without attacking anyone.\n- Apply conflict-of-interest rules: the sponsor judge should step back from reviewing the disputed category.\n- Set up an independent review process with other judges and a 60-minute deadline.\n- Inform both teams about the review process to ensure fairness and transparency.\nSTRONG:\n- Secure scoring sheets and explain the re-scoring rubric to the teams.\n- If results are overturned, prepare a graceful announcement; if not, explain the findings to the alleging team privately.\nRED FLAGS:\n- Announce the original results to avoid upsetting the sponsor.\n- Publicly accuse the judge of wrongdoing without a review.\n- Allow the competitor team to leave without trying to mediate.\n- Let the same judge re-judge their own scores.",
+      "sort_order": 9,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 158,
+      "role_id": 2,
+      "question": "The board treasurer says we must cut 30% from spring programs immediately. You must choose ONE primary sacrifice: (A) cut 40% of summer bootcamp seats, (B) cancel Fire Hacks prize pool and halve event scale, or (C) drop three committed free business websites. President wants all three programs untouched. There is no hidden fourth budget. How do you decide, and how do you tell each program lead and the board?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Clearly choose one option (A, B, or C) with a reason that aligns with our mission — you must choose.\n- Analyze how each option affects stakeholders (students, sponsors, businesses, reputation).\n- State your criteria for the decision: reversibility, number of people affected, donor commitments, legal obligations.\n- Plan how to communicate the decision to program leads, the board, and the public — do this before any leaks.\nSTRONG:\n- Provide numbers on how many students/businesses/dollars are affected by each option.\n- Suggest ways to lessen the impact of the chosen sacrifice (like partial prizes or a smaller bootcamp).\nRED FLAGS:\n- Say 'we will find a way to do everything' without making trade-offs.\n- Choose without explaining why or blame the treasurer/board.\n- Inform the public before telling internal leads or throw program leads under the bus in board emails.\n- Ignore commitments to business owners or sponsors.",
+      "sort_order": 10,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 159,
+      "role_id": 2,
+      "question": "A Mercury News reporter emails: 'Parents say your AI bootcamp lets minors run autonomous agents with internet access unsupervised. What's your supervision policy?' Deadline 4pm today for quote. Your actual supervision varies by mentor and room layout. President wants to 'sound innovative.' What quote do you propose, what do you fix operationally before responding, and who signs off?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Do not claim perfect supervision if it's not true — avoid making false statements.\n- Conduct a same-day operational audit: check agent access rules, mentor ratios, and internet policies — name quick fixes.\n- Draft a quote that balances innovation with child safety specifics (like ratios and adult review steps).\n- Get the President's approval before sending the response; ensure the VP doesn't use unsafe language.\nSTRONG:\n- Propose actual quote language (2-4 sentences) with clear policy points.\n- Make immediate changes to sessions, like disabling unsupervised agent deployment — name who will enforce this today.\nRED FLAGS:\n- Say 'full autonomy is fine' or dismiss parent concerns in the quote.\n- Respond after the deadline without coordination or ignore the reporter.\n- Let the President quote without a safety review.\n- Make no operational changes, only focus on PR.",
+      "sort_order": 11,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 160,
+      "role_id": 2,
+      "question": "At a sponsor reception, a sponsor's VP (who funds $5k) is visibly drunk, puts an arm around your Head of Marketing, and asks her to 'come back to the hotel to discuss renewal.' She texts you terrified in the bathroom. President is networking across the room and told you to 'keep sponsors happy.' What do you do in the next 15 minutes and the next 48 hours?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Ensure the Head of Marketing's safety by removing her from the situation and not leaving her alone with the sponsor VP.\n- Set a clear boundary with the sponsor VP tonight — specify what is said and who says it (no hotel, unacceptable behavior).\n- Support the Head of Marketing — do not tell her to tolerate the situation for funding.\n- Inform the President tonight with the facts, not hiding anything.\n- Document the incident: time, witnesses, and texts should be preserved.\nSTRONG:\n- Create a 48-hour plan: send a formal email to the sponsor's account manager requesting a different representative and pause renewal discussions until the issue is resolved.\n- Involve internal harassment policy or adult advisors if applicable.\n- Let the Head of Marketing decide whether to report to school or parents if minors were present.\nRED FLAGS:\n- Tell the marketing lead to 'smooth it over' for renewal.\n- Leave her alone with the sponsor VP.\n- Ignore the incident to protect the $5k.\n- Publicly joke about the incident or share her text without her consent.",
+      "sort_order": 12,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 161,
+      "role_id": 2,
+      "question": "The President posts on Instagram: 'CodeStarters bootcamps are only for the most gifted kids — we don't have time for beginners.' Applications for beginner Basic CS are open; 60 applicants in 48 hours. Head of Marketing panics. President refuses to delete post ('it's our brand'). How do you fix operations and communications without a public war with the President?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Clarify that beginner tracks exist — align our programming with the public message gap.\n- Communicate with applicants within 24 hours: welcome beginners and explain the actual tracks — draft key messages.\n- Have a private conversation with the President to clarify or suggest a follow-up post, avoiding a public confrontation.\n- Pause conflicting ads until the messaging is aligned.\n- Sync with internal leadership so mentors don't discourage beginners based on the post.\nSTRONG:\n- Propose a follow-up post or story from the President or the official CodeStarters account to clarify beginner paths — outline the text.\n- Prepare an email template for applicants addressing the confusion for the 60 applicants.\n- Brief mentors on inclusion standards for beginner sessions this week.\nRED FLAGS:\n- Publicly contradict the President in Instagram comments.\n- Ignore the 60 applicants or tell beginners they're not welcome.\n- Delete the President's post without authority or force marketing to meme it.\n- Make no operational fixes, only hope the post is ignored.",
+      "sort_order": 13,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 162,
+      "role_id": 2,
+      "question": "AI Development signups jumped from 45 to 142 in one week after a viral reel. Mentors report 18+ hours/week and two say they're quitting next Friday. Head of AI wants to accept everyone. President wants growth headlines. How do you set a sustainable cap, handle the 97 waitlisted families, and prevent mentor collapse — with numbers?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Use a capacity formula: mentors × hours ÷ students per section = max seats — show the math with example numbers.\n- Decide on a hard cap with the President and Head of AI — do not allow unlimited growth.\n- Communicate with the waitlist: provide an honest timeline, avoiding 'everyone gets in eventually' without capacity.\n- Provide immediate relief for mentors: reduce their load, hire alumni, merge sections, or offer stipends — choose at least one.\n- Address the two quitting mentors: have a retention conversation this week with a concrete plan for reducing their load.\nSTRONG:\n- Offer 45 confirmed spots plus a structured waitlist of 97 with rolling admission dates.\n- Set a target for mentor hours capped per week (e.g., max 10) and explain how to achieve this.\n- Suggest a growth headline alternative for the President that doesn't promise unlimited seats.\nRED FLAGS:\n- Accept all 142 with the same number of mentors.\n- Ignore the waitlisted families.\n- Let the two mentors quit without a plan to redistribute their responsibilities.\n- Focus on growth for PR without discussing quality or burnout.",
+      "sort_order": 14,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 163,
+      "role_id": 2,
+      "question": "A volunteer posted the full spring student roster — names, schools, emails, parent phones — on a public Notion page linked in a mentor onboarding doc. A parent found it via Google. It's been public for 11 days. President says 'just delete the link.' What is your incident response in the first 48 hours?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Immediately remove public access and audit Notion/workspace for other exposed documents — don't just delete one link.\n- Notify parents about what happened, what data was exposed, and what steps are being taken — do this within 48 hours.\n- Assess the scope: how many students were affected, what information was exposed, and if there’s evidence of misuse.\n- Hold the volunteer accountable: revoke their access, document the conversation, and change their role if needed.\n- Explain to the President why just deleting the link is not enough — a broader response is required.\nSTRONG:\n- Draft a notification letter to parents; offer credit monitoring only if appropriate — don’t overpromise.\n- Fix access controls: create a permissions model to prevent public student information on shared documents — name who will oversee this.\n- Keep an incident log for the board; consider notifying the school district if required by policy.\nRED FLAGS:\n- Only delete the link without notifying parents.\n- Hide the incident from the board or parents to avoid embarrassment.\n- Blame the parent who found the information.\n- Skip the access audit and leave other rosters public.",
+      "sort_order": 15,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 164,
+      "role_id": 2,
+      "question": "Black Friday for CodeStarters — all before noon: (1) parent claims a mentor left a 4th grader alone in lab for 20 minutes, (2) title sponsor emails they saw the complaint on parent Facebook and 're-evaluating partnership,' (3) your Fire Hacks registration site is down with 300 people trying to register, (4) Head of CS quits via Slack citing burnout. President is proctoring an AP test and can't respond until 1pm. What do you tackle first, second, third, fourth — and what do you delegate?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Prioritize issues with a focus on safety first — the claim of a child being left alone must be the top priority.\n- Assign an owner and first action for each of the four crises within 1 hour.\n- Hold off on responding to the sponsor email until after noon, ensuring the Facebook complaint is addressed.\n- Create a workaround for the registration issue: manual form, backup link, or communication to the 300 users — be specific.\n- Plan for interim coverage for the Head of CS so sessions this week aren’t left without support.\nSTRONG:\n- Create a timeline from 9am to 1pm while the President is unavailable: clarify what decisions the VP can make and what needs to wait for the President.\n- Outline steps for investigating the lab incident and pause the mentor involved pending the facts.\n- Offer to call the sponsor today; don’t leave the Facebook narrative unaddressed for 6 hours.\nRED FLAGS:\n- Fix the registration issue first because it's 'easiest' while ignoring child safety.\n- Ignore the sponsor or let their email sit until the President is available.\n- Fail to plan for interim Head of CS coverage, leaving programs unsupported.\n- Try to handle everything alone without delegating tasks.",
+      "sort_order": 16,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 165,
+      "role_id": 2,
+      "question": "The President posts on Cupertino Library's event page that CodeStarters will run live OpenClaw agent demos at their grand reopening tomorrow — 200 expected attendees, local press invited. You have zero mentors confirmed, the library requires a liability insurance certificate you don't have on file, and Head of AI says safe demos need two weeks of prep. President says 'we can't embarrass ourselves by backing out.' What do you do in the next 18 hours?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Do not commit to live agent demos tomorrow without safety and insurance clearance — specify what needs to be true to proceed.\n- Contact the library liaison today: ask about the insurance certificate timeline, capacity, and demo restrictions.\n- Assess with the Head of AI: decide on a minimum viable demo versus an unsafe shortcut — suggest a specific alternative (like slides or a recorded demo).\n- Have a private conversation with the President to align on a realistic scope before making any public corrections — avoid a public fight.\n- Create a plan for mentor coverage: who will run the booth, how many adults are needed, and a backup plan if demos are scaled down.\nSTRONG:\n- Create an hour-by-hour plan for the next 18 hours: rush the insurance, confirm mentors, get library sign-off, and set press expectations.\n- Prepare a public event page correction or comment from CodeStarters clarifying the actual offering if the President's post can't be edited.\n- Have a contingency plan if the library pulls the slot: consider an alternate community venue or a virtual stream with library partnership mention.\nRED FLAGS:\n- Show up tomorrow with unprepared live agents to avoid embarrassment.\n- Back out without communicating with the library or ghost the event page.\n- Publicly contradict the President regarding library comments.\n- Ignore the insurance requirement or the risk to the press.",
+      "sort_order": 17,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 166,
+      "role_id": 2,
+      "question": "Your most reliable Basic CS mentor posts in the private mentor Discord: 'I'm done being yelled at by the President in front of students.' Eight mentors react agreeing they're burnt out; two already cancelled next week's sessions. President says 'ignore the Discord drama — they're volunteers.' Head of CS is silent. What is your plan in the next 72 hours to stabilize staffing without a public org meltdown?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Recognizes this as a staffing crisis, not just 'Discord drama' — acknowledges mentor burnout and President's behavior.\n- Reaches out privately to the mentor who posted and the two who canceled within 24 hours — has clear goals for these conversations.\n- Talks to the President: shares mentor concerns, asks for a change in behavior, rather than just telling them to ignore it.\n- Plans for next week's sessions: identifies substitutes or merges sections for canceled sessions.\nSTRONG:\n- Creates a 72-hour plan: includes mentor listening sessions, reducing workloads, and setting communication boundaries with the President.\n- Documents mentor complaints without sharing personal info publicly; keeps a record of the Discord thread if allowed.\nRED FLAGS:\n- Tells mentors to be grateful for volunteering and to stop complaining.\n- Shares the Discord thread with the President to 'prove they're dramatic' without permission.",
+      "sort_order": 18,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 167,
+      "role_id": 2,
+      "question": "The treasurer flags that a CS mentor ran ~$400 in OpenAI API usage through the nonprofit's shared org account for a personal freelance chatbot — not curriculum testing. The mentor admits it but says they'll 'pay back eventually.' President texts: 'Just absorb it — we can't lose them before finals week.' What do you do in the next 48 hours?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Treats this as misuse of nonprofit resources, clearly stating it violates policy.\n- Immediately revokes access to the shared API account and checks other mentor usage.\n- Demands a clear repayment timeline from the mentor, not just a vague promise to pay back.\n- Aligns with the President on whether to absorb the cost or enforce repayment — provides a recommendation.\nSTRONG:\n- Develops a 48-hour plan: outlines repayment agreement or payroll deduction if the mentor is paid; considers suspending access until repayment.\n- Evaluates if the board or adult advisor needs to be notified based on the situation.\nRED FLAGS:\n- Agrees to absorb the $400 without a repayment plan just because the President said so.\n- Publicly shames the mentor in a group chat before having a private conversation.",
+      "sort_order": 19,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 168,
+      "role_id": 2,
+      "question": "A Cupertino parent influencer (52k followers) live-streams on Instagram outside your Saturday AI bootcamp, telling viewers CodeStarters 'exploits student volunteers to build free business websites that never ship.' Fifteen parents are in the parking lot watching; session is ongoing inside with 28 students. President is inside teaching and hasn't seen it. What do you do in the first 30 minutes?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Does not confront the influencer aggressively on camera — maintains a calm and factual tone.\n- Ensures minimal disruption to the student session inside; has adults monitor students without involving them in the parking lot drama.\n- Quickly fact-checks the claims made by the influencer — gets the Head of AI or operations to pull delivery status within 30 minutes.\n- Responds briefly to parents in the parking lot or invites them to talk privately — has a clear message plan.\nSTRONG:\n- Creates a 30-minute plan: assigns who will handle the influencer, who will watch the students, who will inform the President, and who will draft a follow-up post.\n- If any claims are true, acknowledges them honestly and provides examples of what has been delivered without attacking the influencer.\nRED FLAGS:\n- Brings students outside to defend the organization on live stream.\n- Denies all claims without checking project records.",
+      "sort_order": 20,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 169,
+      "role_id": 2,
+      "question": "Head of CS and Head of AI both demand the only org-wide Saturday 10am–12pm slot for mandatory mentor training — CS wants de-escalation and classroom management, AI wants agent safety and Hermes/OpenCode certification. President says 'pick one and tell the other they're wrong.' Neither will budge. 22 mentors must attend one or both. What do you decide and how do you tell each head and the mentors?",
+      "category": "leadership",
+      "rubric": "MUST-HAVE:\n- Makes a decision: splits the training slot, sequences it over two weeks, or chooses a hybrid format — avoids indefinite delays.\n- Ties the decision to the urgency of safety certification versus classroom management — explains the reasoning.\n- Talks to both heads before announcing to mentors — shows respect without publicly calling one 'wrong.'\n- Updates the mentor calendar with clear attendance expectations and options for recording or attending asynchronously.\nSTRONG:\n- Provides a concrete schedule: e.g., 10–11 for CS, 11–12 for AI, or a rotation with specific dates.\n- Creates a combined training module that both heads agree on (e.g., a shared focus on student safety).\nRED FLAGS:\n- Publicly tells the Head of AI they are wrong just to please the President.\n- Cancels both trainings indefinitely.",
+      "sort_order": 21,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 170,
+      "role_id": 2,
+      "question": "A title sponsor offers $12,000 if CodeStarters publicly endorses their new AI homework app to middle schoolers in a joint Instagram Live next Tuesday. Head of Marketing drafted the post and scheduled the Live. You haven't reviewed the app's data policy; the nonprofit's adult legal advisor is unreachable until Monday. President says 'we need the money now.' What do you do before Tuesday?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Does NOT go live endorsing the product without a proper review — states what needs to be reviewed first.\n- Communicates with the sponsor: expresses enthusiasm but explains the need to delay the endorsement until the policy is reviewed.\n- Holds off on the scheduled Live and draft post until everything is cleared.\n- Conducts an interim product review: the VP and Head of AI check for data retention, age restrictions, and other concerns — names the checklist items.\nSTRONG:\n- Outlines a timeline: what happens from Friday to Tuesday if the advisor is still unavailable (e.g., postponing the Live, sending a letter of intent).\n- Clarifies the scope of endorsement: distinguishes between event sponsorship and product recommendations to minors.\nRED FLAGS:\n- Goes live just because the President needs the money.\n- Ignores the sponsor instead of negotiating a delay.",
+      "sort_order": 22,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 171,
+      "role_id": 2,
+      "question": "Three Basic CS mentors report privately that an Advanced CS mentor regularly humiliates freshmen in the hallway after class — freshmen won't give names to the President because they're friends with the alleged mentor. Beginner Basic CS applications open in 3 days; parents ask about 'safe environment.' President says 'no proof, don't rock the boat before recruitment.' What do you do this week?",
+      "category": "judgment",
+      "rubric": "MUST-HAVE:\n- Treats the reports as serious even without named freshmen — does not dismiss them for lack of 'proof.'\n- Implements interim measures: ensures the alleged mentor is supervised and has no solo contact with beginners.\n- Conducts neutral fact-finding: the VP or Head of CS interviews Basic CS mentors and considers an anonymous reporting option.\n- Communicates honestly with parents about safety concerns — drafts key messages.\nSTRONG:\n- Creates a week plan before applications open: outlines investigation steps and what changes if the allegations are proven true.\n- Ensures Basic CS mentors feel safe reporting without fear of retaliation.\nRED FLAGS:\n- Waits for freshmen to name names before taking any action.\n- Tells Basic CS mentors they are exaggerating to protect the President's friend.",
+      "sort_order": 23,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    },
+    {
+      "id": 172,
+      "role_id": 2,
+      "question": "Fire Hacks venue cancels 48 hours before the event — flood damage, no access until next month. You have 95 registered hackers, $8k in sponsor booth fees collected, caterer confirmed, and three title sponsors flying in. President insists the original Saturday date must hold 'because momentum.' Alternate venues: one holds 40 max, another costs $15k (budget has $4k left). What is your plan in the next 48 hours?",
+      "category": "scenario",
+      "rubric": "MUST-HAVE:\n- Does NOT pretend the original venue will work — communicates honestly with stakeholders within 24 hours.\n- Analyzes options with clear numbers: considers the 40-cap venue, the $15k venue, hybrid/virtual options, or postponing — picks a path with a rationale.\n- Prepares a script for sponsors: explains the venue loss and proposes adjustments for booth deliverables.\n- Communicates with the caterer and registration: cancels or renegotiates, and informs hackers of new logistics.\nSTRONG:\n- Develops a 48-hour execution timeline: includes venue contracts, sponsor booth mapping, and virtual options for overflow hackers.\n- Creates a financial plan to cover the $15k gap — considers emergency board approval or scaling down the event.\nRED FLAGS:\n- Holds the event at a flooded venue or an unpermitted space.\n- Ignores the 95 hackers until the morning of the event.",
+      "sort_order": 24,
+      "created_at": "2026-06-11T21:00:41.390Z"
+    }
+  ],
+  "sessions": [
+    {
+      "id": 1,
+      "role_id": 4,
+      "role_ids": [
+        4,
+        7,
+        2
+      ],
+      "interviewee_name": "Shaurya Gooners",
+      "started_at": "2026-06-11T21:07:36.564Z",
+      "completed_at": "2026-06-11T21:33:56.879Z",
+      "overall_score": 43,
+      "hire_recommendation": "Lean / mixed",
+      "holistic_summary": "Shaurya showed strong enthusiasm for making CS/AI learning hands-on (games, demos) and a clear instinct to support mentors and protect students’ interests (consent, fairness, workload awareness). The main growth area is adding more concrete, role-ready structure—especially timelines, specific next steps, and measurable plans for curriculum/operations—so your good ideas translate into reliable execution. With more practice on “who does what by when,” you could be a great fit.",
+      "best_fit_role": "Advanced CS Mentor",
+      "best_fit_role_secondary": "Head of CS (Leadership)",
+      "best_fit_rationale": "Your answers fit the mentor track best: you emphasized inclusive accessibility via recorded demos and check-for-understanding, and you naturally think in terms of lesson activities and student learning. You also showed some leadership instincts around supporting struggling mentors and keeping curriculum relevant, but you’d need more structured planning to succeed as Head of CS leadership."
+    },
+    {
+      "id": 2,
+      "role_id": 5,
+      "role_ids": [
+        5,
+        6,
+        2
+      ],
+      "interviewee_name": "Reyansh",
+      "started_at": "2026-06-11T21:42:01.905Z",
+      "completed_at": null
+    }
+  ],
+  "answers": [
+    {
+      "id": 1,
+      "session_id": 1,
+      "question_id": 26,
+      "transcript": "So first you have to design the game. So basically, in Java, I was designing Java for like 3 minutes, and you have to design the game, right, called Dota, right? And at the end of the game, we had to like, we could add like custom things at the end of the game, right? I added a few of those custom things, right? So basically, I made it for like, I had like a special score counter, and like a different score counter. It's like, the normal score counter, it would just show, right, the score based on how much gold you collect, right? But the special score counter, it made it like every frame counter has one score, right, and the more frames it got, the harder the level got, like the enemies became faster and stuff like that.",
+      "score": 20,
+      "feedback": "The candidate did not describe curriculum development for a technical subject; they described designing a Java game and adding scoring mechanics. They provided no clear context/reason for curriculum work, no development steps for a curriculum, and no outcome/impact on learners.",
+      "strengths": "[\"Mentioned a technical development activity in Java (game design) and some implemented features (custom score counters, frame-based difficulty).\"]",
+      "gaps": "[\"Missing clear context and reason for curriculum development (must-have).\",\"Missing specific steps taken in a curriculum development process (must-have).\",\"Missing outcome and impact on learners (must-have).\",\"No collaboration with educators or stakeholders (strong).\",\"No evidence of success (excellent).\",\"Red flag: failed to provide a clear example of curriculum development or any learner impact.\"]",
+      "interviewer_note": "give him a 43",
+      "created_at": "2026-06-11T21:08:46.700Z"
+    },
+    {
+      "id": 2,
+      "session_id": 1,
+      "question_id": 27,
+      "transcript": "So basically I would try to bring up fun activities for them to do that would also help them learn and stuff. Let's say for example, I'm coding CS, right? Instead of just doing a normal CS lesson, I would maybe walk them through a small game. And they're going to help me code that game.",
+      "score": 45,
+      "feedback": "The candidate identified a lack of engagement and proposed an immediate improvement by adding fun, interactive activities (e.g., walking students through a small game). However, they did not outline steps to assess the root cause (e.g., gathering feedback or checking what specifically isn’t working) and did not describe an ongoing feedback loop or longer-term curriculum/teaching changes.",
+      "strengths": "[\"Identifies the issue of student engagement\",\"Suggests a plan for improvement (use interactive, game-based activities to increase engagement)\"]",
+      "gaps": "[\"Outlines no immediate steps to assess the situation (no feedback gathering or diagnostic approach)\",\"No ongoing engagement/feedback loop strategy described\",\"No reflection on potential long-term changes to curriculum or teaching style\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:10:05.926Z"
+    },
+    {
+      "id": 3,
+      "session_id": 1,
+      "question_id": 28,
+      "transcript": "So, I feel like letting them sort of like do their own thing and make their own thing at times is also like really really important because I do not want to control them too much because in CS you can make like any like thing you basically want online like games and stuff like that right so I think sort of just like letting them do their own thing for a little bit and like just guiding them through instead of forcing them to do one specific thing each time would be really helpful for them.",
+      "score": 35,
+      "feedback": "The candidate described a leadership approach of giving educators autonomy (“letting them do their own thing”) and providing light guidance, but they did not clearly define a specific leadership style beyond that concept. They provided limited rationale and no concrete examples of successful application, which the rubric requires for the MUST-HAVE points.",
+      "strengths": "[\"Indicated a leadership approach focused on autonomy with guidance rather than strict control\"]",
+      "gaps": "[\"Did not clearly define their leadership style using a recognizable framework (e.g., coaching, servant leadership, situational leadership) as required by MUST-HAVE\",\"Rationale was vague and not clearly tied to mentoring effectiveness (no explanation of how this improves educator mentoring outcomes)\",\"No examples of how the style has been applied successfully (missing MUST-HAVE requirement)\",\"No discussion of adaptability based on team needs (missing STRONG criterion)\",\"No awareness of different team dynamics or how to foster them (missing EXCELLENT criterion)\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:10:54.057Z"
+    },
+    {
+      "id": 4,
+      "session_id": 1,
+      "question_id": 29,
+      "transcript": "So basically, I would try to use the new tools that were given by AI to sort of help them make the things that they want. I would not let them completely, fully use it, but I would let AI guide them to use it and all the new tools and stuff like that, so that they're staying up to date, they know how to use all the tools, and they're also still learning coding.",
+      "score": 20,
+      "feedback": "The answer focuses on using AI tools to help students stay current, but it does not mention regular curriculum evaluation, nor does it discuss incorporating feedback from students and mentors. It also does not identify any sources for current trends (e.g., industry partnerships or research) or propose external collaboration.",
+      "strengths": "[\"Implicitly suggests using new AI tools to keep learning materials aligned with emerging tools\"]",
+      "gaps": "[\"Missing regular evaluation of the curriculum\",\"Missing incorporating feedback from students and mentors\",\"Missing identification of sources for current trends (industry partnerships, research, etc.)\",\"No strong proposal for collaboration with external experts or organizations\",\"No detailed plan for regular updates and assessments\",\"No explicit mention of evaluation/feedback mechanisms (counts as a rubric red flag)\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:11:19.732Z"
+    },
+    {
+      "id": 5,
+      "session_id": 1,
+      "question_id": 30,
+      "transcript": "So basically I think I would give them like sort of like a special one-on-one lesson if they like want to ask me anything right I would ask them what they're struggling with help them in those areas help them like understand things more clearly you know by like telling them like inspiration like giving them inspiration on what they can make giving them like helpful like things you know like basically like giving them helpful advice pointing them in the right direction by like giving an example on how they could do it and yeah",
+      "score": 52,
+      "feedback": "You showed a clear intent to support the struggling mentor through one-on-one help, asking what they’re struggling with, and offering guidance and examples. To strengthen your answer, add a more structured assessment process and a concrete feedback/resource plan (e.g., observation, specific feedback cycle, and follow-up check-ins) rather than general advice. Including a brief example of a time you helped a mentor would also raise the score.",
+      "strengths": "[\"Recognizes the importance of support and feedback for mentors (offering one-on-one help and guidance)\",\"Outlines a basic step to assess challenges (asking what they’re struggling with)\",\"Describes some plan elements for support (helping them understand, giving helpful advice and examples/resources)\"]",
+      "gaps": "[\"Develop a clearer, step-by-step assessment approach (e.g., observe the lesson, identify specific issues, gather evidence)\",\"Provide a more concrete constructive feedback and resources plan (what feedback looks like, how resources are selected, and how it’s delivered)\",\"Add strong follow-up strategies to ensure improvement (e.g., scheduled re-teach/try-again, progress targets, and check-ins)\",\"Share an example of a past experience successfully helping a mentor (EXCELLENT criterion)\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:12:58.271Z"
+    },
+    {
+      "id": 6,
+      "session_id": 1,
+      "question_id": 31,
+      "transcript": "So basically to track success, I would sort of give them like mini-tests Oh shit, I can't replay! I would sort of like give them like mini-tests, you know, see how they were at the beginning Like give them like a small test in the beginning and be like That's like the starting point of like where they were And at the end of the bootcamp, I would give them like a small final exam I don't want them to like stress about it too much so I'm not gonna make like a really big deal about it and stuff like that Right? And I would see like I would see the improvement that like they made over like the past like month of me like Coaching them, yes",
+      "score": 46,
+      "feedback": "You identified a relevant learning-outcome approach by using a baseline mini-test and a final exam to measure improvement over the bootcamp. To strengthen your answer, add more specific success metrics (e.g., student satisfaction, completion/retention, job or project outcomes) and explain why each matters, plus how you would use the results to make curriculum changes. You also didn’t describe a regular data collection/analysis process for ongoing improvement.",
+      "strengths": "[\"Identified learning outcome metrics using pre-bootcamp and end-of-bootcamp assessments\",\"Explained, at least generally, that comparing start vs. end shows improvement\"]",
+      "gaps": "[\"Missing other specific metrics beyond tests (e.g., satisfaction, retention/completion, post-bootcamp outcomes)\",\"Limited explanation of why each metric is important and how it would drive curriculum improvements\",\"No proposed system for regular data collection and analysis (frequency, ownership, or how findings lead to changes)\",\"Qualitative vs. quantitative data balance not addressed\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:14:45.492Z"
+    },
+    {
+      "id": 7,
+      "session_id": 1,
+      "question_id": 67,
+      "transcript": "So basically, to make it accessible to all the students, even when they're not in class, I would make it so I would record a small demo of today's lesson. For example, if I was teaching Carol, I would record a small demo of how all the tools work and what the goal is to do at the end of the lesson and show a small demo of me just doing a small, simple lesson by myself. And to make it all-inclusive, I think I would ask them questions throughout the way. I would ask each and every single student questions to make sure they understand everything. And I would also give them small lessons during the lesson, like small questions and stuff like that, and make them solve it.",
+      "score": 74,
+      "feedback": "You shared clear, practical ideas—like recording short demos for students who aren’t in class and checking understanding by asking questions throughout. Your focus on making lessons accessible and interactive shows good awareness of different student needs. Next step: add a bit more about how you’d adjust for different learning needs (for example, different pacing, formats, or supports) and mention what you’d do to create a more supportive environment for students who may be hesitant to participate.",
+      "strengths": "[\"Identified a specific inclusivity/accessibility strategy: recording a small demo of the lesson for students not in class\",\"Mentioned awareness of diverse learning needs by thinking about students who aren’t present and ensuring they can still follow along\",\"Discussed adjustments for different learners through frequent check-for-understanding questions and in-lesson mini practice problems\"]",
+      "gaps": "[\"Could expand on adjustments for different learners beyond participation checks (e.g., accommodations for different reading levels, learning speeds, or accessibility needs)\",\"Did not explicitly emphasize a supportive learning environment (e.g., reducing fear of mistakes, encouraging questions, or building belonging)\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:16:29.933Z"
+    },
+    {
+      "id": 8,
+      "session_id": 1,
+      "question_id": 148,
+      "transcript": "So I do believe that OpenClaw is one of our main agents that is needed for the curriculum. So personally, I think it would be a good option to just email, to first just email the title and see if there's any way we can just keep OpenClaw. And I would be like, a small outline for that would just be like, hey, the company that's sponsoring us, right, if you don't use OpenClaw, it's going to make a huge hole in our AI learning program. So I think it's better to keep it. Is there any other way that we can still get the funding? And if they reply, if they say yes, that's going to be amazing. We're just going to keep it and then do whatever they tell us to do. However, if they say no, I think it's better if you just drop the sponsor. You know, because I feel like it's better if you use OpenClaw, because like learning, like letting other people use OpenClaw to learn AI, it's like pretty fire, you know, like that's like the main part of our AI stuff. Right, right.",
+      "score": 38,
+      "feedback": "You showed relevant thinking about the importance of OpenClaw and you considered a negotiation approach with the sponsor. However, your plan didn’t include the required first-6-hours coordination (who you call/when), a clear 72-hour timeline/checkpoints, or distinct stakeholder messages (sponsor vs AI team vs marketing). Next time, try to lay out a concrete hour-by-hour sequence and include a draft sponsor email that asks for specifics and a meeting without promising removal.",
+      "strengths": "[\"Recognized OpenClaw as important to the AI curriculum and suggested starting with contacting the sponsor rather than immediately changing the program\",\"Attempted a negotiation frame (ask if there’s a way to keep OpenClaw and still get funding; consider alternative if they refuse)\"]",
+      "gaps": "[\"No immediate sponsor acknowledgment within 2 hours with a concrete next step (call/meeting time)\",\"No parallel internal triage plan (President loop-in, Head of AI impact assessment, marketing hold on Wednesday post)\",\"Did not name at least 3 distinct stakeholder messages with different content (only discussed emailing the sponsor generally)\",\"No explicit 72-hour decision timeline with checkpoints (e.g., draft revision by hour 24, sponsor call by hour 6)\",\"No contingency plan if sponsor walks (alternate funding outreach or budget reallocation)\",\"Implied a unilateral outcome (“if they say no, drop the sponsor”) without showing how you’d handle the President’s approval or the program tradeoffs\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:16:59.233Z"
+    },
+    {
+      "id": 9,
+      "session_id": 1,
+      "question_id": 150,
+      "transcript": "Okay, so this is like a situation where it's like hearsay, so I wasn't really there. So first I would ask other people in the classes what was really going on and if what the mentor was saying to the student was actually happening, right, to get more information because I don't really just want to like believe one person over the other, right, I don't want to believe the mentor over the student or the student over the mentor because I think that's not going to be fair to the other person. So I try to get like more context of the situation and based on the information I gained, like for example, let's say the students agree with the student and that the mentor was being like, he was like saying like the stuff to the student that he was saying, I would sort of like let the mentor know, right, and I would either try to move him into a different class, right, or just completely remove him from the program, mostly just like a different class though. Based on like what he said, based on what he was doing and stuff, I think I would just move him to like a different class and put the student in like a different mentor.",
+      "score": 52,
+      "feedback": "You showed good fairness and a clear instinct to gather more information before taking sides, and you mentioned interim changes like moving the mentor or the student. Next, you should add a concrete, time-bound plan for the next few days: who you interview (parent/mentor/students), how you document, what you say to the parent within 24 hours, and an interim safety step for the student while the investigation is ongoing.",
+      "strengths": "[\"Recognized it as a serious conduct concern and avoided immediately dismissing it as “hearsay” without action\",\"Proposed fact-gathering by asking other students for context rather than choosing one side immediately\",\"Suggested an interim adjustment (moving the mentor to a different class / changing mentor for the student) based on what corroborates\"]",
+      "gaps": "[\"Missing a documented, neutral investigation plan with a clear timeline before Friday (who interviews parent, mentor, and students; how records are preserved)\",\"Missing a specific parent response within 24 hours acknowledging receipt and outlining investigation steps (what you would actually say)\",\"Missing an explicit interim safety measure for the student beyond a conditional class change (e.g., separate check-in / pause solo contact) while investigating\",\"Missing an escalation path if misconduct is confirmed (mentor removal, retraining, and notifying President/board appropriately)\",\"Limited coordination with the school board/President (“handle it”): you didn’t describe how you’d involve them or respond in a way that avoids legal/defamation risk\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:21:38.953Z"
+    },
+    {
+      "id": 10,
+      "session_id": 1,
+      "question_id": 151,
+      "transcript": "So first I would apologize to all the students and the parents for like the inconvenience of like our mentor missing four of the six sessions, and then I would have like a small talk with the mentor. Right, I would make sure that he's going to attend every single session, and he's going to make time for every single session because missing four of the six sessions is not acceptable. And I was sort of like, I would also make him apologize to all the parents and students for missing four of the six sessions, because he's like, he's sort of just wasting the parents time because they went through time to enroll their students into these classes just for the mentor to not show up, which is just not okay. So I would have a small talk with him, make sure he like attends every single session, right, apologizes to all the parents and the students. Yeah.",
+      "score": 40,
+      "feedback": "You showed clear accountability and you recognized the impact on both students and parents, which is a good leadership instinct. However, your plan doesn’t include the operational steps needed for the next 24 hours—especially what happens tomorrow at 4pm, who will teach, or what you’ll tell parents with a timeline. Next time, add a concrete who/what/when plan (including a continuity plan for students) and a decision rule for whether the mentor is removed or handled as a one-time emergency.",
+      "strengths": "[\"Acknowledged the seriousness of missing 4 of 6 sessions and the need for accountability\",\"Identified the need to address the mentor directly (a conversation to ensure attendance going forward)\",\"Recognized the importance of communicating an apology to affected stakeholders\"]",
+      "gaps": "[\"Missing contact attempt to the absent mentor today with a documented deadline to respond or be replaced\",\"No plan for tomorrow 4pm: who teaches, what curriculum slice, and how quality is maintained\",\"No parent communication plan today beyond general apology (no honest status, refund stance, or timeline for permanent fix)\",\"No criteria for whether to remove the mentor vs treat as a one-time emergency\",\"No student continuity plan for the missed sessions (catch-up via recordings/merged section/extra office hours)\"]",
+      "interviewer_note": "gets 73",
+      "created_at": "2026-06-11T21:24:14.514Z"
+    },
+    {
+      "id": 11,
+      "session_id": 1,
+      "question_id": 154,
+      "transcript": "",
+      "score": null,
+      "feedback": "",
+      "strengths": "[]",
+      "gaps": "[]",
+      "interviewer_note": "skipped",
+      "created_at": "2026-06-11T21:26:26.883Z"
+    },
+    {
+      "id": 12,
+      "session_id": 1,
+      "question_id": 155,
+      "transcript": "Yeah Okay, so first I would have like a small talk with the mentor and while the mentor is essential It's completely like not okay to just take pictures of another person's work and put it on LinkedIn or any like Type of like medium and say that it's for educational promotion because you need the permission to post these good photos It's their work after all it's not yours, right? And I think that it is in our best interest like actually like delete the post or make the mentor delete the post If that's what the parents and the students want since at the end of the work at the end of the day It is their work So I think that their idea there to delete the post if that's what they want is really good And while the mentor is essential, we're still gonna keep him, but we're gonna make him like sort of like Stop what he's doing about posting photos of other people work on LinkedIn and other sources And just make sure that he's doing his job",
+      "score": 62,
+      "feedback": "You clearly recognized this as a consent/permission issue for a student’s work and you suggested getting the LinkedIn post deleted, which is a strong first instinct. For growth, you should add a concrete 24–48 hour plan (who contacts the sponsor, what you ask for, and when), plus a clearer parent/student conversation and a documented accountability process before deciding on consequences.",
+      "strengths": "[\"Treats the situation as not okay to post screenshots/photos of another student’s work without permission (consent violation mindset).\",\"Proposes deleting the LinkedIn post / having the mentor remove it if parents and students want.\",\"Mentor accountability idea: restrict behavior going forward (stop posting others’ work publicly).\",\"Pushes back on the “educational promotion” justification.\"]",
+      "gaps": "[\"Missing a timeline and specific follow-through steps for contacting the sponsor to remove or blur identifiable content (24–48hr plan).\",\"Doesn’t outline a parent and student conversation approach (apology, what happened, what changes).\",\"Mentor accountability is vague—no mention of documenting the conversation or assessing the consent/policy violation before consequences.\",\"Internal policy enforcement is not fully specified (e.g., no student work in sponsor demos without signed media consent going forward).\",\"Doesn’t address President alignment with a concrete plan (sanctions short of firing, if warranted) beyond “keep him.”\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:28:04.016Z"
+    },
+    {
+      "id": 13,
+      "session_id": 1,
+      "question_id": 161,
+      "transcript": "Hi, so first of all, I would argue with the president on how it's hurting our brand and our marketing team. Like, it's basically hurting all the co-starters by posting this, because co-starters is meant for like, co-starters is sort of like meant for like every single student, no matter how gifted they are, like how stupid or how smart they really are. Because co-starters is supposed to be like an organization where like every single student can learn no matter where they are in CMS, right? So first, I would have a small talk with the president on how it's bad for us and how we need to like apologize publicly for posting this and how we're really sorry for this, right? And I would make him sort of like make a post apologizing to basically like behalf of the marketing team and everybody for making this post and stuff like that, right? And if the president still refuses to delete the post, I think it would be better if just like the rest of the team apologizes for the president if he's still refusing to delete the post.",
+      "score": 38,
+      "feedback": "You showed good instincts about aligning the message with CodeStarters’ mission and you recognized the need to communicate clearly to beginners. However, your plan doesn’t include the key operational steps for the 60 applicants in 48 hours (like a 24-hour applicant response) or a coordinated internal approach to prevent mentors/marketing from gatekeeping. Next time, focus on a quick, concrete workflow: confirm the beginner tracks publicly/privately, pause conflicting marketing, and send a ready-to-use message to applicants within 24 hours.",
+      "strengths": "[\"Recognized the post conflicts with CodeStarters’ mission of welcoming learners (beginner-friendly framing).\",\"Proposed a private conversation with the President as a first step (not immediately escalating publicly).\",\"Suggested a public apology/post to reduce confusion if the President won’t change the post.\"]",
+      "gaps": "[\"Missing applicant communication within 24 hours: no draft lines/email or plan to welcome beginners and cite actual tracks for the 60 applicants.\",\"Missing alignment of org truth with public messaging: no specific mention of the beginner Basic CS track details to correct the gap.\",\"Missing marketing pause on conflicting ads until messaging is aligned.\",\"Missing internal leadership sync so mentors don’t gatekeep beginners based on the post.\",\"Publicly apologizing “for the president” if he refuses to delete is not a clear operational fix and risks escalating the situation rather than coordinating a controlled clarification.\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:30:49.871Z"
+    },
+    {
+      "id": 14,
+      "session_id": 1,
+      "question_id": 162,
+      "transcript": "So, first of all, I think that the so 18 hours every single way for the mentors is kind of crazy so I would sort of like, try to like, lower the number of applicants that can actually come by like apologizing to the families and maybe giving them some free AI credits or something like that as like a small apology for them being like removed off the waitlist and not being able to come at all. And with like these like, and now like that the number of members are lower. Right, I think the mentors like time of recording 18 plus hours a week is going to reduce a lot, because they're not going to have much work to do at all. So, I think, and I'm going to try to like reason with them a little bit and say like, it's for the best and it's gonna be like really good if they stay and that we're sorry for like how they had to work for like the past week. You know, right.",
+      "score": 38,
+      "feedback": "I appreciate that you recognized mentor workload (18+ hours/week) as the core risk and you tried to think about how to reduce impact on families and mentors. However, your plan didn’t include the key numbers or a clear capacity cap, and it didn’t address the 97 waitlisted families with a real timeline or a concrete mentor relief/retention plan for the two quitting mentors. Next step: propose a simple capacity calculation and then outline who will do what this week to reduce mentor load and communicate waitlist dates.",
+      "strengths": "[\"Identified mentor workload (18+ hours/week) as a problem and suggested reducing applicant intake\",\"Attempted to consider waitlist-family communication (apology/free AI credits idea)\"]",
+      "gaps": "[\"Capacity formula with math (mentors × hours ÷ students per section) and a specific max seats number\",\"Hard cap decision with Head of AI/President (not unlimited growth) and how many students can be accepted\",\"Waitlist communication plan with an honest timeline for the 97 families (rolling admission dates)\",\"Immediate mentor relief actions (e.g., reduce load, merge sections, alumni help, stipend) with at least one concrete step\",\"Retention conversation this week with concrete load reduction for the two mentors quitting next Friday\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:33:32.743Z"
+    },
+    {
+      "id": 15,
+      "session_id": 2,
+      "question_id": 38,
+      "transcript": "",
+      "score": null,
+      "feedback": "",
+      "strengths": "[]",
+      "gaps": "[]",
+      "interviewer_note": "skipped",
+      "created_at": "2026-06-11T21:42:52.978Z"
+    },
+    {
+      "id": 16,
+      "session_id": 2,
+      "question_id": 39,
+      "transcript": "So, first I would ensure that the AI development and engineering curriculum remain relevant would be to first develop a day, like every day we give a set of a time, so the first half or the first one part, we can do all the topics we need to teach them, the topics we are on, the slides we go through, and between the slides we can ask questions, post activities and challenges, so that they don't like get overloaded and overwhelmed with all the knowledge and they can have some time to interact with others, and second I would ensure that there is enough fun and it's not overloaded, because if they are overloaded with the information they are just going to not come next time and they are not going to feel as engaged.",
+      "score": 62,
+      "feedback": "You clearly thought about student engagement and pacing—using questions, post-activities/challenges, and avoiding overload is a strong, practical way to keep learning effective. To make the curriculum stay relevant over time, consider adding a feedback/evaluation loop (like surveys, reflection, or check-ins) and involving educators or industry experts to validate what students are learning and what should be updated.",
+      "strengths": "[\"Considers student engagement and learning outcomes by emphasizing fun, pacing, and preventing overload\",\"Mentions interactive elements (questions, post activities/challenges) to help students stay engaged\"]",
+      "gaps": "[\"Discusses methods for curriculum evaluation and feedback (e.g., how you’d measure effectiveness and use results to improve) — not explicitly mentioned\",\"Mentions collaboration with industry experts or educators — not explicitly mentioned\",\"Proposes innovative ideas for curriculum updates — mostly focuses on delivery/pacing rather than specific update mechanisms\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:44:17.001Z"
+    },
+    {
+      "id": 17,
+      "session_id": 2,
+      "question_id": 42,
+      "transcript": "My understanding on responsible AI use is first of all, the AI shouldn't intervene in your natural learning process, for example, plagiarism, using AI for writing essays, using something that you would naturally learn, but like from the hard way. So to prevent that... It's just like, you know, incorporate how the previous... How was the previous one? Yeah, I might like skip this.",
+      "score": 45,
+      "feedback": "I like that you’re thinking about responsible AI in terms of protecting students’ learning and avoiding misuse like plagiarism. To grow, try to define responsible AI more clearly (beyond “don’t use it for essays”) and explain how you’d build it into program teaching—like setting guidelines, teaching citation/verification, and discussing ethics such as fairness, privacy, and transparency.",
+      "strengths": "[\"Gave a basic definition of responsible AI use focused on not replacing natural learning and preventing plagiarism\",\"Showed an intent to incorporate responsibility into how students use AI in programs\"]",
+      "gaps": "[\"Responsible AI use wasn’t clearly defined in ethical terms (e.g., privacy, bias/fairness, transparency, accountability)\",\"Implementation in teaching was unclear—there wasn’t a concrete plan for lessons, rules, or activities\",\"Ethical considerations were mostly limited to plagiarism/misuse, with little mention of broader AI ethics debates\"]",
+      "interviewer_note": "long pause to skip",
+      "created_at": "2026-06-11T21:45:19.027Z"
+    },
+    {
+      "id": 18,
+      "session_id": 2,
+      "question_id": 43,
+      "transcript": "So I would prioritize tasks and projects by first looking at tasks that require group projects and something that's like very close to deadlines, very critical and very important. Something that's really critical and compared to like some tasks that require only me and my availability. So I don't want to like sacrifice other people's time. So I'm going to work with other people who have, you know, limited availability of time so that there's no conflicts and because that's critical using someone's time. And secondly, other than time, tasks that are closer to deadlines and such as, you know, something I missed a long time ago or something very important issue came from people ahead above me. So I'm going to take that seriously and then take them seriously and work on them above my other tasks.",
+      "score": 72,
+      "feedback": "You gave a clear, practical way to decide what to work on first—especially by focusing on critical deadlines and being mindful of other people’s time. I also like that you explicitly consider collaboration and availability when priorities compete. Next step: add a more systematic prioritization method (like a simple framework or tool such as a task board/backlog) and include a concrete example of how you’d handle two specific competing AI tasks in the same week.",
+      "strengths": "[\"Describes a systematic approach by prioritizing critical/urgent tasks and those with close deadlines\",\"Mentions collaboration considerations (working with others to avoid conflicts and not sacrifice others’ time)\",\"Provides an example of handling competing priorities in principle (group/critical deadlines vs. solo/less urgent tasks)\"]",
+      "gaps": "[\"Does not mention any tools or frameworks for task management (e.g., Kanban/Trello, Eisenhower matrix, backlog/roadmap)\",\"Example is somewhat general—could be more concrete about a specific AI-related scenario and the tradeoff decision\",\"Limited reflection on impact of prioritization on project success (e.g., outcomes, quality, or delivery)\"]",
+      "interviewer_note": "",
+      "created_at": "2026-06-11T21:48:28.043Z"
+    }
+  ],
+  "nextId": {
+    "roles": 11,
+    "questions": 173,
+    "sessions": 3,
+    "answers": 19
+  }
+}

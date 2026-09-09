@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #0a0e1a;
+  --color-ink-900: #0f1525;
+  --color-ink-800: #161d31;
+  --color-ink-700: #20283f;
+  --color-ink-600: #2b3550;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+}
+
+html,
+body {
+  background: var(--color-ink-950);
+  color: #e6eaf2;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent-500);
+  color: white;
+}

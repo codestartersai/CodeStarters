@@ -1,92 +1,90 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { Button } from "./ui/Button";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
+import { useState } from "react";
+
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-100px" },
+  transition: { duration: 0.6, delay, ease: "easeOut" as const },
+});
 
 export function HeroSection() {
-    return (
-        <section className="relative min-h-screen flex items-end overflow-hidden pb-20 pt-32">
-            {/* Background Image */}
-            <div className="absolute inset-0 z-0">
-                <Image
-                    src="/hero-bg.png"
-                    alt="Students in a modern tech workshop"
-                    fill
-                    className="object-cover object-center"
-                    priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/50 to-slate-900/30" />
-            </div>
+  const [email, setEmail] = useState("");
 
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 w-full">
-                <div className="max-w-3xl">
-                    <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                        <p className="text-brand-300 text-sm font-medium tracking-wide mb-6">Student-led nonprofit in Cupertino, CA</p>
-                    </motion.div>
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Subscribing:", email);
+    setEmail("");
+  };
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="font-display text-5xl sm:text-6xl lg:text-[5.5rem] font-bold text-white leading-[1.05] mb-8 text-balance"
-                    >
-                        Teaching the next generation{" "}
-                        <span className="relative inline-block">
-                            <span className="relative z-10">CS &amp; AI</span>
-                            <span className="absolute bottom-1 sm:bottom-2 left-0 right-0 h-3 sm:h-4 bg-brand-500/40 rounded-sm" />
-                        </span>
-                        , building websites for local businesses
-                    </motion.h1>
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260325_120549_0cd82c36-56b3-4dd9-b190-069cfc3a623f.mp4"
+        />
+      </div>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="text-lg text-slate-300 max-w-xl mb-10 leading-relaxed"
-                    >
-                        We&apos;re high school students who believe every kid deserves to learn code — and every small business deserves a great website.
-                    </motion.p>
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background to-transparent z-[1]" />
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        className="flex flex-col sm:flex-row gap-4"
-                    >
-                        <Link href="#volunteer">
-                            <Button size="lg" className="w-full sm:w-auto bg-brand-500 hover:bg-brand-400 border-none text-white">
-                                Join as Volunteer <ArrowRight className="ml-2 w-4 h-4" />
-                            </Button>
-                        </Link>
-                        <Link href="#request-website">
-                            <Button variant="ghost" size="lg" className="w-full sm:w-auto text-white hover:bg-white/10">
-                                Request a Website
-                            </Button>
-                        </Link>
-                    </motion.div>
-                </div>
-            </div>
+      <div className="relative z-10 text-center px-6 pt-28 md:pt-32 max-w-4xl mx-auto">
+        <motion.div {...fadeUp(0)} className="flex items-center justify-center gap-2 mb-8">
+          <div className="flex -space-x-2">
+            {[1, 2, 3].map((i) => (
+              <img
+                key={i}
+                src={`/assets/avatar-${i}.png`}
+                alt={`Subscriber ${i}`}
+                className="w-8 h-8 rounded-full border-2 border-background object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            ))}
+          </div>
+          <span className="text-muted-foreground text-sm">7,000+ people already subscribed</span>
+        </motion.div>
 
-            {/* Scroll Indicator */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2, duration: 1 }}
-                className="absolute bottom-8 right-8 lg:right-12 z-10 hidden sm:block"
-            >
-                <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-[1px] h-12 bg-gradient-to-b from-transparent via-white/40 to-white/40"
-                />
-            </motion.div>
-        </section>
-    );
+        <motion.h1
+          {...fadeUp(0.1)}
+          className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-[-2px] mb-6"
+        >
+          Get <span className="font-serif italic font-normal">Inspired</span> with Us
+        </motion.h1>
+
+        <motion.p {...fadeUp(0.2)} className="text-hero-subtitle text-lg mb-12 max-w-xl mx-auto">
+          Join our feed for meaningful updates, news around technology and a shared journey toward
+          depth and direction.
+        </motion.p>
+
+        <motion.form
+          {...fadeUp(0.3)}
+          onSubmit={handleSubscribe}
+          className="liquid-glass rounded-full p-2 max-w-lg mx-auto flex items-center gap-2"
+        >
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+            className="flex-1 bg-transparent px-6 py-2 text-foreground placeholder:text-muted-foreground outline-none"
+          />
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            className="bg-foreground text-background rounded-full px-8 py-3 font-medium hover:bg-foreground/90 transition-colors"
+          >
+            SUBSCRIBE
+          </motion.button>
+        </motion.form>
+      </div>
+    </section>
+  );
 }

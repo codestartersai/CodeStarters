@@ -1,126 +1,71 @@
-"use client";
+import { ExternalLink, Instagram } from "lucide-react";
+import { useLocation } from "@tanstack/react-router";
+import { CodeStartersLogo } from "@/assets/logo";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-
-const NAV_LINKS = [
-    { name: "Mission", href: "#mission" },
-    { name: "Programs", href: "#programs" },
-    { name: "Events", href: "#events" },
-    { name: "Team", href: "#team" },
-    { name: "Sponsors", href: "#sponsors" },
-    { name: "Donate", href: "#donate" },
+const fireHacksLinks = [
+  ["About", "#about"],
+  ["Tracks", "#tracks"],
+  ["Sponsors", "#sponsors"],
+  ["Prospectus", "/firehacks-sponsorship-prospectus.pdf"],
+  ["FAQ", "#faq"],
 ];
 
 export function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isFireHacks = location.pathname.startsWith("/firehacks");
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+  return (
+    <nav className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between border-b border-white/[0.06] bg-[#0A0A0A]/80 px-6 py-3 backdrop-blur-xl md:px-10">
+      <a href={isFireHacks ? "/firehacks" : "/"} className="flex items-center gap-3">
+        <CodeStartersLogo size={28} white />
+        <span className="font-bold text-base text-white">
+          {isFireHacks ? "Fire Hacks" : "CodeStarters"}
+        </span>
+      </a>
 
-    return (
-        <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl"
-        >
-            <nav className="bg-white rounded-2xl shadow-lg border border-slate-100 flex items-center justify-between px-5 py-2.5">
-                {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-9 h-9 relative flex items-center justify-center">
-                        <Image
-                            src="/logo_new.png"
-                            alt="CodeStarters Logo"
-                            fill
-                            className="object-contain"
-                        />
-                    </div>
-                    <span className="font-barlow font-bold text-lg tracking-tight text-slate-900">
-                        CodeStarters
-                    </span>
-                </Link>
-
-                {/* Desktop Nav */}
-                <ul className="hidden md:flex items-center gap-8">
-                    {NAV_LINKS.map((link) => (
-                        <li key={link.name}>
-                            <Link
-                                href={link.href}
-                                className="text-[13px] font-barlow font-medium tracking-wide uppercase text-slate-500 hover:text-slate-900 transition-colors"
-                            >
-                                {link.name}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-
-                {/* CTA Button */}
-                <Link
-                    href="#volunteer"
-                    className="hidden md:flex bg-brand-700 text-white rounded-full pl-5 pr-2 py-2 font-barlow font-medium text-[13px] items-center gap-3 hover:bg-brand-800 transition-colors"
-                >
-                    Join Us
-                    <span className="bg-white/20 rounded-full p-1.5">
-                        <ArrowUpRight className="w-3.5 h-3.5 text-white" />
-                    </span>
-                </Link>
-
-                {/* Mobile Nav Toggle */}
-                <button
-                    className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                    <span
-                        className={`block w-5 h-0.5 bg-slate-900 transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-                    />
-                    <span
-                        className={`block w-5 h-0.5 bg-slate-900 transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`}
-                    />
-                    <span
-                        className={`block w-5 h-0.5 bg-slate-900 transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-                    />
-                </button>
-            </nav>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-2 bg-white rounded-2xl shadow-lg border border-slate-100 p-4"
-                >
-                    <ul className="flex flex-col gap-1">
-                        {NAV_LINKS.map((link) => (
-                            <li key={link.name}>
-                                <Link
-                                    href={link.href}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="block py-3 px-3 text-lg font-barlow font-bold text-slate-900 hover:bg-slate-50 rounded-xl transition-colors"
-                                >
-                                    {link.name}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                    <Link
-                        href="#volunteer"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="mt-2 w-full flex items-center justify-center bg-brand-700 text-white rounded-xl py-3 font-barlow font-medium"
-                    >
-                        Join Us
-                    </Link>
-                </motion.div>
+      <div className="hidden md:flex items-center gap-1 text-sm">
+        {fireHacksLinks.map(([link, href], index) => (
+          <div key={link} className="flex items-center">
+            <a
+              href={href}
+              className="text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
+            >
+              {link}
+            </a>
+            {index < fireHacksLinks.length - 1 && (
+              <span className="text-muted-foreground/40">•</span>
             )}
-        </motion.div>
-    );
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <a
+          href="https://www.instagram.com/cupertino_codestarters/"
+          target="_blank"
+          rel="noreferrer"
+          className="liquid-glass w-10 h-10 rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+          aria-label="Instagram"
+        >
+          <Instagram className="w-4 h-4" />
+        </a>
+        <a
+          href="https://discord.gg/utUNdDz3"
+          target="_blank"
+          rel="noreferrer"
+          className="hidden sm:inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-gray-300 transition hover:border-white/35 hover:text-white"
+        >
+          Discord <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+        <a
+          href="https://luma.com/event/evt-teYwe8vJ6Eqne8d"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+        >
+          Register
+        </a>
+      </div>
+    </nav>
+  );
 }
