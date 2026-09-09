@@ -156,6 +156,8 @@ DO $$ BEGIN
     DROP POLICY IF EXISTS "Users can read own admin profile" ON admin_users;
     DROP POLICY IF EXISTS "Super admins can manage admin users" ON admin_users;
     DROP POLICY IF EXISTS "Admins can view other admins" ON admin_users;
+    DROP POLICY IF EXISTS "Allow bootstrap of first super admin" ON admin_users;
+    DROP POLICY IF EXISTS "Allow bootstrap read when empty" ON admin_users;
 
     -- admin_invites policies
     DROP POLICY IF EXISTS "Admins can view invitations" ON admin_invites;
@@ -190,6 +192,19 @@ CREATE POLICY "Admins can view other admins"
 CREATE POLICY "Super admins can manage admin users"
     ON admin_users FOR ALL
     USING (is_super_admin());
+
+-- Allow bootstrap of the first super admin when the table is empty
+CREATE POLICY "Allow bootstrap of first super admin"
+    ON admin_users FOR INSERT
+    WITH CHECK (
+        NOT EXISTS (SELECT 1 FROM admin_users)
+    );
+
+CREATE POLICY "Allow bootstrap read when empty"
+    ON admin_users FOR SELECT
+    USING (
+        NOT EXISTS (SELECT 1 FROM admin_users)
+    );
 
 -- 2. admin_invites policies
 CREATE POLICY "Admins can view invitations"

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient, jsonWithCookies } from "@/lib/supabase/server";
+import { extractErrorMessage } from "@/lib/error-utils";
 import type { AdminRole, AdminPermission } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/api/admin/redeem-invite")({
@@ -152,7 +153,8 @@ export const Route = createFileRoute("/api/admin/redeem-invite")({
                         message: "Access granted! Your credentials have been saved.",
                     });
                 } catch (err: unknown) {
-                    const message = err instanceof Error ? err.message : "Failed to redeem invitation.";
+                    console.error("Redeem invite error:", err);
+                    const message = extractErrorMessage(err, "Failed to redeem invitation.");
                     return jsonWithCookies(bundle, { ok: false, error: message }, { status: 500 });
                 }
             },

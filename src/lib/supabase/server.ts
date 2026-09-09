@@ -18,18 +18,22 @@ export type VerifiedAdmin = {
     permissions: AdminPermission[];
 };
 
+import { resolveEnv } from "@/lib/supabase/admin";
+
 function readEnv(): { url: string; key: string } {
-    const url =
-        process.env.NEXT_PUBLIC_SUPABASE_URL ||
-        process.env.SUPABASE_URL ||
-        process.env.VITE_SUPABASE_URL ||
-        process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL;
-    const key =
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-        process.env.SUPABASE_ANON_KEY ||
-        process.env.VITE_SUPABASE_ANON_KEY ||
-        process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY ||
-        process.env.SUPABASE_PUBLIC_ANON_KEY;
+    const url = resolveEnv([
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "SUPABASE_URL",
+        "VITE_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PROJECT_URL",
+    ]);
+    const key = resolveEnv([
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_ANON_KEY",
+        "VITE_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_PUBLIC_KEY",
+        "SUPABASE_PUBLIC_ANON_KEY",
+    ]);
     if (!url || !key) {
         throw new Error("Missing SUPABASE_URL or SUPABASE_ANON_KEY (checked NEXT_PUBLIC_SUPABASE_URL, SUPABASE_URL, VITE_SUPABASE_URL)");
     }

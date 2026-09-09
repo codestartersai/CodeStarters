@@ -212,6 +212,9 @@ function AdminLoginPage() {
 
             if (signInErr) {
                 console.warn("Auto-signin warning:", signInErr);
+                setError(`Admin account configured! Automatic sign-in note: ${signInErr.message}. Please click "Switch to Sign In" and enter your credentials.`);
+                setIsSubmitting(false);
+                return;
             }
 
             window.location.replace("/admin");

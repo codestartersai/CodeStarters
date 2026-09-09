@@ -17,6 +17,15 @@ type SendPlainArgs = {
     gmailFrom?: string;
 };
 
+import { resolveEnv } from "@/lib/supabase/admin";
+
+export function getEmailConfig(): { user?: string; pass?: string; from?: string } {
+    const user = resolveEnv(["GMAIL_USER", "GMAIL_ADDRESS", "SMTP_USER"]);
+    const pass = resolveEnv(["GMAIL_APP_PASSWORD", "GMAIL_PASSWORD", "SMTP_PASSWORD"]);
+    const from = resolveEnv(["EMAIL_FROM_NAME", "GMAIL_FROM_NAME"]) || "CodeStarters";
+    return { user, pass, from };
+}
+
 /** Sends an email via Gmail SMTP. */
 export async function sendPlainEmail({
     to,
@@ -24,21 +33,20 @@ export async function sendPlainEmail({
     text,
     html,
     attachments,
-    gmailFrom = "CodeStarters",
+    gmailFrom,
 }: SendPlainArgs): Promise<void> {
-    const user = process.env.GMAIL_USER;
-    const pass = process.env.GMAIL_APP_PASSWORD;
-    if (!user || !pass) {
+    const config = getEmailConfig();
+    if (!config.user || !config.pass) {
         throw new Error("MISSING_EMAIL_CONFIG");
     }
     const transport = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
         secure: false,
-        auth: { user, pass },
+        auth: { user: config.user, pass: config.pass },
     });
     await transport.sendMail({
-        from: `"${gmailFrom}" <${user}>`,
+        from: `"${gmailFrom || config.from}" <${config.user}>`,
         to,
         subject,
         text,
@@ -52,13 +60,13 @@ export function emailNotConfiguredMessage(): string {
 }
 
 export function isEmailConfigured(): boolean {
-    return Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
+    const { user, pass } = getEmailConfig();
+    return Boolean(user && pass);
 }
 
 /** Verifies the Gmail SMTP connection. */
 export async function testSmtpConnection(): Promise<{ ok: boolean; error?: string; user?: string }> {
-    const user = process.env.GMAIL_USER;
-    const pass = process.env.GMAIL_APP_PASSWORD;
+    const { user, pass } = getEmailConfig();
     if (!user || !pass) {
         return { ok: false, error: "Missing GMAIL_USER or GMAIL_APP_PASSWORD in environment variables." };
     }

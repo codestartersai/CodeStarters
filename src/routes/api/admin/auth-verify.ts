@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getSupabaseServerClient, jsonWithCookies } from "@/lib/supabase/server";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { extractErrorMessage } from "@/lib/error-utils";
 import type { AdminRole, AdminPermission } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/api/admin/auth-verify")({
@@ -172,7 +173,8 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                         message: "Invitation verified successfully! Welcome to the CodeStarters team.",
                     });
                 } catch (err: unknown) {
-                    const message = err instanceof Error ? err.message : "Authentication verification error.";
+                    console.error("Auth verify error:", err);
+                    const message = extractErrorMessage(err, "Authentication verification error.");
                     return jsonWithCookies(bundle, { authorized: false, error: message }, { status: 500 });
                 }
             },
