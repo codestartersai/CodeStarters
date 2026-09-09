@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect, useLocation } from "@tanstack/react-
 import { AdminSidebar } from "@/components/codestarters/AdminSidebar";
 import { getSupabase } from "@/lib/supabase/browser";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { AdminUser, AdminPermission } from "@/lib/admin-auth";
+import type { AdminUser, AdminPermission, AdminRole } from "@/lib/admin-auth";
 import { hasPermission } from "@/lib/admin-auth";
 
 export type AdminSessionContextType = {
@@ -67,6 +67,34 @@ function AdminLayout() {
     const [admin, setAdmin] = useState<AdminUser | null>(null);
     const [isLoading, setIsLoading] = useState(!isAuthPage);
 
+    // Global fetch interceptor: automatically attach current session Bearer token to all /api/admin/ calls
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const originalFetch = window.fetch;
+        window.fetch = async (input, init) => {
+            const url = typeof input === "string" ? input : input instanceof URL ? input.href : input instanceof Request ? input.url : "";
+            if (url.includes("/api/admin/") && !url.includes("/api/admin/initial-setup")) {
+                try {
+                    const supabase = getSupabase();
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (session?.access_token) {
+                        const headers = new Headers(init?.headers);
+                        if (!headers.has("Authorization")) {
+                            headers.set("Authorization", `Bearer ${session.access_token}`);
+                        }
+                        return originalFetch(input, { ...init, credentials: "include", headers });
+                    }
+                } catch {
+                    // Fall back
+                }
+            }
+            return originalFetch(input, init);
+        };
+        return () => {
+            window.fetch = originalFetch;
+        };
+    }, []);
+
     useEffect(() => {
         if (isAuthPage) return;
 
@@ -89,7 +117,15 @@ function AdminLayout() {
                     .maybeSingle();
 
                 if (row && isMounted) {
-                    setAdmin(row as AdminUser);
+                    setAdmin({
+                        id: row.id || user.id,
+                        email: row.email || user.email || "",
+                        name: row.name || (user.user_metadata?.full_name as string) || (user.email?.split("@")[0] ?? "Admin"),
+                        avatar_url: row.avatar_url || null,
+                        role: (row.role as AdminRole) || "super_admin",
+                        permissions: Array.isArray(row.permissions) ? (row.permissions as AdminPermission[]) : (["all"] as AdminPermission[]),
+                        created_at: row.created_at || new Date().toISOString(),
+                    });
                 } else if (isMounted) {
                     // Try verifying via auth-verify (handles first user bootstrap or invite token in session)
                     const inviteToken = typeof window !== "undefined"
@@ -104,7 +140,16 @@ function AdminLayout() {
                     const verifyData = await res.json().catch(() => ({}));
 
                     if (verifyData.authorized && verifyData.admin) {
-                        setAdmin(verifyData.admin as AdminUser);
+                        const a = verifyData.admin;
+                        setAdmin({
+                            id: a.id || user.id,
+                            email: a.email || user.email || "",
+                            name: a.name || (user.user_metadata?.full_name as string) || (user.email?.split("@")[0] ?? "Admin"),
+                            avatar_url: a.avatar_url || null,
+                            role: (a.role as AdminRole) || "super_admin",
+                            permissions: Array.isArray(a.permissions) ? (a.permissions as AdminPermission[]) : (["all"] as AdminPermission[]),
+                            created_at: a.created_at || new Date().toISOString(),
+                        });
                     } else {
                         // Access denied - clear session and redirect to login
                         await supabase.auth.signOut();

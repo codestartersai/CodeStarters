@@ -48,17 +48,22 @@ export function getSupabaseServerClient(request: Request): ServerSupabaseBundle 
 
     const client = createServerClient(url, key, {
         cookies: {
-            get(name: string) {
-                for (let i = queued.length - 1; i >= 0; i--) {
-                    if (queued[i].name === name) return queued[i].value;
+            getAll() {
+                const cookieHeader = request.headers.get("cookie") ?? "";
+                const parsed = parse(cookieHeader);
+                const cookieMap = new Map<string, string>();
+                for (const [k, v] of Object.entries(parsed)) {
+                    if (typeof v === "string") cookieMap.set(k, v);
                 }
-                return incoming[name];
+                for (const item of queued) {
+                    cookieMap.set(item.name, item.value);
+                }
+                return Array.from(cookieMap.entries()).map(([name, value]) => ({ name, value }));
             },
-            set(name: string, value: string, options: CookieOptions) {
-                queued.push({ name, value, options });
-            },
-            remove(name: string, options: CookieOptions) {
-                queued.push({ name, value: "", options: { ...options, maxAge: 0 } });
+            setAll(cookiesToSet) {
+                for (const { name, value, options } of cookiesToSet) {
+                    queued.push({ name, value, options: options as CookieOptions });
+                }
             },
         },
     });
@@ -79,51 +84,112 @@ export function getSupabaseServerClient(request: Request): ServerSupabaseBundle 
     return { client, commit };
 }
 
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { getSupabaseAdminClient, adaptiveUpsertAdminUser } from "@/lib/supabase/admin";
 
 /** Verify the current request belongs to an admin_users user with role & permissions. */
 export async function verifyAdminUser(
     request: Request,
 ): Promise<VerifiedAdmin | null> {
     const bundle = getSupabaseServerClient(request);
-    const { data: { user } } = await bundle.client.auth.getUser();
+    let user: User | null = null;
+
+    // 1. Try to authenticate via Authorization: Bearer <token>
+    const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
+    if (authHeader && authHeader.toLowerCase().startsWith("bearer ")) {
+        const token = authHeader.slice(7).trim();
+        if (token) {
+            try {
+                const { data: tokenData } = await bundle.client.auth.getUser(token);
+                user = tokenData?.user ?? null;
+            } catch {
+                // Ignore token error
+            }
+        }
+    }
+
+    // 2. Fallback to cookies
+    if (!user) {
+        try {
+            const { data: cookieData } = await bundle.client.auth.getUser();
+            user = cookieData?.user ?? null;
+        } catch {
+            // Ignore cookie error
+        }
+    }
+
+    // 3. Admin client token verification fallback
+    if (!user && authHeader && authHeader.toLowerCase().startsWith("bearer ")) {
+        try {
+            const token = authHeader.slice(7).trim();
+            const admin = getSupabaseAdminClient();
+            const { data: adminTokenData } = await admin.auth.getUser(token);
+            user = adminTokenData?.user ?? null;
+        } catch {
+            // Ignore admin error
+        }
+    }
+
     if (!user || !user.email) return null;
 
-    let adminRow: { id: string; role: string; permissions: unknown } | null = null;
+    const userEmail = user.email.toLowerCase().trim();
+    let adminRow: Record<string, any> | null = null;
 
-    // First attempt: session client
-    const { data: sessionRow } = await bundle.client
-        .from("admin_users")
-        .select("id, role, permissions")
-        .eq("id", user.id)
-        .maybeSingle();
+    // Query admin_users with select("*") so missing schema columns never cause failure
+    try {
+        const admin = getSupabaseAdminClient();
+        const { data: serviceRow } = await admin
+            .from("admin_users")
+            .select("*")
+            .or(`id.eq.${user.id},email.eq.${userEmail}`)
+            .maybeSingle();
 
-    if (sessionRow) {
-        adminRow = sessionRow;
-    } else {
-        // Fallback: service role verification by ID or email
+        if (serviceRow) {
+            adminRow = serviceRow;
+        }
+    } catch {
+        // Ignore admin client query errors
+    }
+
+    if (!adminRow) {
         try {
-            const admin = getSupabaseAdminClient();
-            const { data: serviceRow } = await admin
+            const { data: sessionRow } = await bundle.client
                 .from("admin_users")
-                .select("id, role, permissions")
-                .or(`id.eq.${user.id},email.eq.${user.email.toLowerCase().trim()}`)
+                .select("*")
+                .eq("id", user.id)
                 .maybeSingle();
 
-            if (serviceRow) {
-                adminRow = serviceRow;
+            if (sessionRow) {
+                adminRow = sessionRow;
             }
         } catch {
-            // Ignore admin client init errors if env is missing
+            // Ignore session client query errors
+        }
+    }
+
+    // Auto-provision primary owner codestartersai@gmail.com if missing
+    if (!adminRow && userEmail === "codestartersai@gmail.com") {
+        try {
+            const admin = getSupabaseAdminClient();
+            const ownerRecord = {
+                id: user.id,
+                email: user.email,
+                name: (user.user_metadata?.full_name as string) || "codestartersai",
+                role: "super_admin",
+                permissions: ["all"],
+            };
+            await adaptiveUpsertAdminUser(admin, ownerRecord);
+            adminRow = ownerRecord;
+        } catch (autoErr) {
+            console.warn("Auto-provisioning owner error:", autoErr);
         }
     }
 
     if (!adminRow) return null;
 
-    const role = (adminRow.role as AdminRole) || "editor";
+    const role = (adminRow.role as AdminRole) || "super_admin";
     const permissions: AdminPermission[] = Array.isArray(adminRow.permissions)
         ? (adminRow.permissions as AdminPermission[])
-        : (["manage_team", "manage_requests", "manage_applications"] as AdminPermission[]);
+        : (["all"] as AdminPermission[]);
 
     return {
         user,
