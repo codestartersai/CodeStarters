@@ -110,7 +110,15 @@ const desktopNavLinks = [
 
 const mobileNavLinks = desktopNavLinks;
 
-const programs = [
+interface ProgramItem {
+  img: string;
+  name: string;
+  desc: string;
+  bullets: string[];
+  badge?: string;
+}
+
+const programs: ProgramItem[] = [
   {
     img: "/cs-education.png",
     name: "CS & AI Education",
@@ -147,7 +155,17 @@ const featuredTeam = [
   { name: "Pranav C", role: "Founder & Head of AI, Finance, and Legal", img: "/team/pranav-c.png" },
 ];
 
-const sponsors = [
+interface SponsorItem {
+  name: string;
+  url?: string;
+  img?: string;
+  fitClass?: string;
+  imgClass?: string;
+  cardClass?: string;
+  cardPadClass?: string;
+}
+
+const sponsors: SponsorItem[] = [
   {
     name: "CodeCrafters",
     url: "https://codecrafters.io",
@@ -300,10 +318,29 @@ function CodeStartersHomePage() {
   const [openRoleGroup, setOpenRoleGroup] = useState<string | undefined>();
   const [scrolled, setScrolled] = useState(false);
   const [donationAmount, setDonationAmount] = useState<number | null>(25);
-  const [customAmount, setCustomAmount] = useState("");
+  const [liveTeam, setLiveTeam] = useState(featuredTeam);
   const ctaVideoRef = useRef<HTMLVideoElement>(null);
   const missionRef = useRef<HTMLElement>(null);
   const missionProgress = useMotionValue(0);
+
+  useEffect(() => {
+    fetch("/api/team")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data?.members) && data.members.length > 0) {
+          const leadership = data.members.filter((m: { category_id: string }) => m.category_id === "leadership");
+          const listToUse = leadership.length > 0 ? leadership : data.members.slice(0, 3);
+          setLiveTeam(
+            listToUse.map((m: { name: string; role: string; image_url?: string }) => ({
+              name: m.name,
+              role: m.role,
+              img: m.image_url || "/smaran.png",
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const mailto = useMemo(() => {
     const subject = encodeURIComponent("CodeStarters volunteer interest");
@@ -852,7 +889,7 @@ function CodeStartersHomePage() {
             </h2>
           </motion.div>
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-3">
-            {featuredTeam.map((member, index) => (
+            {liveTeam.map((member, index) => (
               <motion.article
                 key={member.name}
                 {...fadeUp(0.1 + index * 0.08)}

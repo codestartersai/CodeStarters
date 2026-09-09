@@ -87,44 +87,39 @@ export const Route = createFileRoute("/api/admin/redeem-invite")({
                     : ["manage_team", "manage_requests"];
 
                 try {
+                    if (!password || password.length < 6) {
+                        return jsonWithCookies(bundle, { ok: false, error: "Password must be at least 6 characters." }, { status: 400 });
+                    }
+
+                    const displayName = name?.trim() || email.split("@")[0];
+
+                    // Check if user already exists in Supabase Auth
+                    const { data: existingUserList } = await admin.auth.admin.listUsers();
+                    const existingAuth = existingUserList?.users?.find((u) => u.email?.toLowerCase() === email);
+
                     let userId: string;
 
-                    // If user chose to create password credentials:
-                    if (password) {
-                        if (password.length < 6) {
-                            return jsonWithCookies(bundle, { ok: false, error: "Password must be at least 6 characters." }, { status: 400 });
-                        }
-
-                        // Check if user already exists in auth
-                        const { data: existingUserList } = await admin.auth.admin.listUsers();
-                        const existingAuth = existingUserList?.users?.find((u) => u.email?.toLowerCase() === email);
-
-                        if (existingAuth) {
-                            userId = existingAuth.id;
-                            // Update password
-                            await admin.auth.admin.updateUserById(userId, {
-                                password,
-                                email_confirm: true,
-                                user_metadata: { full_name: name || email.split("@")[0] },
-                            });
-                        } else {
-                            // Create new auth user
-                            const { data: newUser, error: createAuthErr } = await admin.auth.admin.createUser({
-                                email,
-                                password,
-                                email_confirm: true,
-                                user_metadata: { full_name: name || email.split("@")[0] },
-                            });
-                            if (createAuthErr || !newUser.user) {
-                                throw createAuthErr || new Error("Failed to create auth user.");
-                            }
-                            userId = newUser.user.id;
-                        }
+                    if (existingAuth) {
+                        userId = existingAuth.id;
+                        // Update password and confirm email
+                        const { error: updateAuthErr } = await admin.auth.admin.updateUserById(userId, {
+                            password,
+                            email_confirm: true,
+                            user_metadata: { full_name: displayName },
+                        });
+                        if (updateAuthErr) throw updateAuthErr;
                     } else {
-                        // User will log in via Google SSO, provision or reserve ID
-                        const { data: existingUserList } = await admin.auth.admin.listUsers();
-                        const existingAuth = existingUserList?.users?.find((u) => u.email?.toLowerCase() === email);
-                        userId = existingAuth ? existingAuth.id : invite.id;
+                        // Create new auth user
+                        const { data: newUser, error: createAuthErr } = await admin.auth.admin.createUser({
+                            email,
+                            password,
+                            email_confirm: true,
+                            user_metadata: { full_name: displayName },
+                        });
+                        if (createAuthErr || !newUser.user) {
+                            throw createAuthErr || new Error("Failed to create auth user.");
+                        }
+                        userId = newUser.user.id;
                     }
 
                     // 2. Upsert admin_users
@@ -133,7 +128,7 @@ export const Route = createFileRoute("/api/admin/redeem-invite")({
                         .upsert({
                             id: userId,
                             email,
-                            name: name || email.split("@")[0],
+                            name: displayName,
                             role,
                             permissions,
                             updated_at: new Date().toISOString(),

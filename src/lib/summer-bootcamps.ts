@@ -1,4 +1,12 @@
-export const SUMMER_BOOTCAMPS = [
+export interface SummerBootcamp {
+  name: string;
+  slug: string;
+  label?: string;
+  badge?: string;
+  eligibility: string;
+}
+
+export const SUMMER_BOOTCAMPS: readonly SummerBootcamp[] = [
   {
     name: "AI Development",
     slug: "ai",
@@ -15,11 +23,12 @@ export const SUMMER_BOOTCAMPS = [
   {
     name: "Python",
     slug: "python",
+    label: "Python Bootcamp",
     eligibility: "All grades",
   },
 ] as const;
 
-export type SummerBootcampSlug = (typeof SUMMER_BOOTCAMPS)[number]["slug"];
+export type SummerBootcampSlug = "ai" | "robotics" | "python";
 
 const slugToName = new Map(SUMMER_BOOTCAMPS.map((bootcamp) => [bootcamp.slug, bootcamp.name]));
 

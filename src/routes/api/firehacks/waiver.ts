@@ -14,7 +14,7 @@ export const Route = createFileRoute("/api/firehacks/waiver")({
       POST: async ({ request }) => {
         const bundle = getSupabaseServerClient(request);
         const auth = await getAuthenticatedParticipant(bundle);
-        if ("error" in auth) {
+        if (auth.error) {
           return jsonWithCookies(bundle, { error: auth.error.message }, { status: auth.error.status });
         }
 
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/api/firehacks/waiver")({
           fileSize: file.size,
           contentType: file.type,
         });
-        if ("error" in validated) {
+        if (validated.error) {
           const status = validated.error.includes("15 MB") ? 413 : 415;
           return jsonWithCookies(bundle, { error: validated.error }, { status });
         }
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/api/firehacks/waiver")({
         const path = waiverPathForParticipant(
           participant.event_id,
           participant.id,
-          validated.fileName,
+          validated.fileName!,
         );
         const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -77,12 +77,12 @@ export const Route = createFileRoute("/api/firehacks/waiver")({
           .eq("id", participant.id);
 
         if (updateError) {
-          await admin.storage.from(BUCKET).remove([path]);
+          await admin.storage.from(WAIVER_BUCKET).remove([path]);
           return jsonWithCookies(bundle, { error: updateError.message }, { status: 500 });
         }
 
         if (participant.waiver_storage_path && participant.waiver_storage_path !== path) {
-          await admin.storage.from(BUCKET).remove([participant.waiver_storage_path]);
+          await admin.storage.from(WAIVER_BUCKET).remove([participant.waiver_storage_path]);
         }
 
         return jsonWithCookies(bundle, {

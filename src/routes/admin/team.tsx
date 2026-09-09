@@ -16,6 +16,7 @@ import {
     Layers,
     ArrowUpRight,
     Camera,
+    Settings,
 } from "lucide-react";
 import { Button } from "@/components/codestarters/Button";
 import type { TeamCategory, TeamMember } from "@/routes/api/admin/teams";
@@ -52,8 +53,9 @@ function AdminTeamsPage() {
     const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
     const [isTabModalOpen, setIsTabModalOpen] = useState(false);
     const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
+    const [editingCategory, setEditingCategory] = useState<TeamCategory | null>(null);
 
-    // Form states
+    // Form states for Member
     const [memberName, setMemberName] = useState("");
     const [memberRole, setMemberRole] = useState("");
     const [memberCategory, setMemberCategory] = useState("");
@@ -63,9 +65,10 @@ function AdminTeamsPage() {
     const [memberOrder, setMemberOrder] = useState(1);
     const [isSaving, setIsSaving] = useState(false);
 
-    // New Tab form
+    // Form states for Category (Add / Edit)
     const [tabName, setTabName] = useState("");
     const [tabDesc, setTabDesc] = useState("");
+    const [tabOrder, setTabOrder] = useState(1);
     const [isSavingTab, setIsSavingTab] = useState(false);
 
     const loadTeamData = async () => {
@@ -80,10 +83,6 @@ function AdminTeamsPage() {
             const mems = (data.members as TeamMember[]) || [];
             setCategories(cats);
             setMembers(mems);
-
-            if (cats.length > 0 && activeTab === "all") {
-                // Keep 'all' or default
-            }
         } catch (err: unknown) {
             setErrorMessage(err instanceof Error ? err.message : "Error loading team.");
         } finally {
@@ -119,6 +118,22 @@ function AdminTeamsPage() {
         setIsMemberModalOpen(true);
     };
 
+    const openCreateTabModal = () => {
+        setEditingCategory(null);
+        setTabName("");
+        setTabDesc("");
+        setTabOrder(categories.length + 1);
+        setIsTabModalOpen(true);
+    };
+
+    const openEditTabModal = (cat: TeamCategory) => {
+        setEditingCategory(cat);
+        setTabName(cat.name);
+        setTabDesc(cat.description || "");
+        setTabOrder(cat.order_index ?? 1);
+        setIsTabModalOpen(true);
+    };
+
     const handleSaveMember = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
@@ -132,12 +147,12 @@ function AdminTeamsPage() {
                         type: "member",
                         id: editingMember.id,
                         updates: {
-                            name: memberName,
-                            role: memberRole,
+                            name: memberName.trim(),
+                            role: memberRole.trim(),
                             category_id: memberCategory,
                             image_url: memberImage || null,
-                            bio: memberBio || null,
-                            social_links: memberLinks || null,
+                            bio: memberBio.trim() || null,
+                            social_links: memberLinks.trim() || null,
                             order_index: Number(memberOrder),
                         },
                     }),
@@ -151,12 +166,12 @@ function AdminTeamsPage() {
                     body: JSON.stringify({
                         type: "member",
                         member: {
-                            name: memberName,
-                            role: memberRole,
+                            name: memberName.trim(),
+                            role: memberRole.trim(),
                             category_id: memberCategory,
                             image_url: memberImage || null,
-                            bio: memberBio || null,
-                            social_links: memberLinks || null,
+                            bio: memberBio.trim() || null,
+                            social_links: memberLinks.trim() || null,
                             order_index: Number(memberOrder),
                         },
                     }),
@@ -184,31 +199,51 @@ function AdminTeamsPage() {
         }
     };
 
-    const handleCreateTab = async (e: React.FormEvent) => {
+    const handleSaveTab = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!tabName.trim()) return;
         setIsSavingTab(true);
         try {
-            const res = await fetch("/api/admin/teams", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    type: "category",
-                    category: {
-                        name: tabName.trim(),
-                        description: tabDesc.trim() || undefined,
-                        order_index: categories.length + 1,
-                    },
-                }),
-            });
-            if (!res.ok) throw new Error("Failed to create team tab.");
+            if (editingCategory) {
+                // Update
+                const res = await fetch("/api/admin/teams", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        type: "category",
+                        id: editingCategory.id,
+                        updates: {
+                            name: tabName.trim(),
+                            description: tabDesc.trim() || null,
+                            order_index: Number(tabOrder),
+                        },
+                    }),
+                });
+                if (!res.ok) throw new Error("Failed to update team tab.");
+            } else {
+                // Create
+                const res = await fetch("/api/admin/teams", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        type: "category",
+                        category: {
+                            name: tabName.trim(),
+                            description: tabDesc.trim() || undefined,
+                            order_index: Number(tabOrder),
+                        },
+                    }),
+                });
+                if (!res.ok) throw new Error("Failed to create team tab.");
+            }
 
             setIsTabModalOpen(false);
+            setEditingCategory(null);
             setTabName("");
             setTabDesc("");
             await loadTeamData();
         } catch (err: unknown) {
-            alert(err instanceof Error ? err.message : "Error creating tab.");
+            alert(err instanceof Error ? err.message : "Error saving tab.");
         } finally {
             setIsSavingTab(false);
         }
@@ -226,12 +261,45 @@ function AdminTeamsPage() {
         }
     };
 
+    // Client-side smart image compression via HTML5 canvas
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
         const reader = new FileReader();
-        reader.onloadend = () => {
-            setMemberImage(reader.result as string);
+        reader.onload = (event) => {
+            const rawData = event.target?.result as string;
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                let width = img.width;
+                let height = img.height;
+                const maxDim = 600;
+
+                if (width > height && width > maxDim) {
+                    height = Math.round((height * maxDim) / width);
+                    width = maxDim;
+                } else if (height > maxDim) {
+                    width = Math.round((width * maxDim) / height);
+                    height = maxDim;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                if (ctx) {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    try {
+                        const compressed = canvas.toDataURL("image/webp", 0.85);
+                        setMemberImage(compressed);
+                    } catch {
+                        setMemberImage(canvas.toDataURL("image/jpeg", 0.85));
+                    }
+                } else {
+                    setMemberImage(rawData);
+                }
+            };
+            img.src = rawData;
         };
         reader.readAsDataURL(file);
     };
@@ -259,13 +327,13 @@ function AdminTeamsPage() {
                         </span>
                     </h1>
                     <p className="text-slate-500 text-sm mt-1">
-                        Organize team categories (like Robotics, Web Dev, Leadership), add members, and upload photos.
+                        Organize department categories (Robotics, Web Dev, Leadership), add members, change photos, and customize ordering.
                     </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
                     <Button
-                        onClick={() => setIsTabModalOpen(true)}
+                        onClick={openCreateTabModal}
                         variant="secondary"
                         className="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-2 h-11 text-xs font-bold"
                     >
@@ -326,14 +394,25 @@ function AdminTeamsPage() {
                                 </span>
                             </button>
 
-                            {isActive && cat.id !== "leadership" && (
-                                <button
-                                    onClick={() => handleDeleteTab(cat.id, cat.name)}
-                                    title="Delete tab"
-                                    className="ml-1 p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
+                            {isActive && (
+                                <div className="flex items-center ml-1">
+                                    <button
+                                        onClick={() => openEditTabModal(cat)}
+                                        title="Edit tab details"
+                                        className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                                    >
+                                        <Edit3 className="w-3.5 h-3.5" />
+                                    </button>
+                                    {cat.id !== "leadership" && (
+                                        <button
+                                            onClick={() => handleDeleteTab(cat.id, cat.name)}
+                                            title="Delete tab"
+                                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </div>
                     );
@@ -435,8 +514,8 @@ function AdminTeamsPage() {
                                         )}
                                     </div>
 
-                                    {m.social_links && (
-                                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                                        {m.social_links ? (
                                             <a
                                                 href={m.social_links.startsWith("http") ? m.social_links : `https://${m.social_links}`}
                                                 target="_blank"
@@ -446,9 +525,11 @@ function AdminTeamsPage() {
                                                 <ExternalLink className="w-3 h-3 shrink-0" />
                                                 <span className="truncate">Profile / Link</span>
                                             </a>
-                                            <span className="text-[10px] font-bold text-slate-400">Order #{m.order_index}</span>
-                                        </div>
-                                    )}
+                                        ) : (
+                                            <span className="text-[11px] text-slate-400 italic">No link</span>
+                                        )}
+                                        <span className="text-[10px] font-bold text-slate-400">Order #{m.order_index}</span>
+                                    </div>
                                 </div>
                             </div>
                         );
@@ -521,7 +602,7 @@ function AdminTeamsPage() {
 
                                 <div>
                                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                                        Order Index
+                                        Display Order Index
                                     </label>
                                     <input
                                         type="number"
@@ -535,7 +616,7 @@ function AdminTeamsPage() {
                             {/* Headshot & Image Selection */}
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                                    Headshot Image
+                                    Headshot Photo
                                 </label>
 
                                 {memberImage && (
@@ -546,7 +627,9 @@ function AdminTeamsPage() {
                                             className="w-14 h-14 rounded-xl object-cover border border-slate-300 shrink-0"
                                         />
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-xs font-bold text-slate-800 truncate">{memberImage.substring(0, 40)}...</p>
+                                            <p className="text-xs font-bold text-slate-800 truncate">
+                                                {memberImage.startsWith("data:") ? "Uploaded Photo (Optimized)" : memberImage}
+                                            </p>
                                             <button
                                                 type="button"
                                                 onClick={() => setMemberImage("")}
@@ -561,7 +644,7 @@ function AdminTeamsPage() {
                                 <div className="space-y-2">
                                     <input
                                         type="text"
-                                        value={memberImage}
+                                        value={memberImage.startsWith("data:") ? "" : memberImage}
                                         onChange={(e) => setMemberImage(e.target.value)}
                                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
                                         placeholder="Paste image URL (e.g. /team/pranav-c.png or https://...)"
@@ -577,7 +660,7 @@ function AdminTeamsPage() {
                                             defaultValue=""
                                         >
                                             <option value="" disabled>
-                                                Select from existing photos...
+                                                Select from existing presets...
                                             </option>
                                             {PRESET_IMAGES.map((img) => (
                                                 <option key={img.url} value={img.url}>
@@ -587,9 +670,9 @@ function AdminTeamsPage() {
                                         </select>
 
                                         {/* Local File Upload */}
-                                        <label className="cursor-pointer px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors">
-                                            <Camera className="w-3.5 h-3.5 text-brand-600" />
-                                            <span>Upload</span>
+                                        <label className="cursor-pointer px-3 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0">
+                                            <Camera className="w-3.5 h-3.5" />
+                                            <span>Upload File</span>
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -649,24 +732,27 @@ function AdminTeamsPage() {
                 </div>
             )}
 
-            {/* Add Team Tab Modal */}
+            {/* Add / Edit Team Tab Modal */}
             {isTabModalOpen && (
                 <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
                                 <FolderPlus className="w-5 h-5 text-brand-600" />
-                                Add Team Category / Tab
+                                {editingCategory ? "Edit Team Tab" : "Add Team Category / Tab"}
                             </h2>
                             <button
-                                onClick={() => setIsTabModalOpen(false)}
+                                onClick={() => {
+                                    setIsTabModalOpen(false);
+                                    setEditingCategory(null);
+                                }}
                                 className="p-2 text-slate-400 hover:text-slate-600 rounded-xl"
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleCreateTab} className="space-y-4">
+                        <form onSubmit={handleSaveTab} className="space-y-4">
                             <div>
                                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
                                     Tab Name *
@@ -694,11 +780,26 @@ function AdminTeamsPage() {
                                 />
                             </div>
 
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                    Order Index
+                                </label>
+                                <input
+                                    type="number"
+                                    value={tabOrder}
+                                    onChange={(e) => setTabOrder(Number(e.target.value))}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                />
+                            </div>
+
                             <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                                 <Button
                                     type="button"
                                     variant="secondary"
-                                    onClick={() => setIsTabModalOpen(false)}
+                                    onClick={() => {
+                                        setIsTabModalOpen(false);
+                                        setEditingCategory(null);
+                                    }}
                                     className="h-11 px-5 text-xs font-bold"
                                 >
                                     Cancel
@@ -708,7 +809,7 @@ function AdminTeamsPage() {
                                     disabled={isSavingTab}
                                     className="h-11 px-6 text-xs font-bold bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-100"
                                 >
-                                    {isSavingTab ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Tab"}
+                                    {isSavingTab ? <Loader2 className="w-4 h-4 animate-spin" /> : editingCategory ? "Save Tab Changes" : "Create Tab"}
                                 </Button>
                             </div>
                         </form>

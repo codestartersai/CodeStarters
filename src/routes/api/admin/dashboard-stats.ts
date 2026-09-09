@@ -13,8 +13,8 @@ export const Route = createFileRoute("/api/admin/dashboard-stats")({
         }
 
         const admin = getSupabaseAdminClient();
-        const volunteerApplicationFilter = (q: ReturnType<typeof admin.from>) =>
-          q.not("interest", "like", "Summer Program:%");
+        const volunteerApplicationFilter = <T>(q: T): T =>
+          (q as any).not("interest", "like", "Summer Program:%");
 
         const [
           { count: requests, error: e1 },

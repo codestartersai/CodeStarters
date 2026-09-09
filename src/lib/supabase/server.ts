@@ -66,25 +66,51 @@ export function getSupabaseServerClient(request: Request): ServerSupabaseBundle 
     return { client, commit };
 }
 
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+
 /** Verify the current request belongs to an admin_users user with role & permissions. */
 export async function verifyAdminUser(
     request: Request,
 ): Promise<VerifiedAdmin | null> {
     const bundle = getSupabaseServerClient(request);
     const { data: { user } } = await bundle.client.auth.getUser();
-    if (!user) return null;
-    const { data: adminRow } = await bundle.client
+    if (!user || !user.email) return null;
+
+    let adminRow: { id: string; role: string; permissions: unknown } | null = null;
+
+    // First attempt: session client
+    const { data: sessionRow } = await bundle.client
         .from("admin_users")
         .select("id, role, permissions")
         .eq("id", user.id)
         .maybeSingle();
 
+    if (sessionRow) {
+        adminRow = sessionRow;
+    } else {
+        // Fallback: service role verification by ID or email
+        try {
+            const admin = getSupabaseAdminClient();
+            const { data: serviceRow } = await admin
+                .from("admin_users")
+                .select("id, role, permissions")
+                .or(`id.eq.${user.id},email.eq.${user.email.toLowerCase().trim()}`)
+                .maybeSingle();
+
+            if (serviceRow) {
+                adminRow = serviceRow;
+            }
+        } catch {
+            // Ignore admin client init errors if env is missing
+        }
+    }
+
     if (!adminRow) return null;
 
     const role = (adminRow.role as AdminRole) || "editor";
-    const permissions = Array.isArray(adminRow.permissions)
+    const permissions: AdminPermission[] = Array.isArray(adminRow.permissions)
         ? (adminRow.permissions as AdminPermission[])
-        : ["manage_team", "manage_requests", "manage_applications"];
+        : (["manage_team", "manage_requests", "manage_applications"] as AdminPermission[]);
 
     return {
         user,

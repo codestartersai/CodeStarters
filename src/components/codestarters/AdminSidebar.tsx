@@ -35,10 +35,6 @@ const MENU_ITEMS: MenuItem[] = [
     { name: "Website Requests", href: "/admin/requests", icon: Globe, permission: "manage_requests" },
     { name: "Applications", href: "/admin/applications", icon: ClipboardList, permission: "manage_applications" },
     { name: "Access & Invites", href: "/admin/members", icon: UserPlus, permission: "manage_admins" },
-    { name: "Scanner", href: "/admin/scanner", icon: QrCode, permission: "manage_scanners" },
-    { name: "Summer Scanner", href: "/admin/summer-scanner", icon: ScanLine, permission: "manage_scanners" },
-    { name: "Fire Hacks Portal", href: "/admin/firehacks-portal", icon: Ticket, permission: "manage_scanners" },
-    { name: "Fire Hacks Members", href: "/admin/firehacks-members", icon: Users, permission: "manage_scanners" },
     { name: "Email & Settings", href: "/admin/settings", icon: MailCheck, permission: "manage_admins" },
 ];
 

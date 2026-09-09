@@ -19,7 +19,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       return json(res, 200, data ?? []);
     }
 
-    const body = await readJson(req).catch(() => ({}));
+    const body: Record<string, any> = await readJson(req).catch(() => ({}));
     const id = typeof body.id === "string" ? body.id : "";
     const status = typeof body.status === "string" ? body.status : "";
     if (!id || !status) return json(res, 400, { error: "Invalid id or status." });

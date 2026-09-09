@@ -37,7 +37,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       return json(res, 200, withResumes);
     }
 
-    const body = await readJson(req).catch(() => ({}));
+    const body: Record<string, any> = await readJson(req).catch(() => ({}));
     const id = typeof body.id === "string" ? body.id : "";
     const status = typeof body.status === "string" ? body.status : "";
     if (!id || !VOLUNTEER_STATUSES.has(status)) {

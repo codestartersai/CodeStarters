@@ -1,11 +1,12 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { supabase, signInWithGoogle } from "@/lib/supabase/browser";
+import { supabase } from "@/lib/supabase/browser";
 import { Button } from "@/components/codestarters/Button";
 import {
     Loader2,
     Mail,
     Lock,
+    User,
     ShieldCheck,
     Sparkles,
     AlertCircle,
@@ -14,10 +15,18 @@ import {
     KeyRound,
     ArrowRight,
     CheckCircle2,
+    Eye,
+    EyeOff,
+    ShieldAlert,
 } from "lucide-react";
 
+type LoginSearchParams = {
+    invite?: string;
+    error?: string;
+};
+
 export const Route = createFileRoute("/admin/login")({
-    validateSearch: (search: Record<string, unknown>) => ({
+    validateSearch: (search: Record<string, unknown>): LoginSearchParams => ({
         invite: typeof search.invite === "string" ? search.invite : undefined,
         error: typeof search.error === "string" ? search.error : undefined,
     }),
@@ -26,15 +35,22 @@ export const Route = createFileRoute("/admin/login")({
 
 function AdminLoginPage() {
     const search = useSearch({ from: "/admin/login" });
-    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-    const [isPasswordLoading, setIsPasswordLoading] = useState(false);
-    const [showPasswordForm, setShowPasswordForm] = useState(false);
-    const [email, setEmail] = useState("");
+    const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(search.error || null);
-    const [inviteToken, setInviteToken] = useState<string | null>(search.invite || null);
+
+    // Initial Setup state (when 0 admins exist)
+    const [isCheckingSetup, setIsCheckingSetup] = useState(true);
+    const [setupRequired, setSetupRequired] = useState(false);
+    const [setupUsername, setSetupUsername] = useState("");
+    const [setupEmail, setSetupEmail] = useState("codestartersai@gmail.com");
+    const [setupPassword, setSetupPassword] = useState("");
+    const [setupConfirm, setSetupConfirm] = useState("");
 
     // Invite verification state
+    const [inviteToken, setInviteToken] = useState<string | null>(search.invite || null);
     const [isValidatingInvite, setIsValidatingInvite] = useState(false);
     const [inviteData, setInviteData] = useState<{
         valid: boolean;
@@ -44,59 +60,199 @@ function AdminLoginPage() {
         error?: string;
     } | null>(null);
 
-    // Credential Generation State
-    const [newPassword, setNewPassword] = useState("");
+    // Invite redemption form state
+    const [inviteUsername, setInviteUsername] = useState("");
+    const [invitePassword, setInvitePassword] = useState("");
+    const [inviteConfirm, setInviteConfirm] = useState("");
     const [savedCredentials, setSavedCredentials] = useState<{
+        username: string;
         email: string;
         password: string;
     } | null>(null);
     const [copiedCreds, setCopiedCreds] = useState(false);
-    const [isClaiming, setIsClaiming] = useState(false);
 
-    // Validate invite token if present in URL
+    // 1. Check if initial bootstrap is needed OR validate invite token
     useEffect(() => {
-        if (search.invite) {
-            const token = search.invite.trim();
-            setInviteToken(token);
-            try {
-                window.sessionStorage.setItem("cs_invite_token", token);
-            } catch {}
+        let isMounted = true;
 
-            setIsValidatingInvite(true);
-            fetch(`/api/admin/redeem-invite?token=${token}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setInviteData(data);
-                    if (data.email) {
-                        setEmail(data.email);
-                        // Generate a strong random password suggestion
-                        const randomPass = Math.random().toString(36).slice(-8) + "!CS" + Math.floor(100 + Math.random() * 900);
-                        setNewPassword(randomPass);
+        async function init() {
+            if (search.invite) {
+                const token = search.invite.trim();
+                setInviteToken(token);
+                setIsValidatingInvite(true);
+
+                try {
+                    const res = await fetch(`/api/admin/redeem-invite?token=${encodeURIComponent(token)}`);
+                    const data = await res.json().catch(() => ({}));
+                    if (isMounted) {
+                        setInviteData(data);
+                        if (data.valid && data.email) {
+                            setInviteUsername(data.email.split("@")[0]);
+                        }
                     }
-                })
-                .catch(() => {
-                    setInviteData({ valid: false, error: "Failed to verify invitation link." });
-                })
-                .finally(() => setIsValidatingInvite(false));
+                } catch {
+                    if (isMounted) {
+                        setInviteData({ valid: false, error: "Unable to verify this invitation link." });
+                    }
+                } finally {
+                    if (isMounted) setIsValidatingInvite(false);
+                }
+            } else {
+                // Check if system needs first-user setup
+                try {
+                    const res = await fetch("/api/admin/initial-setup");
+                    const data = await res.json().catch(() => ({}));
+                    if (isMounted && data.setupRequired) {
+                        setSetupRequired(true);
+                    }
+                } catch (err) {
+                    console.warn("Failed to check setup status:", err);
+                } finally {
+                    if (isMounted) setIsCheckingSetup(false);
+                }
+            }
         }
+
+        void init();
+        return () => {
+            isMounted = false;
+        };
     }, [search.invite]);
 
-    const handleGoogleSignIn = async () => {
-        setIsGoogleLoading(true);
+    // Handle Standard Login (Username or Email + Password)
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
         setError(null);
+
         try {
-            await signInWithGoogle();
+            const rawId = identifier.trim();
+            if (!rawId || !password) {
+                throw new Error("Please enter your email/username and password.");
+            }
+
+            let loginEmail = rawId;
+
+            // If identifier does not contain '@', resolve email via username lookup
+            if (!rawId.includes("@")) {
+                const lookupRes = await fetch("/api/admin/lookup-username", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ identifier: rawId }),
+                });
+                const lookupData = await lookupRes.json().catch(() => ({}));
+                if (!lookupRes.ok || !lookupData.email) {
+                    throw new Error(`No account found with username "${rawId}". Please check your spelling or sign in with your email.`);
+                }
+                loginEmail = lookupData.email;
+            }
+
+            // Authenticate with Supabase
+            const { error: signInErr } = await supabase.auth.signInWithPassword({
+                email: loginEmail,
+                password,
+            });
+
+            if (signInErr) {
+                throw new Error(signInErr.message === "Invalid login credentials"
+                    ? "Invalid credentials. Please verify your email/username and password."
+                    : signInErr.message);
+            }
+
+            // Strict authorization check: ensure user exists in admin_users table
+            const verifyRes = await fetch("/api/admin/auth-verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({}),
+            });
+
+            const verifyData = await verifyRes.json().catch(() => ({}));
+
+            if (!verifyRes.ok || !verifyData.authorized) {
+                await supabase.auth.signOut();
+                throw new Error(verifyData.error || "Access denied. Your account is not authorized as an administrator.");
+            }
+
+            // Successfully authenticated as an authorized admin
+            window.location.href = "/admin";
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Failed to initialize Google SSO.");
-            setIsGoogleLoading(false);
+            setError(err instanceof Error ? err.message : "Authentication failed.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    const handleClaimWithPassword = async (e: React.FormEvent) => {
+    // Handle First-User Super Admin Setup
+    const handleInitialSetup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError(null);
+
+        if (setupPassword !== setupConfirm) {
+            setError("Passwords do not match.");
+            setIsSubmitting(false);
+            return;
+        }
+
+        if (setupPassword.length < 6) {
+            setError("Password must be at least 6 characters.");
+            setIsSubmitting(false);
+            return;
+        }
+
+        try {
+            const res = await fetch("/api/admin/initial-setup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: setupUsername.trim(),
+                    email: setupEmail.trim(),
+                    password: setupPassword,
+                }),
+            });
+
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) {
+                throw new Error(data.error || "Failed to initialize super admin.");
+            }
+
+            // Log in immediately
+            const { error: signInErr } = await supabase.auth.signInWithPassword({
+                email: setupEmail.trim(),
+                password: setupPassword,
+            });
+
+            if (signInErr) {
+                console.warn("Auto-signin error:", signInErr);
+            }
+
+            window.location.href = "/admin";
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Failed to set up Super Admin.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Handle One-Time Invite Redemption (Set username & password)
+    const handleRedeemInvite = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inviteToken || !inviteData?.email) return;
-        setIsClaiming(true);
+
+        setIsSubmitting(true);
         setError(null);
+
+        if (invitePassword !== inviteConfirm) {
+            setError("Passwords do not match.");
+            setIsSubmitting(false);
+            return;
+        }
+
+        if (invitePassword.length < 6) {
+            setError("Password must be at least 6 characters long.");
+            setIsSubmitting(false);
+            return;
+        }
 
         try {
             const res = await fetch("/api/admin/redeem-invite", {
@@ -104,73 +260,56 @@ function AdminLoginPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     token: inviteToken,
-                    password: newPassword,
+                    name: inviteUsername.trim() || inviteData.email.split("@")[0],
+                    password: invitePassword,
                 }),
             });
 
             const data = await res.json().catch(() => ({}));
             if (!res.ok || !data.ok) {
-                throw new Error(data.error || "Failed to redeem invitation.");
+                throw new Error(data.error || "Failed to activate invitation.");
             }
 
-            // Save credentials to display to user
+            // Store credentials to show copy screen
             setSavedCredentials({
+                username: inviteUsername.trim() || inviteData.email.split("@")[0],
                 email: inviteData.email,
-                password: newPassword,
+                password: invitePassword,
             });
 
-            // Sign in immediately with the new credentials
+            // Automatically sign in
             const { error: signInErr } = await supabase.auth.signInWithPassword({
                 email: inviteData.email,
-                password: newPassword,
+                password: invitePassword,
             });
 
             if (signInErr) {
-                console.warn("Auto-signin warning:", signInErr);
+                console.warn("Auto sign-in warning:", signInErr);
             }
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Error saving credentials.");
+            setError(err instanceof Error ? err.message : "Error setting up account.");
         } finally {
-            setIsClaiming(false);
-        }
-    };
-
-    const handlePasswordLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsPasswordLoading(true);
-        setError(null);
-
-        try {
-            const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-            if (loginError) throw loginError;
-
-            // Verify admin access
-            const res = await fetch("/api/admin/auth-verify", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ inviteToken: inviteToken || undefined }),
-            });
-            const authRes = await res.json().catch(() => ({}));
-
-            if (!res.ok || !authRes.authorized) {
-                await supabase.auth.signOut();
-                throw new Error(authRes.error || "You are not authorized to access the admin dashboard.");
-            }
-
-            window.location.href = "/admin";
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Sign in failed.");
-        } finally {
-            setIsPasswordLoading(false);
+            setIsSubmitting(false);
         }
     };
 
     const copyCredentials = () => {
         if (!savedCredentials) return;
-        const text = `CodeStarters Admin Credentials\nEmail: ${savedCredentials.email}\nPassword: ${savedCredentials.password}\nLogin URL: ${window.location.origin}/admin/login`;
+        const text = `CodeStarters Admin Credentials\nUsername: ${savedCredentials.username}\nEmail: ${savedCredentials.email}\nPassword: ${savedCredentials.password}\nLogin URL: ${window.location.origin}/admin/login`;
         navigator.clipboard.writeText(text);
         setCopiedCreds(true);
         setTimeout(() => setCopiedCreds(false), 2500);
+    };
+
+    const generateStrongPassword = (target: "invite" | "setup") => {
+        const rand = Math.random().toString(36).slice(-8) + "!CS" + Math.floor(100 + Math.random() * 900);
+        if (target === "invite") {
+            setInvitePassword(rand);
+            setInviteConfirm(rand);
+        } else {
+            setSetupPassword(rand);
+            setSetupConfirm(rand);
+        }
     };
 
     return (
@@ -200,20 +339,24 @@ function AdminLoginPage() {
                     </div>
                 )}
 
-                {/* 1. SAVED CREDENTIALS SUCCESS VIEW */}
+                {/* VIEW 1: ONE-TIME LINK ACTIVATED - CREDENTIALS CREATED CONFIRMATION */}
                 {savedCredentials ? (
                     <div className="space-y-6">
                         <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
                             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                             <div>
-                                <p className="text-sm font-bold text-emerald-900">Access Granted!</p>
+                                <p className="text-sm font-bold text-emerald-900">Account Activated!</p>
                                 <p className="text-xs text-emerald-700 leading-relaxed mt-0.5">
-                                    Your admin credentials have been created. Save them to your password manager.
+                                    Your username and password have been saved. You can now use them anytime to sign in.
                                 </p>
                             </div>
                         </div>
 
                         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                            <div>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Username</p>
+                                <p className="text-sm font-bold text-slate-900 font-mono">{savedCredentials.username}</p>
+                            </div>
                             <div>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email</p>
                                 <p className="text-sm font-bold text-slate-900 font-mono">{savedCredentials.email}</p>
@@ -252,74 +395,40 @@ function AdminLoginPage() {
                             <ArrowRight className="w-4 h-4" />
                         </Button>
                     </div>
-                ) : inviteToken && inviteData?.valid ? (
-                    /* 2. INVITE REDEMPTION & CREDENTIAL CREATION VIEW */
-                    <div className="space-y-6">
-                        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
-                            <Sparkles className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="text-sm font-bold text-emerald-900">You've Been Invited!</p>
-                                <p className="text-xs text-emerald-700 leading-relaxed mt-0.5">
-                                    Assigned Role: <strong>{inviteData.role}</strong> ({inviteData.email})
-                                </p>
-                            </div>
+                ) : inviteToken ? (
+                    /* VIEW 2: ONE-TIME INVITE LINK REDEMPTION FORM */
+                    isValidatingInvite ? (
+                        <div className="py-12 flex flex-col items-center justify-center gap-3">
+                            <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
+                            <p className="text-xs font-medium text-slate-500">Verifying your invitation link...</p>
                         </div>
-
-                        {/* Option 1: 1-Click Google SSO */}
-                        <button
-                            onClick={handleGoogleSignIn}
-                            disabled={isGoogleLoading}
-                            className="w-full h-13 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border-2 border-slate-200 hover:border-slate-300 shadow-sm flex items-center justify-center gap-3 transition-all hover:scale-[1.01] active:scale-[0.99]"
-                        >
-                            {isGoogleLoading ? (
-                                <Loader2 className="w-5 h-5 animate-spin text-slate-500" />
-                            ) : (
-                                <>
-                                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                        <path
-                                            fill="#4285F4"
-                                            d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.665-5.17 3.665-9.12z"
-                                        />
-                                        <path
-                                            fill="#34A853"
-                                            d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.13C3.27 21.41 7.34 24 12 24z"
-                                        />
-                                        <path
-                                            fill="#FBBC05"
-                                            d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.57H1.25C.45 8.16 0 9.98 0 12s.45 3.84 1.25 5.43l4.03-3.14z"
-                                        />
-                                        <path
-                                            fill="#EA4335"
-                                            d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.27 2.59 1.25 6.57l4.03 3.14c.95-2.83 3.6-4.96 6.72-4.96z"
-                                        />
-                                    </svg>
-                                    <span className="text-xs sm:text-sm">Claim Access via Google SSO</span>
-                                </>
-                            )}
-                        </button>
-
-                        <div className="relative my-4">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-slate-200" />
+                    ) : inviteData?.valid ? (
+                        <form onSubmit={handleRedeemInvite} className="space-y-4">
+                            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
+                                <Sparkles className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="text-sm font-bold text-emerald-900">You've Been Invited!</p>
+                                    <p className="text-xs text-emerald-700 leading-relaxed mt-0.5">
+                                        Assigned Role: <strong>{inviteData.role}</strong> ({inviteData.email})
+                                    </p>
+                                </div>
                             </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-white px-3 text-slate-400 font-bold tracking-wider">
-                                    or Save Password Credentials
-                                </span>
-                            </div>
-                        </div>
 
-                        {/* Option 2: Set and Save Credentials */}
-                        <form onSubmit={handleClaimWithPassword} className="space-y-4">
                             <div className="space-y-1">
                                 <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                    Your Email
+                                    Choose Username
                                 </label>
-                                <input
-                                    readOnly
-                                    value={inviteData.email}
-                                    className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 outline-none"
-                                />
+                                <div className="relative">
+                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                    <input
+                                        required
+                                        type="text"
+                                        value={inviteUsername}
+                                        onChange={(e) => setInviteUsername(e.target.value)}
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                        placeholder="e.g. jdoe or Jane Doe"
+                                    />
+                                </div>
                             </div>
 
                             <div className="space-y-1">
@@ -329,147 +438,260 @@ function AdminLoginPage() {
                                     </label>
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            const gen = Math.random().toString(36).slice(-8) + "!CS" + Math.floor(100 + Math.random() * 900);
-                                            setNewPassword(gen);
-                                        }}
+                                        onClick={() => generateStrongPassword("invite")}
                                         className="text-[11px] font-bold text-brand-600 hover:underline"
                                     >
-                                        Generate Strong Password
+                                        Suggest Password
                                     </button>
                                 </div>
+                                <div className="relative">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                    <input
+                                        required
+                                        type={showPassword ? "text" : "password"}
+                                        value={invitePassword}
+                                        onChange={(e) => setInvitePassword(e.target.value)}
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                        placeholder="At least 6 characters"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    >
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                    Confirm Password
+                                </label>
                                 <div className="relative">
                                     <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                     <input
                                         required
-                                        type="text"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        type={showPassword ? "text" : "password"}
+                                        value={inviteConfirm}
+                                        onChange={(e) => setInviteConfirm(e.target.value)}
                                         className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                        placeholder="Enter password..."
+                                        placeholder="Confirm your password"
                                     />
                                 </div>
                             </div>
 
                             <Button
                                 type="submit"
-                                disabled={isClaiming}
-                                className="w-full h-12 text-sm font-bold bg-slate-900 hover:bg-black shadow-md shadow-slate-200 flex items-center justify-center gap-2"
+                                disabled={isSubmitting}
+                                className="w-full h-13 text-sm font-bold bg-slate-900 hover:bg-black shadow-md shadow-slate-200 flex items-center justify-center gap-2 mt-4"
                             >
-                                {isClaiming ? (
+                                {isSubmitting ? (
                                     <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : (
                                     <>
-                                        <Lock className="w-4 h-4" />
-                                        <span>Create & Save Credentials</span>
+                                        <ShieldCheck className="w-4 h-4" />
+                                        <span>Create Account & Join Dashboard</span>
                                     </>
                                 )}
                             </Button>
                         </form>
-                    </div>
-                ) : (
-                    /* 3. STANDARD LOGIN VIEW */
-                    <div className="space-y-4">
-                        <button
-                            onClick={handleGoogleSignIn}
-                            disabled={isGoogleLoading}
-                            className="w-full h-14 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border-2 border-slate-200 hover:border-slate-300 shadow-sm flex items-center justify-center gap-3 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60"
-                        >
-                            {isGoogleLoading ? (
-                                <Loader2 className="w-5 h-5 animate-spin text-slate-500" />
-                            ) : (
-                                <>
-                                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                        <path
-                                            fill="#4285F4"
-                                            d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.665-5.17 3.665-9.12z"
-                                        />
-                                        <path
-                                            fill="#34A853"
-                                            d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.13C3.27 21.41 7.34 24 12 24z"
-                                        />
-                                        <path
-                                            fill="#FBBC05"
-                                            d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.57H1.25C.45 8.16 0 9.98 0 12s.45 3.84 1.25 5.43l4.03-3.14z"
-                                        />
-                                        <path
-                                            fill="#EA4335"
-                                            d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.27 2.59 1.25 6.57l4.03 3.14c.95-2.83 3.6-4.96 6.72-4.96z"
-                                        />
-                                    </svg>
-                                    <span>Sign in with Google SSO</span>
-                                </>
-                            )}
-                        </button>
-
-                        <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-slate-200" />
+                    ) : (
+                        <div className="text-center py-6 space-y-4">
+                            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center">
+                                <ShieldAlert className="w-6 h-6" />
                             </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-white px-3 text-slate-400 font-bold tracking-wider">
-                                    Secure Access
-                                </span>
+                            <div>
+                                <h3 className="text-base font-bold text-slate-900">Invalid or Expired Invitation</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    {inviteData?.error || "This invitation link has either already been used or has expired."}
+                                </p>
+                            </div>
+                            <Button
+                                onClick={() => (window.location.href = "/admin/login")}
+                                variant="outline"
+                                className="text-xs font-bold"
+                            >
+                                Back to Sign In
+                            </Button>
+                        </div>
+                    )
+                ) : setupRequired ? (
+                    /* VIEW 3: INITIAL SETUP - CREATE SUPER ADMIN ACCOUNT */
+                    <form onSubmit={handleInitialSetup} className="space-y-4">
+                        <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
+                            <ShieldCheck className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+                            <div>
+                                <p className="text-xs font-bold text-amber-900">Initial Setup Required</p>
+                                <p className="text-xs text-amber-700 leading-relaxed mt-0.5">
+                                    Create the initial <strong>Super Admin</strong> account. Afterwards, self-registration is permanently locked.
+                                </p>
                             </div>
                         </div>
 
-                        {!showPasswordForm ? (
-                            <button
-                                type="button"
-                                onClick={() => setShowPasswordForm(true)}
-                                className="w-full text-center text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest py-2"
-                            >
-                                Sign in with Saved Password &rarr;
-                            </button>
-                        ) : (
-                            <form onSubmit={handlePasswordLogin} className="space-y-4 pt-2">
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Email</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                        <input
-                                            required
-                                            type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium text-slate-900"
-                                            placeholder="admin@codestarters.org"
-                                        />
-                                    </div>
-                                </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Full Name / Username
+                            </label>
+                            <div className="relative">
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <input
+                                    required
+                                    type="text"
+                                    value={setupUsername}
+                                    onChange={(e) => setSetupUsername(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    placeholder="e.g. CodeStarters Admin"
+                                />
+                            </div>
+                        </div>
 
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Password</label>
-                                    <div className="relative">
-                                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                        <input
-                                            required
-                                            type="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium text-slate-900"
-                                            placeholder="••••••••"
-                                        />
-                                    </div>
-                                </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Super Admin Email
+                            </label>
+                            <div className="relative">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <input
+                                    required
+                                    type="email"
+                                    value={setupEmail}
+                                    onChange={(e) => setSetupEmail(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    placeholder="codestartersai@gmail.com"
+                                />
+                            </div>
+                        </div>
 
-                                <Button
-                                    type="submit"
-                                    disabled={isPasswordLoading}
-                                    className="w-full h-12 text-base font-bold shadow-lg shadow-brand-100"
+                        <div className="space-y-1">
+                            <div className="flex items-center justify-between">
+                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                    Password
+                                </label>
+                                <button
+                                    type="button"
+                                    onClick={() => generateStrongPassword("setup")}
+                                    className="text-[11px] font-bold text-brand-600 hover:underline"
                                 >
-                                    {isPasswordLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
-                                </Button>
-                            </form>
-                        )}
-                    </div>
-                )}
+                                    Suggest Password
+                                </button>
+                            </div>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <input
+                                    required
+                                    type={showPassword ? "text" : "password"}
+                                    value={setupPassword}
+                                    onChange={(e) => setSetupPassword(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    placeholder="At least 6 characters"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                            </div>
+                        </div>
 
-                {/* Footer security guarantee */}
-                <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-center gap-2 text-slate-400 text-xs font-bold">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                    <span>Invite-only administrative security</span>
-                </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Confirm Password
+                            </label>
+                            <div className="relative">
+                                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <input
+                                    required
+                                    type={showPassword ? "text" : "password"}
+                                    value={setupConfirm}
+                                    onChange={(e) => setSetupConfirm(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    placeholder="Repeat your password"
+                                />
+                            </div>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full h-13 text-sm font-bold bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-200 flex items-center justify-center gap-2 mt-4"
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <>
+                                    <ShieldCheck className="w-4 h-4" />
+                                    <span>Create Super Admin & Lock Portal</span>
+                                </>
+                            )}
+                        </Button>
+                    </form>
+                ) : (
+                    /* VIEW 4: STANDARD ADMIN LOGIN */
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Username or Email
+                            </label>
+                            <div className="relative">
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <input
+                                    required
+                                    type="text"
+                                    value={identifier}
+                                    onChange={(e) => setIdentifier(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white text-slate-900 transition-all"
+                                    placeholder="Username or email address"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Password
+                            </label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <input
+                                    required
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white text-slate-900 transition-all"
+                                    placeholder="Enter your password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full h-13 text-sm font-bold bg-slate-900 hover:bg-black shadow-lg shadow-slate-200 flex items-center justify-center gap-2 mt-4"
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <>
+                                    <Lock className="w-4 h-4" />
+                                    <span>Sign In to Dashboard</span>
+                                </>
+                            )}
+                        </Button>
+
+                        <p className="text-center text-[11px] text-slate-400 leading-relaxed pt-2">
+                            Dashboard access is restricted to verified administrators. Invitations are delivered via email.
+                        </p>
+                    </form>
+                )}
             </div>
         </div>
     );

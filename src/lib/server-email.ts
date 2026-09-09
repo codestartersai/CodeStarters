@@ -147,13 +147,13 @@ export async function sendAdminInviteEmail({
           </ul>
         </div>
 
-        <p>To accept your invitation, sign in using your Google account (<strong>${to}</strong>):</p>
+        <p>To accept your invitation, click the button below to choose your username and create your password:</p>
 
         <div class="btn-wrapper">
-          <a href="${inviteUrl}" class="btn" target="_blank">Sign in with Google SSO &rarr;</a>
+          <a href="${inviteUrl}" class="btn" target="_blank">Set Up Username & Password &rarr;</a>
         </div>
 
-        <p style="font-size: 13px; color: #64748b;">This invitation link is single-use and will expire in 7 days. If you did not expect this email, you can safely ignore it.</p>
+        <p style="font-size: 13px; color: #64748b;">This link is single-use and will expire in 7 days. Once you create your password, you will be able to log in to the dashboard directly anytime.</p>
 
         <div class="footer">
           CodeStarters &bull; Empowering the Next Generation of Tech Leaders
@@ -169,10 +169,10 @@ You've been invited to the CodeStarters Admin Dashboard!
 ${invitedByName} has invited you to access the admin portal as a ${roleTitle}.
 Your permissions: ${permissions.join(", ")}
 
-Sign in with your Google account (${to}) by clicking this single-use link:
+To accept your invitation, choose your username and password at this one-time link:
 ${inviteUrl}
 
-This link is valid for 7 days.
+This single-use link is valid for 7 days.
     `;
 
     await sendPlainEmail({
@@ -183,3 +183,110 @@ This link is valid for 7 days.
         gmailFrom: "CodeStarters",
     });
 }
+
+/** Sends a human, cleanly-designed reply to a website request or inquiry via Gmail connector */
+export async function sendRequestReplyEmail({
+    to,
+    recipientName,
+    businessName,
+    subject,
+    message,
+    senderName = "The CodeStarters Team",
+    callToActionText,
+    callToActionUrl,
+}: {
+    to: string;
+    recipientName: string;
+    businessName?: string;
+    subject: string;
+    message: string;
+    senderName?: string;
+    callToActionText?: string;
+    callToActionUrl?: string;
+}): Promise<void> {
+    // Escape HTML special characters for the message paragraphs while preserving linebreaks
+    const formattedParagraphs = message
+        .split("\n\n")
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .map((p) => `<p style="font-size: 15px; line-height: 1.65; color: #334155; margin: 0 0 16px 0;">${p.replace(/\n/g, "<br/>")}</p>`)
+        .join("");
+
+    const ctaHtml = callToActionText && callToActionUrl
+        ? `
+        <div style="text-align: left; margin: 28px 0 24px 0;">
+            <a href="${callToActionUrl}" style="display: inline-block; background: #2563eb; color: #ffffff !important; padding: 12px 28px; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);" target="_blank">
+                ${callToActionText} &rarr;
+            </a>
+        </div>
+        `
+        : "";
+
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>${subject}</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #0f172a; margin: 0; padding: 24px; }
+        .card { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 24px; border: 1px solid #e2e8f0; padding: 36px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04); }
+        .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid #f1f5f9; padding-bottom: 18px; }
+        .logo { width: 38px; height: 38px; background: #eff6ff; color: #1d4ed8; border-radius: 10px; font-weight: 900; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; line-height: 38px; }
+        h1 { font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 16px 0; }
+        .footer { font-size: 12px; color: #94a3b8; margin-top: 32px; border-top: 1px solid #f1f5f9; padding-top: 20px; line-height: 1.5; }
+        .signoff { margin-top: 24px; font-size: 14px; color: #475569; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="header">
+          <div class="logo">CS</div>
+          <div>
+            <span style="font-size: 15px; font-weight: 800; color: #0f172a; display: block;">CodeStarters</span>
+            <span style="font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Student Tech Initiative &bull; Cupertino, CA</span>
+          </div>
+        </div>
+
+        ${businessName ? `<div style="display: inline-block; background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; margin-bottom: 16px;">Re: ${businessName}</div>` : ""}
+
+        <h1>Hi ${recipientName || "there"},</h1>
+
+        ${formattedParagraphs}
+
+        ${ctaHtml}
+
+        <div class="signoff">
+          <p style="margin: 0; font-weight: 700; color: #1e293b;">Best regards,</p>
+          <p style="margin: 4px 0 0 0; color: #475569;">${senderName}</p>
+          <p style="margin: 2px 0 0 0; font-size: 12px; color: #94a3b8;">CodeStarters Cupertino &bull; codestarters26@gmail.com</p>
+        </div>
+
+        <div class="footer">
+          You are receiving this message regarding your inquiry on <a href="https://codestarters.org" style="color: #2563eb; text-decoration: none;">codestarters.org</a>.
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
+    const plainText = `
+Hi ${recipientName || "there"},
+
+${message}
+
+Best regards,
+${senderName}
+CodeStarters Cupertino
+codestarters26@gmail.com
+    `.trim();
+
+    await sendPlainEmail({
+        to,
+        subject,
+        text: plainText,
+        html,
+        gmailFrom: "CodeStarters",
+    });
+}
+

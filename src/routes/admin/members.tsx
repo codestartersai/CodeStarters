@@ -595,7 +595,7 @@ function AdminMembersPage() {
                                         ) : (
                                             <>
                                                 <Send className="w-3.5 h-3.5" />
-                                                Send Google SSO Invite
+                                                Send Invite Link
                                             </>
                                         )}
                                     </Button>

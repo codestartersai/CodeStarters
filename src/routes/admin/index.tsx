@@ -16,6 +16,7 @@ import {
     Shield,
     Layers,
     ChevronRight,
+    Settings,
 } from "lucide-react";
 import { Button } from "@/components/codestarters/Button";
 import { useAdminSession } from "@/routes/admin/route";
@@ -233,20 +234,20 @@ function AdminOverview() {
                             </div>
                             <div>
                                 <p className="font-bold text-slate-900 text-sm">Invite Colleagues</p>
-                                <p className="text-xs text-slate-400">Send Google SSO invite links</p>
+                                <p className="text-xs text-slate-400">Send one-time invite links</p>
                             </div>
                         </Link>
 
                         <Link
-                            to="/admin/scanner"
+                            to="/admin/settings"
                             className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 hover:bg-brand-50/70 border border-slate-100 hover:border-brand-200 transition-all group"
                         >
                             <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-xs text-slate-500 group-hover:text-brand-600">
-                                <QrCode className="w-5 h-5" />
+                                <Settings className="w-5 h-5" />
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900 text-sm">QR Scanner</p>
-                                <p className="text-xs text-slate-400">Event pass check-in</p>
+                                <p className="font-bold text-slate-900 text-sm">System Settings</p>
+                                <p className="text-xs text-slate-400">Gmail & Supabase connector</p>
                             </div>
                         </Link>
                     </div>

@@ -86,15 +86,27 @@ function AdminLayout() {
                 if (row && isMounted) {
                     setAdmin(row as AdminUser);
                 } else if (isMounted) {
-                    // Fallback from auth user metadata
-                    setAdmin({
-                        id: user.id,
-                        email: user.email || "",
-                        name: (user.user_metadata?.full_name as string) || (user.user_metadata?.name as string) || "Admin",
-                        avatar_url: (user.user_metadata?.avatar_url as string) || null,
-                        role: "super_admin",
-                        permissions: ["all"],
+                    // Try verifying via auth-verify (handles first user bootstrap or invite token in session)
+                    const inviteToken = typeof window !== "undefined"
+                        ? window.sessionStorage.getItem("cs_invite_token") || undefined
+                        : undefined;
+
+                    const res = await fetch("/api/admin/auth-verify", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ inviteToken }),
                     });
+                    const verifyData = await res.json().catch(() => ({}));
+
+                    if (verifyData.authorized && verifyData.admin) {
+                        setAdmin(verifyData.admin as AdminUser);
+                    } else {
+                        // Access denied - clear session and redirect to login
+                        await supabase.auth.signOut();
+                        if (typeof window !== "undefined") {
+                            window.location.href = "/admin/login?error=" + encodeURIComponent(verifyData.error || "Access Denied: You have not been invited to this admin portal.");
+                        }
+                    }
                 }
             } catch (err) {
                 console.error("Admin layout profile fetch error:", err);
@@ -118,7 +130,7 @@ function AdminLayout() {
     }
 
     const can = (permission: AdminPermission) => {
-        if (!admin) return true; // Default permissive while loading
+        if (!admin) return false;
         return hasPermission(admin.permissions, permission);
     };
 

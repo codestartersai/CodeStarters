@@ -36,6 +36,7 @@ dist/
 .DS_Store
 .env
 .env.*
+!.env.example
 *.log
 package-lock.json
 .vercel

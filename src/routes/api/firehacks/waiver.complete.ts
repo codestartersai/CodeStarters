@@ -13,7 +13,7 @@ export const Route = createFileRoute("/api/firehacks/waiver/complete")({
       POST: async ({ request }) => {
         const bundle = getSupabaseServerClient(request);
         const auth = await getAuthenticatedParticipant(bundle);
-        if ("error" in auth) {
+        if (auth.error) {
           return jsonWithCookies(bundle, { error: auth.error.message }, { status: auth.error.status });
         }
 

@@ -55,7 +55,9 @@ export const Route = createFileRoute("/api/admin/teams")({
 
                     if (catErr || !catData || catData.length === 0) {
                         for (const cat of DEFAULT_CATEGORIES) {
-                            await admin.from("team_categories").upsert(cat).catch(() => {});
+                            try {
+                                await admin.from("team_categories").upsert(cat);
+                            } catch {}
                         }
                         categories = DEFAULT_CATEGORIES;
                     } else {

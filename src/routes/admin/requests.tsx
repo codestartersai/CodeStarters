@@ -21,6 +21,9 @@ import {
     FileEdit,
     ExternalLink,
     Send,
+    X,
+    Sparkles,
+    Link as LinkIcon,
 } from "lucide-react";
 import { Button } from "@/components/codestarters/Button";
 
@@ -52,6 +55,16 @@ function WebsiteRequestsPage() {
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
     const [notesDraft, setNotesDraft] = useState("");
+
+    // Email Reply Modal State
+    const [replyingToRequest, setReplyingToRequest] = useState<WebsiteRequestRow | null>(null);
+    const [replySubject, setReplySubject] = useState("");
+    const [replyMessage, setReplyMessage] = useState("");
+    const [replyCtaText, setReplyCtaText] = useState("");
+    const [replyCtaUrl, setReplyCtaUrl] = useState("");
+    const [isSendingReply, setIsSendingReply] = useState(false);
+    const [replySuccessMessage, setReplySuccessMessage] = useState<string | null>(null);
+    const [replyErrorMessage, setReplyErrorMessage] = useState<string | null>(null);
 
     const fetchRequests = async () => {
         setIsLoading(true);
@@ -114,6 +127,116 @@ function WebsiteRequestsPage() {
         }
     };
 
+    // Open Reply Modal with smart pre-filled values
+    const openReplyModal = (req: WebsiteRequestRow) => {
+        setReplyingToRequest(req);
+        setReplySubject(`Re: CodeStarters Website Request - ${req.business_name}`);
+        setReplyCtaText("");
+        setReplyCtaUrl("");
+        setReplySuccessMessage(null);
+        setReplyErrorMessage(null);
+
+        // Default to a warm consultation kickoff message
+        setReplyMessage(
+            `Thank you for reaching out to CodeStarters! We are a student-led initiative teaching CS and building custom websites at no cost for local Cupertino businesses.\n\n` +
+            `We reviewed your inquiry for ${req.business_name} and would love to learn more about your vision. Are you available for a brief 15-minute phone or Zoom call this week to go over the project and answer any questions you might have?`
+        );
+    };
+
+    const applyReplyTemplate = (templateType: "kickoff" | "details" | "in_progress" | "waitlist") => {
+        if (!replyingToRequest) return;
+        const biz = replyingToRequest.business_name;
+        const owner = replyingToRequest.owner_name;
+
+        switch (templateType) {
+            case "kickoff":
+                setReplySubject(`Re: CodeStarters Website Request - ${biz}`);
+                setReplyMessage(
+                    `Thank you for reaching out to CodeStarters! We are a student-led initiative teaching CS and building custom websites at no cost for local Cupertino businesses.\n\n` +
+                    `We reviewed your inquiry for ${biz} and would love to learn more about your vision. Are you available for a brief 15-minute phone or Zoom call this week to go over the project and answer any questions you might have?`
+                );
+                setReplyCtaText("Schedule 15-Min Call");
+                setReplyCtaUrl("");
+                break;
+            case "details":
+                setReplySubject(`CodeStarters: Gathering Details for ${biz} Website`);
+                setReplyMessage(
+                    `Thanks for your patience as we prepare the design phase for ${biz}!\n\n` +
+                    `To help our student developers create the best possible first draft, could you please reply with:\n` +
+                    `1. Any existing logos, brand colors, or photos you'd like featured\n` +
+                    `2. Essential pages and content (e.g. Menu, Services list, Hours, Contact phone/address)\n` +
+                    `3. 1 or 2 websites whose design or feel you admire\n\n` +
+                    `Once we have these details, we'll begin assembling the prototype right away!`
+                );
+                setReplyCtaText("");
+                setReplyCtaUrl("");
+                break;
+            case "in_progress":
+                setReplySubject(`Update on your ${biz} Website Development - CodeStarters`);
+                setReplyMessage(
+                    `We're excited to let you know that our development team has officially started building your website for ${biz}!\n\n` +
+                    `Our student leads are coding the initial layout and structure. We will send you an interactive preview link within the next few days so you can see the progress and provide your feedback.`
+                );
+                setReplyCtaText("");
+                setReplyCtaUrl("");
+                break;
+            case "waitlist":
+                setReplySubject(`CodeStarters Website Request - ${biz}`);
+                setReplyMessage(
+                    `Thank you for taking the time to submit a request for ${biz}. Our current cohort of student developers is currently at maximum capacity for this active project cycle.\n\n` +
+                    `We have placed your business on our priority waitlist. As soon as our upcoming development sprint begins, we will reach out immediately to get your website underway.`
+                );
+                setReplyCtaText("");
+                setReplyCtaUrl("");
+                break;
+        }
+    };
+
+    const handleSendEmailReply = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!replyingToRequest) return;
+        setIsSendingReply(true);
+        setReplySuccessMessage(null);
+        setReplyErrorMessage(null);
+
+        try {
+            const res = await fetch("/api/admin/website-requests", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: "reply",
+                    requestId: replyingToRequest.id,
+                    to: replyingToRequest.email,
+                    recipientName: replyingToRequest.owner_name,
+                    businessName: replyingToRequest.business_name,
+                    subject: replySubject,
+                    message: replyMessage,
+                    callToActionText: replyCtaText || undefined,
+                    callToActionUrl: replyCtaUrl || undefined,
+                    updateStatus: true,
+                }),
+            });
+
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) {
+                throw new Error(data.error || "Failed to send email reply.");
+            }
+
+            setReplySuccessMessage(data.message || "Email delivered successfully via Gmail connector!");
+            // Update local state to contacted
+            setRequests(requests.map((r) => (r.id === replyingToRequest.id ? { ...r, status: "contacted" } : r)));
+
+            setTimeout(() => {
+                setReplyingToRequest(null);
+                setReplySuccessMessage(null);
+            }, 1800);
+        } catch (err: unknown) {
+            setReplyErrorMessage(err instanceof Error ? err.message : "Error sending email.");
+        } finally {
+            setIsSendingReply(false);
+        }
+    };
+
     const filteredRequests = requests.filter((req) => {
         const matchesSearch =
             req.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -140,7 +263,7 @@ function WebsiteRequestsPage() {
                         </span>
                     </h1>
                     <p className="text-slate-500 text-sm mt-1">
-                        Inquiries from local Cupertino businesses looking for custom websites.
+                        Inquiries from local Cupertino businesses looking for custom websites. Reply directly via the Gmail connector.
                     </p>
                 </div>
                 <Button onClick={fetchRequests} variant="secondary" className="bg-white border-slate-200 text-xs font-bold h-11">
@@ -254,13 +377,14 @@ function WebsiteRequestsPage() {
 
                                     {/* Contact Chips */}
                                     <div className="flex flex-wrap items-center gap-2.5 mb-4">
-                                        <a
-                                            href={`mailto:${req.email}`}
-                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-100 transition-colors"
+                                        <button
+                                            type="button"
+                                            onClick={() => openReplyModal(req)}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-100 transition-colors"
                                         >
-                                            <Mail className="w-3.5 h-3.5 text-brand-600" />
+                                            <Mail className="w-3.5 h-3.5 text-blue-600" />
                                             <span>{req.email}</span>
-                                        </a>
+                                        </button>
 
                                         {req.phone && (
                                             <a
@@ -309,11 +433,11 @@ function WebsiteRequestsPage() {
                                                 </div>
                                             )}
 
-                                            {/* Internal notes */}
+                                            {/* Internal notes & communication history */}
                                             <div className="p-4 bg-amber-50/40 rounded-2xl border border-amber-200/60">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <p className="text-[11px] font-bold text-amber-900 uppercase tracking-widest flex items-center gap-1.5">
-                                                        <FileEdit className="w-3.5 h-3.5" /> Internal Notes
+                                                        <FileEdit className="w-3.5 h-3.5" /> Notes & Email Audit Log
                                                     </p>
                                                     {!isEditingNotes && (
                                                         <button
@@ -331,7 +455,7 @@ function WebsiteRequestsPage() {
                                                 {isEditingNotes ? (
                                                     <div className="space-y-2">
                                                         <textarea
-                                                            rows={2}
+                                                            rows={3}
                                                             value={notesDraft}
                                                             onChange={(e) => setNotesDraft(e.target.value)}
                                                             className="w-full bg-white border border-amber-300 rounded-xl p-3 text-xs text-slate-900 outline-none"
@@ -353,9 +477,9 @@ function WebsiteRequestsPage() {
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <p className="text-xs text-slate-700 italic">
-                                                        {req.notes || "No internal notes recorded yet."}
-                                                    </p>
+                                                    <div className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">
+                                                        {req.notes || "No notes or email replies logged yet."}
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
@@ -363,19 +487,23 @@ function WebsiteRequestsPage() {
 
                                     {/* Action Bar */}
                                     <div className="flex flex-wrap items-center gap-2.5 pt-4 border-t border-slate-100">
+                                        {/* Quick Reply via Connector Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => openReplyModal(req)}
+                                            className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-xs transition-all shadow-md shadow-brand-100"
+                                        >
+                                            <Send className="w-3.5 h-3.5" />
+                                            <span>Reply via Email Connector</span>
+                                        </button>
+
                                         {req.status === "pending" ? (
                                             <>
                                                 <button
                                                     onClick={() => updateStatus(req.id, "in_progress")}
-                                                    className="flex items-center gap-1.5 px-4 py-2 bg-brand-600 text-white rounded-xl font-bold text-xs hover:bg-brand-700 transition-colors shadow-sm shadow-brand-100"
+                                                    className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-black transition-colors"
                                                 >
-                                                    <PlayCircle className="w-4 h-4" /> Accept & Start
-                                                </button>
-                                                <button
-                                                    onClick={() => updateStatus(req.id, "contacted")}
-                                                    className="flex items-center gap-1.5 px-4 py-2 bg-white text-purple-700 border border-purple-200 rounded-xl font-bold text-xs hover:bg-purple-50 transition-colors"
-                                                >
-                                                    <MessageSquare className="w-4 h-4" /> Contacted
+                                                    <PlayCircle className="w-4 h-4" /> Start Build
                                                 </button>
                                                 <button
                                                     onClick={() => updateStatus(req.id, "rejected")}
@@ -390,7 +518,7 @@ function WebsiteRequestsPage() {
                                                     onClick={() => updateStatus(req.id, "completed")}
                                                     className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 transition-colors shadow-sm"
                                                 >
-                                                    <CheckCircle2 className="w-4 h-4" /> Mark Complete
+                                                    <CheckCircle2 className="w-4 h-4" /> Mark Completed
                                                 </button>
                                                 <select
                                                     value={req.status}
@@ -418,14 +546,6 @@ function WebsiteRequestsPage() {
                                             </select>
                                         )}
 
-                                        <a
-                                            href={`mailto:${req.email}?subject=CodeStarters%20Website%20Inquiry%20-%20${encodeURIComponent(req.business_name)}`}
-                                            className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-colors"
-                                        >
-                                            <Send className="w-3.5 h-3.5 text-brand-600" />
-                                            <span>Email Client</span>
-                                        </a>
-
                                         <button
                                             onClick={() => setExpandedId(isExpanded ? null : req.id)}
                                             className="ml-auto flex items-center gap-1 px-3 py-2 text-slate-400 hover:text-slate-600 text-xs font-bold uppercase tracking-wider transition-colors"
@@ -445,6 +565,170 @@ function WebsiteRequestsPage() {
                             </div>
                         );
                     })}
+                </div>
+            )}
+
+            {/* Email Reply Modal */}
+            {replyingToRequest && (
+                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+                    <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100 my-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                                    <Send className="w-5 h-5 text-brand-600" />
+                                    Reply to {replyingToRequest.business_name}
+                                </h2>
+                                <p className="text-xs text-slate-500 mt-0.5">
+                                    Delivered via Gmail SMTP connector to <strong>{replyingToRequest.email}</strong> ({replyingToRequest.owner_name})
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setReplyingToRequest(null)}
+                                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Quick Response Templates Bar */}
+                        <div className="mb-5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                                Response Templates
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => applyReplyTemplate("kickoff")}
+                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
+                                >
+                                    <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+                                    <span>Kickoff Call</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => applyReplyTemplate("details")}
+                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                                >
+                                    Request Assets & Details
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => applyReplyTemplate("in_progress")}
+                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                                >
+                                    Development Started
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => applyReplyTemplate("waitlist")}
+                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                                >
+                                    Waitlist
+                                </button>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleSendEmailReply} className="space-y-4">
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                    Subject Line *
+                                </label>
+                                <input
+                                    required
+                                    type="text"
+                                    value={replySubject}
+                                    onChange={(e) => setReplySubject(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                    Email Message *
+                                </label>
+                                <textarea
+                                    required
+                                    rows={7}
+                                    value={replyMessage}
+                                    onChange={(e) => setReplyMessage(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 leading-relaxed"
+                                    placeholder="Write your response message..."
+                                />
+                            </div>
+
+                            {/* Optional Call to Action */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
+                                <div>
+                                    <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1">
+                                        Button Text (Optional)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={replyCtaText}
+                                        onChange={(e) => setReplyCtaText(e.target.value)}
+                                        placeholder="e.g. Schedule 15-Min Call"
+                                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1">
+                                        Button Link URL (Optional)
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={replyCtaUrl}
+                                        onChange={(e) => setReplyCtaUrl(e.target.value)}
+                                        placeholder="https://calendly.com/... or https://..."
+                                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    />
+                                </div>
+                            </div>
+
+                            {replySuccessMessage && (
+                                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-2 text-emerald-800 text-xs font-bold">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                    <span>{replySuccessMessage}</span>
+                                </div>
+                            )}
+
+                            {replyErrorMessage && (
+                                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-2 text-red-800 text-xs font-bold">
+                                    <XCircle className="w-4 h-4 text-red-600 shrink-0" />
+                                    <span>{replyErrorMessage}</span>
+                                </div>
+                            )}
+
+                            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                                <span className="text-[11px] text-slate-400 font-medium">
+                                    Status will update to <strong>Contacted</strong> automatically.
+                                </span>
+                                <div className="flex items-center gap-3">
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => setReplyingToRequest(null)}
+                                        className="h-11 px-5 text-xs font-bold"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={isSendingReply}
+                                        className="h-11 px-6 text-xs font-bold bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-100 flex items-center gap-2"
+                                    >
+                                        {isSendingReply ? (
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            <>
+                                                <Send className="w-3.5 h-3.5" />
+                                                <span>Send Email Reply</span>
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )}
         </div>

@@ -116,7 +116,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       return json(res, 200, { stats: buildSummerStats(signups), signups });
     }
 
-    const body = await readJson(req).catch(() => ({}));
+    const body: Record<string, any> = await readJson(req).catch(() => ({}));
     const token = extractToken(body.token);
     const checkIn = body.action === "check-in";
     if (!token) return json(res, 400, { error: "QR token is required." });

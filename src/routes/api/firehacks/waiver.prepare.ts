@@ -14,13 +14,13 @@ export const Route = createFileRoute("/api/firehacks/waiver/prepare")({
       POST: async ({ request }) => {
         const bundle = getSupabaseServerClient(request);
         const auth = await getAuthenticatedParticipant(bundle);
-        if ("error" in auth) {
+        if (auth.error) {
           return jsonWithCookies(bundle, { error: auth.error.message }, { status: auth.error.status });
         }
 
         const body = await request.json().catch(() => ({}));
         const validated = validateWaiverFileMeta(body);
-        if ("error" in validated) {
+        if (validated.error) {
           return jsonWithCookies(bundle, { error: validated.error }, { status: 400 });
         }
 
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/api/firehacks/waiver/prepare")({
         const path = waiverPathForParticipant(
           participant.event_id,
           participant.id,
-          validated.fileName,
+          validated.fileName!,
         );
 
         const admin = getSupabaseAdminClient();

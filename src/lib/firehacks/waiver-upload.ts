@@ -47,7 +47,13 @@ type ParticipantRow = {
   waiver_storage_path: string | null;
 };
 
-export async function getAuthenticatedParticipant(bundle: ServerSupabaseBundle) {
+export type AuthenticatedParticipantResult =
+  | { error: { message: string; status: number }; participant?: never }
+  | { participant: ParticipantRow; error?: never };
+
+export async function getAuthenticatedParticipant(
+  bundle: ServerSupabaseBundle,
+): Promise<AuthenticatedParticipantResult> {
   const {
     data: { user },
   } = await bundle.client.auth.getUser();
@@ -88,11 +94,15 @@ function inferWaiverContentType(fileName: string, contentType: string): string {
   return byExt[ext ?? ""] ?? contentType;
 }
 
+export type ValidateWaiverMetaResult =
+  | { error: string; fileName?: undefined; fileSize?: undefined; contentType?: undefined }
+  | { error?: undefined; fileName: string; fileSize: number; contentType: string };
+
 export function validateWaiverFileMeta(input: {
   fileName?: unknown;
   fileSize?: unknown;
   contentType?: unknown;
-}) {
+}): ValidateWaiverMetaResult {
   const fileName = typeof input.fileName === "string" ? input.fileName.trim() : "";
   const rawType = typeof input.contentType === "string" ? input.contentType.trim() : "";
   const fileSize = typeof input.fileSize === "number" ? input.fileSize : Number(input.fileSize);

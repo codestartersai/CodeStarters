@@ -11,7 +11,7 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                 const { data: { user } } = await bundle.client.auth.getUser();
 
                 if (!user || !user.email) {
-                    return jsonWithCookies(bundle, { authorized: false, error: "Not logged in with Google." }, { status: 401 });
+                    return jsonWithCookies(bundle, { authorized: false, error: "Not authenticated. Please sign in with your Google account." }, { status: 401 });
                 }
 
                 const admin = getSupabaseAdminClient();
@@ -23,18 +23,44 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                 const inviteToken = body.inviteToken?.trim();
 
                 try {
-                    // 1. Check if user is already an admin
-                    const { data: existingAdmin, error: lookupError } = await admin
+                    // 1. Check if user is already an active admin (by auth UUID or email)
+                    const { data: byId } = await admin
                         .from("admin_users")
                         .select("id, email, name, avatar_url, role, permissions")
                         .eq("id", user.id)
                         .maybeSingle();
 
-                    if (existingAdmin) {
+                    if (byId) {
                         return jsonWithCookies(bundle, {
                             authorized: true,
                             isFirstUser: false,
-                            admin: existingAdmin,
+                            admin: byId,
+                        });
+                    }
+
+                    // Check by email in case record was created prior to first OAuth login
+                    const { data: byEmail } = await admin
+                        .from("admin_users")
+                        .select("id, email, name, avatar_url, role, permissions")
+                        .eq("email", userEmail)
+                        .maybeSingle();
+
+                    if (byEmail) {
+                        // Re-bind ID to current auth.users.id so RLS auth.uid() matches
+                        await admin
+                            .from("admin_users")
+                            .update({
+                                id: user.id,
+                                name: byEmail.name || userName,
+                                avatar_url: byEmail.avatar_url || avatarUrl,
+                                updated_at: new Date().toISOString(),
+                            })
+                            .eq("id", byEmail.id);
+
+                        return jsonWithCookies(bundle, {
+                            authorized: true,
+                            isFirstUser: false,
+                            admin: { ...byEmail, id: user.id },
                         });
                     }
 
@@ -76,20 +102,29 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                     let inviteQuery = admin
                         .from("admin_invites")
                         .select("*")
-                        .eq("email", userEmail)
                         .eq("used", false);
 
                     if (inviteToken) {
                         inviteQuery = inviteQuery.eq("token", inviteToken);
+                    } else {
+                        inviteQuery = inviteQuery.eq("email", userEmail);
                     }
 
                     const { data: invite, error: inviteErr } = await inviteQuery.maybeSingle();
 
                     if (!invite || inviteErr) {
-                        // User is neither existing admin nor invited
+                        // User is neither an existing admin nor invited
                         return jsonWithCookies(bundle, {
                             authorized: false,
-                            error: "Access Denied: Your Google account has not been invited to access the CodeStarters Admin Dashboard. Please contact an administrator for an invitation.",
+                            error: `Access Denied: The Google account (${userEmail}) has not been invited to access the CodeStarters Admin Dashboard. Please contact the administrator.`,
+                        }, { status: 403 });
+                    }
+
+                    // Verify email matches the invite if token was passed
+                    if (inviteToken && invite.email.toLowerCase().trim() !== userEmail) {
+                        return jsonWithCookies(bundle, {
+                            authorized: false,
+                            error: `This invitation was issued to ${invite.email}, but you are signed in as ${userEmail}. Please sign in with the invited Google account.`,
                         }, { status: 403 });
                     }
 
@@ -97,7 +132,7 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                     if (new Date(invite.expires_at) < new Date()) {
                         return jsonWithCookies(bundle, {
                             authorized: false,
-                            error: "This invitation has expired. Please ask an administrator to send a new invitation.",
+                            error: "This invitation link has expired. Please ask an administrator to send a new invitation.",
                         }, { status: 403 });
                     }
 
