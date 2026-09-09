@@ -5,7 +5,6 @@ import {
     Clock,
     FileText,
     ArrowUpRight,
-    Sparkles,
     UserCheck,
     ClipboardList,
     X,
@@ -68,215 +67,219 @@ function AdminOverview() {
     }, []);
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-8">
             {/* Greeting Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                        Welcome back{admin?.name ? `, ${admin.name.split(" ")[0]}` : ""}
+                    <h1 className="text-2xl font-semibold text-slate-900 tracking-tight">
+                        Overview
                     </h1>
-                    <p className="text-slate-500 text-sm mt-1">
-                        Here's an overview of CodeStarters websites, teams, and member requests.
+                    <p className="text-slate-500 text-xs mt-0.5">
+                        Welcome back{admin?.name ? `, ${admin.name.split(" ")[0]}` : ""}. System activity and management portal.
                     </p>
                 </div>
 
                 {/* Email Connector status badge */}
                 <Link
                     to="/admin/settings"
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all shadow-xs ${
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
                         emailConnected
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
-                            : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                            ? "bg-white text-emerald-700 border-emerald-200/80 hover:bg-emerald-50/50"
+                            : "bg-white text-amber-700 border-amber-200/80 hover:bg-amber-50/50"
                     }`}
                 >
-                    <span className={`w-2 h-2 rounded-full ${emailConnected ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
-                    <span>{emailConnected ? "Gmail Connector Ready" : "Email Connector Pending"}</span>
-                    <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+                    <span className={`w-1.5 h-1.5 rounded-full ${emailConnected ? "bg-emerald-500" : "bg-amber-500"}`} />
+                    <span>{emailConnected ? "Gmail Connected" : "Email Setup Needed"}</span>
+                    <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                 </Link>
             </div>
 
             {/* Metrics Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
                 {/* Website Requests */}
                 <Link
                     to="/admin/requests"
-                    className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group flex flex-col justify-between"
+                    className="bg-white p-4 rounded-xl border border-slate-200/80 hover:border-slate-300 transition-colors flex flex-col justify-between"
                 >
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
-                            <Globe className="w-6 h-6" />
-                        </div>
-                        <div className="p-2 bg-slate-50 rounded-xl group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                            <ArrowUpRight className="w-4 h-4" />
-                        </div>
+                    <div className="flex justify-between items-start mb-3">
+                        <span className="text-slate-500 font-medium text-xs">Website Requests</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
                     </div>
                     <div>
-                        <p className="text-slate-400 font-bold uppercase tracking-wider text-[11px]">Website Requests</p>
-                        <div className="flex items-baseline gap-2.5 mt-1">
-                            <h3 className="text-3xl font-black text-slate-900">{stats.requests}</h3>
+                        <div className="flex items-baseline gap-2">
+                            <h3 className="text-2xl font-semibold text-slate-900">{stats.requests}</h3>
                             {stats.pendingRequests > 0 && (
-                                <span className="text-amber-700 font-bold text-xs bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                                    {stats.pendingRequests} New
+                                <span className="text-amber-700 font-medium text-[11px] bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/80">
+                                    {stats.pendingRequests} new
                                 </span>
                             )}
                         </div>
+                        <p className="text-[11px] text-slate-400 mt-1">Cupertino business inquiries</p>
                     </div>
                 </Link>
 
                 {/* Team & Tabs */}
                 <Link
                     to="/admin/team"
-                    className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group flex flex-col justify-between"
+                    className="bg-white p-4 rounded-xl border border-slate-200/80 hover:border-slate-300 transition-colors flex flex-col justify-between"
                 >
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
-                            <UserCheck className="w-6 h-6" />
-                        </div>
-                        <div className="p-2 bg-slate-50 rounded-xl group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                            <ArrowUpRight className="w-4 h-4" />
-                        </div>
+                    <div className="flex justify-between items-start mb-3">
+                        <span className="text-slate-500 font-medium text-xs">Team Members</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
                     </div>
                     <div>
-                        <p className="text-slate-400 font-bold uppercase tracking-wider text-[11px]">Team & Tabs</p>
-                        <div className="flex items-baseline gap-2.5 mt-1">
-                            <h3 className="text-3xl font-black text-slate-900">{stats.teamMembers > 0 ? stats.teamMembers : 12}</h3>
-                            <span className="text-slate-400 text-xs font-bold">Robotics, Web & Leads</span>
+                        <div className="flex items-baseline gap-2">
+                            <h3 className="text-2xl font-semibold text-slate-900">{stats.teamMembers > 0 ? stats.teamMembers : 12}</h3>
+                            <span className="text-slate-400 text-[11px]">active roster</span>
                         </div>
+                        <p className="text-[11px] text-slate-400 mt-1">Organized across departments</p>
                     </div>
                 </Link>
 
                 {/* Applications */}
                 <Link
                     to="/admin/applications"
-                    className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group flex flex-col justify-between"
+                    className="bg-white p-4 rounded-xl border border-slate-200/80 hover:border-slate-300 transition-colors flex flex-col justify-between"
                 >
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
-                            <ClipboardList className="w-6 h-6" />
-                        </div>
-                        <div className="p-2 bg-slate-50 rounded-xl group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                            <ArrowUpRight className="w-4 h-4" />
-                        </div>
+                    <div className="flex justify-between items-start mb-3">
+                        <span className="text-slate-500 font-medium text-xs">Applications</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
                     </div>
                     <div>
-                        <p className="text-slate-400 font-bold uppercase tracking-wider text-[11px]">Applications</p>
-                        <div className="flex items-baseline gap-2.5 mt-1">
-                            <h3 className="text-3xl font-black text-slate-900">{stats.pendingApps}</h3>
-                            <span className="text-slate-400 text-xs font-bold">Pending Review</span>
+                        <div className="flex items-baseline gap-2">
+                            <h3 className="text-2xl font-semibold text-slate-900">{stats.pendingApps}</h3>
+                            <span className="text-slate-400 text-[11px]">pending review</span>
                         </div>
+                        <p className="text-[11px] text-slate-400 mt-1">Student volunteer submissions</p>
                     </div>
                 </Link>
 
                 {/* Access & Invites */}
                 <Link
                     to="/admin/members"
-                    className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group flex flex-col justify-between"
+                    className="bg-white p-4 rounded-xl border border-slate-200/80 hover:border-slate-300 transition-colors flex flex-col justify-between"
                 >
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl">
-                            <Shield className="w-6 h-6" />
-                        </div>
-                        <div className="p-2 bg-slate-50 rounded-xl group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                            <ArrowUpRight className="w-4 h-4" />
-                        </div>
+                    <div className="flex justify-between items-start mb-3">
+                        <span className="text-slate-500 font-medium text-xs">Access Control</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
                     </div>
                     <div>
-                        <p className="text-slate-400 font-bold uppercase tracking-wider text-[11px]">Access & Invites</p>
-                        <div className="flex items-baseline gap-2.5 mt-1">
-                            <h3 className="text-3xl font-black text-slate-900">Google SSO</h3>
-                            <span className="text-emerald-600 text-xs font-bold">Invite Only</span>
+                        <div className="flex items-baseline gap-2">
+                            <h3 className="text-2xl font-semibold text-slate-900">Protected</h3>
+                            <span className="text-emerald-700 font-medium text-[11px] bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/80">
+                                Invite-only
+                            </span>
                         </div>
+                        <p className="text-[11px] text-slate-400 mt-1">Role-based administrator invites</p>
                     </div>
                 </Link>
             </div>
 
-            {/* Quick Actions & Mission Card */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm">
-                    <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
-                        <Clock className="w-5 h-5 text-brand-600" />
-                        Quick Management Actions
-                    </h3>
+            {/* Quick Actions & System Info */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200/80">
+                    <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                        <div>
+                            <h2 className="text-sm font-semibold text-slate-900">Quick Navigation</h2>
+                            <p className="text-xs text-slate-400 mt-0.5">Direct shortcuts to administrative tools</p>
+                        </div>
+                    </div>
 
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-3">
                         <Link
                             to="/admin/team"
-                            className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-100 hover:border-emerald-200 transition-all group"
+                            className="flex items-start gap-3 p-3.5 rounded-lg border border-slate-200/70 hover:border-slate-300 hover:bg-slate-50/50 transition-colors group"
                         >
-                            <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-xs text-slate-500 group-hover:text-emerald-600">
-                                <Layers className="w-5 h-5" />
+                            <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                                <Layers className="w-4 h-4" />
                             </div>
-                            <div>
-                                <p className="font-bold text-slate-900 text-sm">Teams & Tabs</p>
-                                <p className="text-xs text-slate-400">Add Robotics, Web & mentors</p>
+                            <div className="min-w-0">
+                                <p className="text-xs font-medium text-slate-900">Teams & Tabs</p>
+                                <p className="text-[11px] text-slate-500 truncate">Manage departments, rosters, and photos</p>
                             </div>
                         </Link>
 
                         <Link
                             to="/admin/requests"
-                            className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 hover:bg-blue-50/70 border border-slate-100 hover:border-blue-200 transition-all group"
+                            className="flex items-start gap-3 p-3.5 rounded-lg border border-slate-200/70 hover:border-slate-300 hover:bg-slate-50/50 transition-colors group"
                         >
-                            <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-xs text-slate-500 group-hover:text-blue-600">
-                                <Globe className="w-5 h-5" />
+                            <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                                <Globe className="w-4 h-4" />
                             </div>
-                            <div>
-                                <p className="font-bold text-slate-900 text-sm">Website Requests</p>
-                                <p className="text-xs text-slate-400">Respond to Cupertino clients</p>
+                            <div className="min-w-0">
+                                <p className="text-xs font-medium text-slate-900">Website Requests</p>
+                                <p className="text-[11px] text-slate-500 truncate">Review inquiries and reply via Gmail</p>
                             </div>
                         </Link>
 
                         <Link
                             to="/admin/members"
-                            className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 hover:bg-purple-50/70 border border-slate-100 hover:border-purple-200 transition-all group"
+                            className="flex items-start gap-3 p-3.5 rounded-lg border border-slate-200/70 hover:border-slate-300 hover:bg-slate-50/50 transition-colors group"
                         >
-                            <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-xs text-slate-500 group-hover:text-purple-600">
-                                <UserPlus className="w-5 h-5" />
+                            <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                                <UserPlus className="w-4 h-4" />
                             </div>
-                            <div>
-                                <p className="font-bold text-slate-900 text-sm">Invite Colleagues</p>
-                                <p className="text-xs text-slate-400">Send one-time invite links</p>
+                            <div className="min-w-0">
+                                <p className="text-xs font-medium text-slate-900">Access & Invites</p>
+                                <p className="text-[11px] text-slate-500 truncate">Send single-use registration links</p>
                             </div>
                         </Link>
 
                         <Link
                             to="/admin/settings"
-                            className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 hover:bg-brand-50/70 border border-slate-100 hover:border-brand-200 transition-all group"
+                            className="flex items-start gap-3 p-3.5 rounded-lg border border-slate-200/70 hover:border-slate-300 hover:bg-slate-50/50 transition-colors group"
                         >
-                            <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-xs text-slate-500 group-hover:text-brand-600">
-                                <Settings className="w-5 h-5" />
+                            <div className="w-8 h-8 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                                <Settings className="w-4 h-4" />
                             </div>
-                            <div>
-                                <p className="font-bold text-slate-900 text-sm">System Settings</p>
-                                <p className="text-xs text-slate-400">Gmail & Supabase connector</p>
+                            <div className="min-w-0">
+                                <p className="text-xs font-medium text-slate-900">Settings & Connector</p>
+                                <p className="text-[11px] text-slate-500 truncate">Google App Password & database</p>
                             </div>
                         </Link>
                     </div>
                 </div>
 
-                {/* Mission / Founder Card */}
-                <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
-                    <Sparkles className="absolute -top-6 -right-6 w-36 h-36 text-white/5 rotate-12 pointer-events-none" />
+                {/* System Summary Card */}
+                <div className="bg-white p-6 rounded-xl border border-slate-200/80 flex flex-col justify-between">
                     <div>
-                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand-400">
-                            CodeStarters Mission
-                        </span>
-                        <h3 className="text-xl font-black mt-2 leading-snug">
-                            Empowering youth in CS & lifting Cupertino businesses.
-                        </h3>
-                        <p className="text-slate-400 text-xs mt-3 leading-relaxed">
-                            "The goal isn't just to build websites, but to build a community of high school innovators, mentors, and local leaders."
-                        </p>
+                        <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                            <h2 className="text-sm font-semibold text-slate-900">Platform Status</h2>
+                            <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                Operational
+                            </span>
+                        </div>
+
+                        <div className="space-y-3 text-xs">
+                            <div className="flex justify-between py-1 border-b border-slate-100">
+                                <span className="text-slate-500">Super Admin</span>
+                                <span className="font-mono text-slate-800 text-[11px] truncate max-w-[140px]">{admin?.email || "Configured"}</span>
+                            </div>
+                            <div className="flex justify-between py-1 border-b border-slate-100">
+                                <span className="text-slate-500">Database</span>
+                                <span className="text-slate-800 text-[11px]">PostgreSQL (Supabase)</span>
+                            </div>
+                            <div className="flex justify-between py-1 border-b border-slate-100">
+                                <span className="text-slate-500">Mail Transport</span>
+                                <span className="text-slate-800 text-[11px]">{emailConnected ? "Gmail SMTP" : "Unconfigured"}</span>
+                            </div>
+                            <div className="flex justify-between py-1">
+                                <span className="text-slate-500">Environment</span>
+                                <span className="font-mono text-slate-800 text-[11px]">Production</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="mt-8 pt-6 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-slate-400">
-                        <span>Cupertino, California</span>
+                    <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span className="text-slate-400 text-[11px]">CodeStarters Cupertino</span>
                         <a
                             href="/team"
                             target="_blank"
                             rel="noreferrer"
-                            className="text-brand-400 hover:text-brand-300 flex items-center gap-1"
+                            className="text-slate-600 hover:text-slate-900 font-medium flex items-center gap-1 text-[11px]"
                         >
-                            View Public Team <ArrowUpRight className="w-3.5 h-3.5" />
+                            Public Team <ArrowUpRight className="w-3 h-3" />
                         </a>
                     </div>
                 </div>

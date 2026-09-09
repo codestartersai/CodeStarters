@@ -12,7 +12,6 @@ import {
     Check,
     AlertCircle,
     Loader2,
-    Sparkles,
     Send,
     Key,
     UserCheck,
@@ -193,18 +192,20 @@ function AdminMembersPage() {
     };
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                        Access Control & Invites
-                        <span className="text-xs font-bold px-2.5 py-1 bg-brand-50 text-brand-700 rounded-full border border-brand-100">
-                            {members.length} Active Admins
+                    <div className="flex items-center gap-2.5">
+                        <h1 className="text-2xl font-semibold text-slate-900 tracking-tight">
+                            Access Control & Invites
+                        </h1>
+                        <span className="text-[11px] font-mono px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md border border-slate-200">
+                            {members.length} administrators
                         </span>
-                    </h1>
-                    <p className="text-slate-500 text-sm mt-1">
-                        Invite team members with one-use Google SSO links and manage granular permissions.
+                    </div>
+                    <p className="text-slate-500 text-xs mt-0.5">
+                        Invite administrators with single-use setup links and customize permissions.
                     </p>
                 </div>
 
@@ -213,58 +214,56 @@ function AdminMembersPage() {
                         setLastInviteResult(null);
                         setIsInviteModalOpen(true);
                     }}
-                    className="bg-brand-600 hover:bg-brand-700 text-white flex items-center gap-2 h-11 text-xs font-bold shadow-md shadow-brand-100"
+                    size="sm"
                 >
-                    <UserPlus className="w-4 h-4" />
-                    Invite Admin Member
+                    <UserPlus className="w-3.5 h-3.5" />
+                    Invite Administrator
                 </Button>
             </div>
 
             {/* Email Connector status banner */}
-            <div className={`p-4 rounded-2xl border flex items-center justify-between ${
-                emailConfigured ? "bg-emerald-50/70 border-emerald-200 text-emerald-900" : "bg-amber-50/70 border-amber-200 text-amber-900"
+            <div className={`p-3.5 rounded-xl border flex items-center justify-between ${
+                emailConfigured ? "bg-emerald-50/50 border-emerald-200 text-emerald-950" : "bg-amber-50/50 border-amber-200 text-amber-950"
             }`}>
-                <div className="flex items-center gap-3">
-                    <Mail className={`w-5 h-5 ${emailConfigured ? "text-emerald-600" : "text-amber-600"}`} />
+                <div className="flex items-center gap-2.5">
+                    <Mail className={`w-4 h-4 shrink-0 ${emailConfigured ? "text-emerald-600" : "text-amber-600"}`} />
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-wider">
-                            {emailConfigured ? "Gmail Connector Active" : "Gmail Connector Pending Configuration"}
+                        <p className="text-xs font-semibold">
+                            {emailConfigured ? "Gmail SMTP Connector Active" : "Gmail Connector Not Configured"}
                         </p>
-                        <p className="text-xs text-slate-600 mt-0.5">
+                        <p className="text-[11px] text-slate-600 mt-0.5">
                             {emailConfigured
-                                ? "Invited members automatically receive an email invitation with their one-use Google SSO link."
-                                : "Add GMAIL_USER and GMAIL_APP_PASSWORD to automatically send email invites. You can still copy invite links manually."}
+                                ? "Invitations are sent automatically to recipient email addresses."
+                                : "Set GMAIL_USER and GMAIL_APP_PASSWORD in your environment to deliver invites automatically. You can also copy links manually."}
                         </p>
                     </div>
                 </div>
 
                 <a
                     href="/admin/settings"
-                    className="text-xs font-bold px-3 py-1.5 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 whitespace-nowrap transition-colors"
+                    className="text-xs font-medium px-2.5 py-1 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 whitespace-nowrap transition-colors"
                 >
                     Email Settings &rarr;
                 </a>
             </div>
 
             {errorMessage && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs font-medium">
                     {errorMessage}
                 </div>
             )}
 
             {/* Active Administrators Section */}
-            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-lg font-black text-slate-900">Active Administrators</h2>
-                        <p className="text-xs text-slate-400 font-medium">Users with verified access to this dashboard</p>
-                    </div>
+            <div className="bg-white rounded-xl border border-slate-200/80 p-5">
+                <div className="pb-3 mb-3 border-b border-slate-100">
+                    <h2 className="text-sm font-semibold text-slate-900">Active Administrators</h2>
+                    <p className="text-xs text-slate-400 mt-0.5">Users with verified access to the dashboard</p>
                 </div>
 
                 {isLoading ? (
-                    <div className="flex items-center justify-center py-12">
-                        <Loader2 className="w-6 h-6 text-brand-600 animate-spin mr-2" />
-                        <span className="text-xs font-bold text-slate-400 uppercase">Loading team...</span>
+                    <div className="flex items-center justify-center py-10">
+                        <Loader2 className="w-4 h-4 text-slate-500 animate-spin mr-2" />
+                        <span className="text-xs text-slate-400">Loading administrators...</span>
                     </div>
                 ) : (
                     <div className="divide-y divide-slate-100">
@@ -272,41 +271,41 @@ function AdminMembersPage() {
                             const isSelf = m.id === currentUser?.id;
                             const isSuper = m.role === "super_admin";
                             return (
-                                <div key={m.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                    <div className="flex items-center gap-3.5 min-w-0">
+                                <div key={m.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3 min-w-0">
                                         {m.avatar_url ? (
                                             <img
                                                 src={m.avatar_url}
                                                 alt={m.name || m.email}
-                                                className="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0"
+                                                className="w-9 h-9 rounded-lg object-cover border border-slate-200 shrink-0"
                                             />
                                         ) : (
-                                            <div className="w-11 h-11 rounded-xl bg-brand-100 text-brand-700 font-black flex items-center justify-center text-sm shrink-0">
+                                            <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-semibold flex items-center justify-center text-xs shrink-0">
                                                 {(m.name || m.email).charAt(0).toUpperCase()}
                                             </div>
                                         )}
 
                                         <div className="min-w-0">
-                                            <div className="flex items-center gap-2">
-                                                <p className="text-sm font-black text-slate-900 truncate">
+                                            <div className="flex items-center gap-1.5">
+                                                <p className="text-xs font-semibold text-slate-900 truncate">
                                                     {m.name || "Administrator"}
                                                 </p>
                                                 {isSelf && (
-                                                    <span className="px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded text-[10px] font-bold">
+                                                    <span className="px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded text-[10px] font-medium">
                                                         You
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-xs text-slate-400 font-medium truncate">{m.email}</p>
+                                            <p className="text-[11px] text-slate-400 truncate">{m.email}</p>
                                         </div>
                                     </div>
 
                                     {/* Roles & Permissions Badges */}
                                     <div className="flex flex-wrap items-center gap-2">
-                                        <span className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${
+                                        <span className={`px-2 py-0.5 rounded-md text-[11px] font-medium flex items-center gap-1 border ${
                                             isSuper
-                                                ? "bg-purple-50 text-purple-700 border border-purple-200"
-                                                : "bg-blue-50 text-blue-700 border border-blue-200"
+                                                ? "bg-purple-50 text-purple-700 border-purple-200/80"
+                                                : "bg-blue-50 text-blue-700 border-blue-200/80"
                                         }`}>
                                             <Shield className="w-3 h-3" />
                                             {isSuper ? "Super Admin" : m.role === "editor" ? "Editor" : "Viewer"}
@@ -314,12 +313,12 @@ function AdminMembersPage() {
 
                                         <div className="hidden md:flex flex-wrap gap-1">
                                             {isSuper ? (
-                                                <span className="text-[11px] px-2 py-0.5 bg-slate-50 text-slate-600 rounded-md font-medium">
-                                                    All Permissions
+                                                <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded">
+                                                    Full Access
                                                 </span>
                                             ) : (
                                                 m.permissions?.map((p) => (
-                                                    <span key={p} className="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-medium">
+                                                    <span key={p} className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded font-mono">
                                                         {p.replace("manage_", "")}
                                                     </span>
                                                 ))
@@ -328,26 +327,27 @@ function AdminMembersPage() {
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="flex items-center gap-2 self-end sm:self-center">
-                                        <button
+                                    <div className="flex items-center gap-1.5 self-end sm:self-center">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
                                             onClick={() => {
                                                 setEditingMember(m);
                                                 setEditRole(m.role);
                                                 setEditPerms(m.permissions || []);
                                             }}
-                                            className="px-3 py-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors flex items-center gap-1"
                                         >
-                                            <Edit2 className="w-3.5 h-3.5 text-slate-400" />
+                                            <Edit2 className="w-3 h-3" />
                                             Permissions
-                                        </button>
+                                        </Button>
 
                                         {!isSelf && (
                                             <button
                                                 onClick={() => handleRevokeMember(m.id, m.name || m.email)}
-                                                className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                                                className="p-1.5 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                                 title="Revoke access"
                                             >
-                                                <Trash2 className="w-4 h-4" />
+                                                <Trash2 className="w-3.5 h-3.5" />
                                             </button>
                                         )}
                                     </div>
@@ -359,19 +359,17 @@ function AdminMembersPage() {
             </div>
 
             {/* Pending Invitations Section */}
-            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-lg font-black text-slate-900">Pending Google SSO Invitations</h2>
-                        <p className="text-xs text-slate-400 font-medium">
-                            One-use invitations awaiting sign-in from the invited Google account
-                        </p>
-                    </div>
+            <div className="bg-white rounded-xl border border-slate-200/80 p-5">
+                <div className="pb-3 mb-3 border-b border-slate-100">
+                    <h2 className="text-sm font-semibold text-slate-900">Pending Invitations</h2>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                        One-time setup links awaiting registration
+                    </p>
                 </div>
 
                 {invites.length === 0 ? (
-                    <div className="text-center py-10 text-slate-400 text-xs font-medium border border-dashed border-slate-200 rounded-2xl">
-                        No pending invitations. Click "Invite Admin Member" above to add new colleagues.
+                    <div className="text-center py-8 text-slate-400 text-xs font-normal border border-dashed border-slate-200 rounded-lg">
+                        No pending invitations. Use "Invite Administrator" to invite colleagues.
                     </div>
                 ) : (
                     <div className="divide-y divide-slate-100">
@@ -380,17 +378,17 @@ function AdminMembersPage() {
                             const inviteUrl = `${baseUrl}/admin/login?invite=${inv.token}`;
 
                             return (
-                                <div key={inv.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div key={inv.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div className="min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <Mail className="w-4 h-4 text-brand-600 shrink-0" />
-                                            <p className="text-sm font-black text-slate-900 truncate">{inv.email}</p>
-                                            <span className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-md text-[10px] font-bold border border-amber-200">
-                                                Awaiting SSO
+                                            <Mail className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                                            <p className="text-xs font-semibold text-slate-900 truncate">{inv.email}</p>
+                                            <span className="px-1.5 py-0.2 bg-amber-50 text-amber-700 rounded text-[10px] font-medium border border-amber-200">
+                                                Pending Setup
                                             </span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-                                            <span>Role: <strong>{inv.role}</strong></span>
+                                        <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                                            <span>Role: {inv.role}</span>
                                             <span>&bull;</span>
                                             <span>Expires {new Date(inv.expires_at).toLocaleDateString()}</span>
                                             {inv.invited_by && (
@@ -402,30 +400,31 @@ function AdminMembersPage() {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2">
-                                        <button
+                                    <div className="flex items-center gap-1.5">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
                                             onClick={() => copyToClipboard(inviteUrl, inv.id)}
-                                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl border border-slate-200 transition-colors"
                                         >
                                             {copiedToken === inv.id ? (
                                                 <>
-                                                    <Check className="w-3.5 h-3.5 text-emerald-600" />
-                                                    <span className="text-emerald-700">Copied!</span>
+                                                    <Check className="w-3 h-3 text-emerald-600" />
+                                                    <span className="text-emerald-700">Copied</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Copy className="w-3.5 h-3.5 text-slate-400" />
+                                                    <Copy className="w-3 h-3" />
                                                     <span>Copy Link</span>
                                                 </>
                                             )}
-                                        </button>
+                                        </Button>
 
                                         <button
                                             onClick={() => handleCancelInvite(inv.id, inv.email)}
-                                            className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                                            className="p-1.5 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                             title="Cancel invite"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-3.5 h-3.5" />
                                         </button>
                                     </div>
                                 </div>
@@ -437,90 +436,90 @@ function AdminMembersPage() {
 
             {/* Invite Modal */}
             {isInviteModalOpen && (
-                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-                    <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100 my-8">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                                <UserPlus className="w-5 h-5 text-brand-600" />
-                                Invite Team Member via Google SSO
+                <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+                    <div className="w-full max-w-lg bg-white rounded-xl shadow-xl p-6 border border-slate-200 my-8">
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                                <UserPlus className="w-4 h-4 text-slate-600" />
+                                Invite Administrator
                             </h2>
                             <button
                                 onClick={() => setIsInviteModalOpen(false)}
-                                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl"
+                                className="p-1 text-slate-400 hover:text-slate-700 rounded"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         {lastInviteResult ? (
                             <div className="space-y-4">
-                                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
-                                    <Sparkles className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-2.5">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                                     <div>
-                                        <p className="text-sm font-bold text-emerald-900">Invite Generated!</p>
-                                        <p className="text-xs text-emerald-700 leading-relaxed mt-0.5">
+                                        <p className="text-xs font-semibold text-emerald-950">Invite Generated</p>
+                                        <p className="text-xs text-emerald-700 mt-0.5">
                                             {lastInviteResult.message}
                                         </p>
                                     </div>
                                 </div>
 
                                 {lastInviteResult.inviteUrl && (
-                                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                                        <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                            Single-Use Google SSO Link
+                                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5">
+                                        <p className="text-[11px] font-medium text-slate-600 uppercase tracking-wider">
+                                            One-Time Registration Link
                                         </p>
                                         <div className="flex items-center gap-2">
                                             <input
                                                 readOnly
                                                 value={lastInviteResult.inviteUrl}
-                                                className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-800 outline-none"
+                                                className="flex-1 bg-white border border-slate-200 rounded-md px-2.5 py-1.5 text-xs font-mono text-slate-800 outline-none"
                                             />
                                             <Button
+                                                size="sm"
                                                 onClick={() => copyToClipboard(lastInviteResult.inviteUrl!, "modal")}
-                                                className="h-9 px-3 text-xs font-bold"
                                             >
-                                                {copiedToken === "modal" ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                                                {copiedToken === "modal" ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                                             </Button>
                                         </div>
                                     </div>
                                 )}
 
-                                <div className="pt-4 flex justify-end">
+                                <div className="pt-2 flex justify-end">
                                     <Button
+                                        size="sm"
                                         onClick={() => {
                                             setLastInviteResult(null);
                                             setIsInviteModalOpen(false);
                                         }}
-                                        className="text-xs font-bold h-10 px-5"
                                     >
                                         Done
                                     </Button>
                                 </div>
                             </div>
                         ) : (
-                            <form onSubmit={handleSendInvite} className="space-y-5">
+                            <form onSubmit={handleSendInvite} className="space-y-4">
                                 <div>
-                                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                                        Google Email Address *
+                                    <label className="text-xs font-medium text-slate-700 block mb-1">
+                                        Email Address *
                                     </label>
                                     <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                                         <input
                                             required
                                             type="email"
                                             value={inviteEmail}
                                             onChange={(e) => setInviteEmail(e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                            placeholder="teammate@gmail.com"
+                                            className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs font-normal outline-none focus:border-slate-400 text-slate-900"
+                                            placeholder="teammate@example.com"
                                         />
                                     </div>
                                     <p className="text-[11px] text-slate-400 mt-1">
-                                        They will authenticate with this exact Google account via SSO.
+                                        The invitee will receive a single-use setup link to create their credentials.
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">
+                                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
                                         Role Tier
                                     </label>
                                     <div className="grid grid-cols-3 gap-2">
@@ -529,17 +528,17 @@ function AdminMembersPage() {
                                                 key={r}
                                                 type="button"
                                                 onClick={() => handleRoleChange(r)}
-                                                className={`p-3 rounded-xl border text-left transition-all ${
+                                                className={`p-2.5 rounded-lg border text-left transition-colors ${
                                                     selectedRole === r
-                                                        ? "border-brand-600 bg-brand-50/50 ring-2 ring-brand-500/20"
+                                                        ? "border-slate-900 bg-slate-50 ring-1 ring-slate-900"
                                                         : "border-slate-200 hover:bg-slate-50"
                                                 }`}
                                             >
-                                                <p className="text-xs font-bold text-slate-900 capitalize">
+                                                <p className="text-xs font-semibold text-slate-900 capitalize">
                                                     {r === "super_admin" ? "Super Admin" : r}
                                                 </p>
-                                                <p className="text-[10px] text-slate-400 mt-0.5">
-                                                    {r === "super_admin" ? "Full system access" : r === "editor" ? "Team & Requests" : "Read-only"}
+                                                <p className="text-[10px] text-slate-500 mt-0.5">
+                                                    {r === "super_admin" ? "Full access" : r === "editor" ? "Team & Requests" : "Read-only"}
                                                 </p>
                                             </button>
                                         ))}
@@ -548,26 +547,26 @@ function AdminMembersPage() {
 
                                 {selectedRole !== "super_admin" && (
                                     <div>
-                                        <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">
+                                        <label className="text-xs font-medium text-slate-700 block mb-1.5">
                                             Granular Permissions
                                         </label>
-                                        <div className="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+                                        <div className="space-y-1.5 bg-slate-50 p-3 rounded-lg border border-slate-200">
                                             {AVAILABLE_PERMISSIONS.map((p) => {
                                                 const checked = selectedPerms.includes(p.id);
                                                 return (
                                                     <label
                                                         key={p.id}
-                                                        className="flex items-start gap-3 cursor-pointer p-1.5 rounded-lg hover:bg-white/80 transition-colors"
+                                                        className="flex items-start gap-2.5 cursor-pointer p-1 rounded hover:bg-white transition-colors"
                                                     >
                                                         <input
                                                             type="checkbox"
                                                             checked={checked}
                                                             onChange={() => togglePermission(p.id)}
-                                                            className="mt-0.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                                                            className="mt-0.5 rounded border-slate-300 text-slate-900"
                                                         />
                                                         <div>
-                                                            <p className="text-xs font-bold text-slate-800">{p.label}</p>
-                                                            <p className="text-[11px] text-slate-500 leading-tight">{p.description}</p>
+                                                            <p className="text-xs font-medium text-slate-900">{p.label}</p>
+                                                            <p className="text-[11px] text-slate-500">{p.description}</p>
                                                         </div>
                                                     </label>
                                                 );
@@ -576,25 +575,25 @@ function AdminMembersPage() {
                                     </div>
                                 )}
 
-                                <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                                     <Button
                                         type="button"
                                         variant="secondary"
+                                        size="sm"
                                         onClick={() => setIsInviteModalOpen(false)}
-                                        className="h-11 px-5 text-xs font-bold"
                                     >
                                         Cancel
                                     </Button>
                                     <Button
                                         type="submit"
+                                        size="sm"
                                         disabled={isSendingInvite}
-                                        className="h-11 px-6 text-xs font-bold bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-100 flex items-center gap-2"
                                     >
                                         {isSendingInvite ? (
-                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                         ) : (
                                             <>
-                                                <Send className="w-3.5 h-3.5" />
+                                                <Send className="w-3 h-3" />
                                                 Send Invite Link
                                             </>
                                         )}
@@ -608,30 +607,30 @@ function AdminMembersPage() {
 
             {/* Edit Permissions Modal */}
             {editingMember && (
-                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100">
-                        <div className="flex items-center justify-between mb-4">
+                <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-6 border border-slate-200">
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div>
-                                <h2 className="text-lg font-black text-slate-900">Update Permissions</h2>
+                                <h2 className="text-base font-semibold text-slate-900">Update Permissions</h2>
                                 <p className="text-xs text-slate-500">{editingMember.name || editingMember.email}</p>
                             </div>
                             <button
                                 onClick={() => setEditingMember(null)}
-                                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl"
+                                className="p-1 text-slate-400 hover:text-slate-700 rounded"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         <form onSubmit={handleSavePermissions} className="space-y-4">
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Role
                                 </label>
                                 <select
                                     value={editRole}
                                     onChange={(e) => setEditRole(e.target.value as AdminRole)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold outline-none"
+                                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-slate-400 text-slate-900"
                                 >
                                     <option value="super_admin">Super Admin (All Permissions)</option>
                                     <option value="editor">Editor</option>
@@ -641,19 +640,19 @@ function AdminMembersPage() {
                             </div>
 
                             {editRole !== "super_admin" && (
-                                <div className="space-y-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+                                <div className="space-y-1.5 bg-slate-50 p-3 rounded-lg border border-slate-200">
                                     {AVAILABLE_PERMISSIONS.map((p) => {
                                         const checked = editPerms.includes(p.id);
                                         return (
                                             <label
                                                 key={p.id}
-                                                className="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-slate-800"
+                                                className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-800"
                                             >
                                                 <input
                                                     type="checkbox"
                                                     checked={checked}
                                                     onChange={() => toggleEditPermission(p.id)}
-                                                    className="rounded border-slate-300 text-brand-600"
+                                                    className="rounded border-slate-300 text-slate-900"
                                                 />
                                                 <span>{p.label}</span>
                                             </label>
@@ -662,21 +661,21 @@ function AdminMembersPage() {
                                 </div>
                             )}
 
-                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                                 <Button
                                     type="button"
                                     variant="secondary"
+                                    size="sm"
                                     onClick={() => setEditingMember(null)}
-                                    className="h-10 px-4 text-xs font-bold"
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     type="submit"
+                                    size="sm"
                                     disabled={isSavingEdit}
-                                    className="h-10 px-5 text-xs font-bold bg-brand-600 hover:bg-brand-700"
                                 >
-                                    {isSavingEdit ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
+                                    {isSavingEdit ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Save Changes"}
                                 </Button>
                             </div>
                         </form>

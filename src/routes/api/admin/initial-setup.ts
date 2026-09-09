@@ -61,10 +61,21 @@ export const Route = createFileRoute("/api/admin/initial-setup")({
                     }
 
                     if (count && count > 0) {
-                        return jsonWithCookies(bundle, {
-                            ok: false,
-                            error: "Initial setup has already been completed. Registration is permanently locked. Please sign in or use an invitation link.",
-                        }, { status: 403 });
+                        // Allow primary owner (codestartersai@gmail.com) or existing super admin to set/reset their password
+                        const isPrimaryAdmin = email === "codestartersai@gmail.com";
+                        const { data: superAdmins } = await admin
+                            .from("admin_users")
+                            .select("email, role")
+                            .eq("role", "super_admin");
+
+                        const matchesSuperAdmin = superAdmins?.some((a) => a.email.toLowerCase() === email);
+
+                        if (!isPrimaryAdmin && !matchesSuperAdmin) {
+                            return jsonWithCookies(bundle, {
+                                ok: false,
+                                error: "Initial setup has already been completed. Registration is permanently locked. Please sign in or use an invitation link.",
+                            }, { status: 403 });
+                        }
                     }
 
                     // Look up if user already exists in auth.users
@@ -107,7 +118,7 @@ export const Route = createFileRoute("/api/admin/initial-setup")({
 
                     const { error: insertErr } = await admin
                         .from("admin_users")
-                        .insert(newAdmin);
+                        .upsert(newAdmin);
 
                     if (insertErr) {
                         throw insertErr;

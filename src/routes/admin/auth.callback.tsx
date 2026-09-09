@@ -89,18 +89,18 @@ function AdminAuthCallback() {
 
     if (errorMessage) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-                <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-xl p-8 md:p-12 border border-slate-100 text-center">
-                    <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <AlertCircle className="w-8 h-8" />
+            <div className="min-h-screen bg-[#090a0f] flex items-center justify-center p-6 text-slate-100">
+                <div className="w-full max-w-sm bg-[#11131a] rounded-xl shadow-2xl p-7 border border-slate-800 text-center">
+                    <div className="w-10 h-10 bg-red-500/10 text-red-400 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <AlertCircle className="w-5 h-5" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-3">Access Restricted</h2>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-8">{errorMessage}</p>
+                    <h2 className="text-base font-semibold text-white mb-2">Access Restricted</h2>
+                    <p className="text-slate-400 text-xs leading-relaxed mb-6">{errorMessage}</p>
                     <Button
                         onClick={() => navigate({ to: "/admin/login" })}
-                        className="w-full h-12 text-sm flex items-center justify-center gap-2"
+                        className="w-full h-9 text-xs font-medium bg-white hover:bg-slate-100 text-slate-900 flex items-center justify-center gap-2"
                     >
-                        <ArrowLeft className="w-4 h-4" /> Back to Login
+                        <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
                     </Button>
                 </div>
             </div>
@@ -108,11 +108,11 @@ function AdminAuthCallback() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-            <div className="w-full max-w-sm bg-white rounded-[2.5rem] shadow-xl p-10 text-center border border-slate-100">
-                <div className="w-16 h-16 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mx-auto mb-6" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Connecting Account</h3>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{statusText}</p>
+        <div className="min-h-screen bg-[#090a0f] flex items-center justify-center p-6 text-slate-100">
+            <div className="w-full max-w-xs bg-[#11131a] rounded-xl shadow-2xl p-8 text-center border border-slate-800">
+                <div className="w-8 h-8 border-2 border-slate-700 border-t-white rounded-full animate-spin mx-auto mb-4" />
+                <h3 className="text-sm font-semibold text-white mb-1">Verifying Access</h3>
+                <p className="text-xs text-slate-400">{statusText}</p>
             </div>
         </div>
     );

@@ -9,7 +9,6 @@ import {
     Trash2,
     ExternalLink,
     Upload,
-    Sparkles,
     Check,
     X,
     Users,
@@ -316,59 +315,64 @@ function AdminTeamsPage() {
     const activeCatObj = categories.find((c) => c.id === activeTab);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                        Teams & Tabs Manager
-                        <span className="text-xs font-bold px-2.5 py-1 bg-brand-50 text-brand-700 rounded-full border border-brand-100">
-                            {members.length} Members
+                    <div className="flex items-center gap-2.5">
+                        <h1 className="text-2xl font-semibold text-slate-900 tracking-tight">
+                            Teams & Tabs
+                        </h1>
+                        <span className="text-[11px] font-mono px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md border border-slate-200">
+                            {members.length} members
                         </span>
-                    </h1>
-                    <p className="text-slate-500 text-sm mt-1">
-                        Organize department categories (Robotics, Web Dev, Leadership), add members, change photos, and customize ordering.
+                    </div>
+                    <p className="text-slate-500 text-xs mt-0.5">
+                        Manage departments, staff rosters, headshots, and member ordering.
                     </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2">
                     <Button
                         onClick={openCreateTabModal}
                         variant="secondary"
-                        className="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-2 h-11 text-xs font-bold"
+                        size="sm"
                     >
-                        <FolderPlus className="w-4 h-4 text-brand-600" />
-                        Add Team Tab
+                        <FolderPlus className="w-3.5 h-3.5" />
+                        Add Category
                     </Button>
 
                     <Button
                         onClick={openCreateMemberModal}
-                        className="bg-brand-600 hover:bg-brand-700 text-white flex items-center gap-2 h-11 text-xs font-bold shadow-md shadow-brand-100"
+                        size="sm"
                     >
-                        <UserPlus className="w-4 h-4" />
+                        <UserPlus className="w-3.5 h-3.5" />
                         Add Member
                     </Button>
                 </div>
             </div>
 
             {errorMessage && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs font-medium">
                     {errorMessage}
                 </div>
             )}
 
-            {/* Tabs Bar */}
-            <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2 overflow-x-auto">
+            {/* Department Navigation Bar */}
+            <div className="border-b border-slate-200 pb-2 flex items-center gap-1.5 overflow-x-auto">
                 <button
                     onClick={() => setActiveTab("all")}
-                    className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                         activeTab === "all"
-                            ? "bg-slate-900 text-white shadow-sm"
-                            : "text-slate-600 hover:bg-slate-100"
+                            ? "bg-slate-900 text-white"
+                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                     }`}
                 >
                     <Layers className="w-3.5 h-3.5" />
-                    All Departments ({members.length})
+                    <span>All Departments</span>
+                    <span className={`text-[10px] font-mono px-1.5 rounded ${activeTab === "all" ? "bg-slate-800 text-slate-200" : "bg-slate-200 text-slate-600"}`}>
+                        {members.length}
+                    </span>
                 </button>
 
                 {categories.map((cat) => {
@@ -378,38 +382,34 @@ function AdminTeamsPage() {
                         <div key={cat.id} className="flex items-center">
                             <button
                                 onClick={() => setActiveTab(cat.id)}
-                                className={`px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                                     isActive
-                                        ? "bg-brand-600 text-white shadow-sm"
-                                        : "text-slate-600 hover:bg-slate-100"
+                                        ? "bg-slate-900 text-white"
+                                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                 }`}
                             >
                                 <span>{cat.name}</span>
-                                <span
-                                    className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                                        isActive ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
-                                    }`}
-                                >
+                                <span className={`text-[10px] font-mono px-1.5 rounded ${isActive ? "bg-slate-800 text-slate-200" : "bg-slate-200 text-slate-600"}`}>
                                     {count}
                                 </span>
                             </button>
 
                             {isActive && (
-                                <div className="flex items-center ml-1">
+                                <div className="flex items-center ml-0.5">
                                     <button
                                         onClick={() => openEditTabModal(cat)}
-                                        title="Edit tab details"
-                                        className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                                        title="Edit category"
+                                        className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
                                     >
-                                        <Edit3 className="w-3.5 h-3.5" />
+                                        <Edit3 className="w-3 h-3" />
                                     </button>
                                     {cat.id !== "leadership" && (
                                         <button
                                             onClick={() => handleDeleteTab(cat.id, cat.name)}
-                                            title="Delete tab"
-                                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Delete category"
+                                            className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                                         >
-                                            <Trash2 className="w-3.5 h-3.5" />
+                                            <Trash2 className="w-3 h-3" />
                                         </button>
                                     )}
                                 </div>
@@ -419,116 +419,116 @@ function AdminTeamsPage() {
                 })}
             </div>
 
-            {/* Search Bar & Active Tab Info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            {/* Search Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="relative flex-1 max-w-sm">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                     <input
                         type="text"
-                        placeholder="Search by member name or title..."
+                        placeholder="Search roster..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 shadow-sm"
+                        className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-normal outline-none focus:border-slate-400 text-slate-900 placeholder:text-slate-400 transition-colors"
                     />
                 </div>
 
-                <div className="text-xs text-slate-500 font-medium">
-                    Showing <strong>{filteredMembers.length}</strong> {activeTab === "all" ? "total members" : `in ${activeCatObj?.name || activeTab}`}
+                <div className="text-[11px] text-slate-500 font-medium">
+                    Showing {filteredMembers.length} {activeTab === "all" ? "members" : `in ${activeCatObj?.name || activeTab}`}
                 </div>
             </div>
 
             {/* Member Cards Grid */}
             {isLoading ? (
-                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 border-dashed">
-                    <Loader2 className="w-8 h-8 text-brand-600 animate-spin mb-3" />
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Loading team members...</p>
+                <div className="flex flex-col items-center justify-center py-16 bg-white rounded-xl border border-slate-200/80">
+                    <Loader2 className="w-5 h-5 text-slate-500 animate-spin mb-2" />
+                    <p className="text-xs text-slate-400">Loading team roster...</p>
                 </div>
             ) : filteredMembers.length === 0 ? (
-                <div className="text-center py-20 bg-white rounded-3xl border border-slate-200/80 shadow-sm p-8">
-                    <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
-                        <Users className="w-6 h-6" />
+                <div className="text-center py-16 bg-white rounded-xl border border-slate-200/80 p-6">
+                    <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                        <Users className="w-5 h-5" />
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 mb-1">No members found</h3>
-                    <p className="text-slate-500 text-xs max-w-sm mx-auto mb-6">
-                        {searchTerm ? "No team members match your search criteria." : "There are no members in this tab yet."}
+                    <h3 className="text-sm font-semibold text-slate-900">No members found</h3>
+                    <p className="text-slate-500 text-xs max-w-xs mx-auto mt-1 mb-4">
+                        {searchTerm ? "No members match your search query." : "No members have been added to this department yet."}
                     </p>
-                    <Button onClick={openCreateMemberModal} className="text-xs font-bold h-10 px-4">
-                        <UserPlus className="w-4 h-4 mr-2" /> Add First Member
+                    <Button onClick={openCreateMemberModal} size="sm">
+                        <UserPlus className="w-3.5 h-3.5" /> Add First Member
                     </Button>
                 </div>
             ) : (
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {filteredMembers.map((m) => {
                         const cat = categories.find((c) => c.id === m.category_id);
                         return (
                             <div
                                 key={m.id}
-                                className="bg-white rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col group"
+                                className="bg-white rounded-xl border border-slate-200/80 hover:border-slate-300 transition-colors overflow-hidden flex flex-col group"
                             >
                                 {/* Photo Header */}
-                                <div className="aspect-[4/3] w-full bg-slate-100 relative overflow-hidden flex items-center justify-center">
+                                <div className="aspect-[4/3] w-full bg-slate-100 relative overflow-hidden flex items-center justify-center border-b border-slate-100">
                                     {m.image_url ? (
                                         <img
                                             src={m.image_url}
                                             alt={m.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            className="w-full h-full object-cover"
                                         />
                                     ) : (
-                                        <div className="w-16 h-16 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-black text-2xl">
+                                        <div className="w-12 h-12 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-semibold text-lg">
                                             {m.name.charAt(0)}
                                         </div>
                                     )}
 
-                                    <div className="absolute top-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/70 backdrop-blur-md p-1.5 rounded-xl">
+                                    <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/95 backdrop-blur-xs p-1 rounded-md border border-slate-200 shadow-xs">
                                         <button
                                             onClick={() => openEditMemberModal(m)}
-                                            className="p-1 text-white hover:text-brand-300 transition-colors"
+                                            className="p-1 text-slate-600 hover:text-slate-950 rounded transition-colors"
                                             title="Edit member"
                                         >
-                                            <Edit3 className="w-4 h-4" />
+                                            <Edit3 className="w-3.5 h-3.5" />
                                         </button>
                                         <button
                                             onClick={() => handleDeleteMember(m.id, m.name)}
-                                            className="p-1 text-white hover:text-red-400 transition-colors"
+                                            className="p-1 text-slate-600 hover:text-red-600 rounded transition-colors"
                                             title="Delete member"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-3.5 h-3.5" />
                                         </button>
                                     </div>
 
-                                    <span className="absolute bottom-3 left-3 text-[11px] font-bold px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 rounded-lg shadow-sm">
+                                    <span className="absolute bottom-2 left-2 text-[10px] font-medium px-2 py-0.5 bg-white/95 backdrop-blur-xs text-slate-700 rounded border border-slate-200/80 shadow-xs">
                                         {cat?.name || m.category_id}
                                     </span>
                                 </div>
 
                                 {/* Content */}
-                                <div className="p-5 flex-1 flex flex-col justify-between">
+                                <div className="p-4 flex-1 flex flex-col justify-between">
                                     <div>
-                                        <h3 className="text-base font-black text-slate-900 leading-snug">{m.name}</h3>
-                                        <p className="text-xs font-bold text-brand-600 mt-0.5">{m.role}</p>
+                                        <h3 className="text-sm font-semibold text-slate-900 leading-snug">{m.name}</h3>
+                                        <p className="text-xs text-slate-600 mt-0.5 font-medium">{m.role}</p>
 
                                         {m.bio && (
-                                            <p className="text-xs text-slate-500 mt-3 line-clamp-2 leading-relaxed">
+                                            <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
                                                 {m.bio}
                                             </p>
                                         )}
                                     </div>
 
-                                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                                    <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
                                         {m.social_links ? (
                                             <a
                                                 href={m.social_links.startsWith("http") ? m.social_links : `https://${m.social_links}`}
                                                 target="_blank"
                                                 rel="noreferrer"
-                                                className="text-slate-400 hover:text-brand-600 flex items-center gap-1 font-bold truncate max-w-[180px]"
+                                                className="text-slate-500 hover:text-slate-900 flex items-center gap-1 text-[11px] font-medium truncate max-w-[150px]"
                                             >
                                                 <ExternalLink className="w-3 h-3 shrink-0" />
-                                                <span className="truncate">Profile / Link</span>
+                                                <span className="truncate">Profile Link</span>
                                             </a>
                                         ) : (
-                                            <span className="text-[11px] text-slate-400 italic">No link</span>
+                                            <span className="text-[11px] text-slate-400">No link</span>
                                         )}
-                                        <span className="text-[10px] font-bold text-slate-400">Order #{m.order_index}</span>
+                                        <span className="text-[10px] font-mono text-slate-400">#{m.order_index}</span>
                                     </div>
                                 </div>
                             </div>
@@ -539,23 +539,23 @@ function AdminTeamsPage() {
 
             {/* Member Modal */}
             {isMemberModalOpen && (
-                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-                    <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100 my-8">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-black text-slate-900">
-                                {editingMember ? "Edit Team Member" : "Add New Team Member"}
+                <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+                    <div className="w-full max-w-lg bg-white rounded-xl shadow-xl p-6 border border-slate-200 my-8">
+                        <div className="flex items-center justify-between mb-5 pb-3 border-b border-slate-100">
+                            <h2 className="text-base font-semibold text-slate-900">
+                                {editingMember ? "Edit Member" : "Add Team Member"}
                             </h2>
                             <button
                                 onClick={() => setIsMemberModalOpen(false)}
-                                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl"
+                                className="p-1 text-slate-400 hover:text-slate-700 rounded"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         <form onSubmit={handleSaveMember} className="space-y-4">
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Full Name *
                                 </label>
                                 <input
@@ -563,13 +563,13 @@ function AdminTeamsPage() {
                                     type="text"
                                     value={memberName}
                                     onChange={(e) => setMemberName(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
                                     placeholder="e.g. Alex Chen"
                                 />
                             </div>
 
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Role / Title *
                                 </label>
                                 <input
@@ -577,20 +577,20 @@ function AdminTeamsPage() {
                                     type="text"
                                     value={memberRole}
                                     onChange={(e) => setMemberRole(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="e.g. Robotics Firmware Lead"
+                                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
+                                    placeholder="e.g. Lead Instructor"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                                        Team Tab / Category *
+                                    <label className="text-xs font-medium text-slate-700 block mb-1">
+                                        Department Category *
                                     </label>
                                     <select
                                         value={memberCategory}
                                         onChange={(e) => setMemberCategory(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-slate-400 text-slate-900"
                                     >
                                         {categories.map((c) => (
                                             <option key={c.id} value={c.id}>
@@ -601,39 +601,39 @@ function AdminTeamsPage() {
                                 </div>
 
                                 <div>
-                                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                                        Display Order Index
+                                    <label className="text-xs font-medium text-slate-700 block mb-1">
+                                        Display Order
                                     </label>
                                     <input
                                         type="number"
                                         value={memberOrder}
                                         onChange={(e) => setMemberOrder(Number(e.target.value))}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
                                     />
                                 </div>
                             </div>
 
                             {/* Headshot & Image Selection */}
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                                <label className="text-xs font-medium text-slate-700 block">
                                     Headshot Photo
                                 </label>
 
                                 {memberImage && (
-                                    <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                                    <div className="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                                         <img
                                             src={memberImage}
                                             alt="Preview"
-                                            className="w-14 h-14 rounded-xl object-cover border border-slate-300 shrink-0"
+                                            className="w-11 h-11 rounded-md object-cover border border-slate-300 shrink-0"
                                         />
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-xs font-bold text-slate-800 truncate">
-                                                {memberImage.startsWith("data:") ? "Uploaded Photo (Optimized)" : memberImage}
+                                            <p className="text-xs font-medium text-slate-800 truncate">
+                                                {memberImage.startsWith("data:") ? "Optimized Headshot" : memberImage}
                                             </p>
                                             <button
                                                 type="button"
                                                 onClick={() => setMemberImage("")}
-                                                className="text-[11px] font-bold text-red-600 hover:underline mt-0.5"
+                                                className="text-[11px] text-red-600 hover:underline mt-0.5"
                                             >
                                                 Remove Photo
                                             </button>
@@ -646,21 +646,20 @@ function AdminTeamsPage() {
                                         type="text"
                                         value={memberImage.startsWith("data:") ? "" : memberImage}
                                         onChange={(e) => setMemberImage(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                        placeholder="Paste image URL (e.g. /team/pranav-c.png or https://...)"
+                                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
+                                        placeholder="Paste image URL (/team/... or https://...)"
                                     />
 
                                     <div className="flex items-center gap-2">
-                                        {/* Preset picker */}
                                         <select
                                             onChange={(e) => {
                                                 if (e.target.value) setMemberImage(e.target.value);
                                             }}
-                                            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 outline-none"
+                                            className="flex-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:border-slate-400"
                                             defaultValue=""
                                         >
                                             <option value="" disabled>
-                                                Select from existing presets...
+                                                Select preset avatar...
                                             </option>
                                             {PRESET_IMAGES.map((img) => (
                                                 <option key={img.url} value={img.url}>
@@ -669,10 +668,9 @@ function AdminTeamsPage() {
                                             ))}
                                         </select>
 
-                                        {/* Local File Upload */}
-                                        <label className="cursor-pointer px-3 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0">
+                                        <label className="cursor-pointer px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors shrink-0">
                                             <Camera className="w-3.5 h-3.5" />
-                                            <span>Upload File</span>
+                                            <span>Upload</span>
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -685,46 +683,46 @@ function AdminTeamsPage() {
                             </div>
 
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Bio / Summary (Optional)
                                 </label>
                                 <textarea
                                     rows={2}
                                     value={memberBio}
                                     onChange={(e) => setMemberBio(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="Brief background or achievements..."
+                                    className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 outline-none focus:border-slate-400"
+                                    placeholder="Brief background..."
                                 />
                             </div>
 
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Social / Website Link (Optional)
                                 </label>
                                 <input
                                     type="text"
                                     value={memberLinks}
                                     onChange={(e) => setMemberLinks(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
                                     placeholder="https://linkedin.com/in/... or github.com/..."
                                 />
                             </div>
 
-                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                                 <Button
                                     type="button"
                                     variant="secondary"
+                                    size="sm"
                                     onClick={() => setIsMemberModalOpen(false)}
-                                    className="h-11 px-5 text-xs font-bold"
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     type="submit"
+                                    size="sm"
                                     disabled={isSaving}
-                                    className="h-11 px-6 text-xs font-bold bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-100"
                                 >
-                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : editingMember ? "Save Changes" : "Create Member"}
+                                    {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : editingMember ? "Save Changes" : "Create Member"}
                                 </Button>
                             </div>
                         </form>
@@ -734,82 +732,82 @@ function AdminTeamsPage() {
 
             {/* Add / Edit Team Tab Modal */}
             {isTabModalOpen && (
-                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                                <FolderPlus className="w-5 h-5 text-brand-600" />
-                                {editingCategory ? "Edit Team Tab" : "Add Team Category / Tab"}
+                <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-6 border border-slate-200">
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                                <FolderPlus className="w-4 h-4 text-slate-600" />
+                                {editingCategory ? "Edit Category" : "Add Team Category"}
                             </h2>
                             <button
                                 onClick={() => {
                                     setIsTabModalOpen(false);
                                     setEditingCategory(null);
                                 }}
-                                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl"
+                                className="p-1 text-slate-400 hover:text-slate-700 rounded"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         <form onSubmit={handleSaveTab} className="space-y-4">
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
-                                    Tab Name *
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
+                                    Category Name *
                                 </label>
                                 <input
                                     required
                                     type="text"
                                     value={tabName}
                                     onChange={(e) => setTabName(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="e.g. Robotics Team, Web Development"
+                                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
+                                    placeholder="e.g. Robotics, Web Dev, Mentors"
                                 />
                             </div>
 
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Description (Optional)
                                 </label>
                                 <textarea
                                     rows={2}
                                     value={tabDesc}
                                     onChange={(e) => setTabDesc(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="Describe the department's purpose..."
+                                    className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 outline-none focus:border-slate-400"
+                                    placeholder="Describe this department's role..."
                                 />
                             </div>
 
                             <div>
-                                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                                <label className="text-xs font-medium text-slate-700 block mb-1">
                                     Order Index
                                 </label>
                                 <input
                                     type="number"
                                     value={tabOrder}
                                     onChange={(e) => setTabOrder(Number(e.target.value))}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
+                                    className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
                                 />
                             </div>
 
-                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                                 <Button
                                     type="button"
                                     variant="secondary"
+                                    size="sm"
                                     onClick={() => {
                                         setIsTabModalOpen(false);
                                         setEditingCategory(null);
                                     }}
-                                    className="h-11 px-5 text-xs font-bold"
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     type="submit"
+                                    size="sm"
                                     disabled={isSavingTab}
-                                    className="h-11 px-6 text-xs font-bold bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-100"
                                 >
-                                    {isSavingTab ? <Loader2 className="w-4 h-4 animate-spin" /> : editingCategory ? "Save Tab Changes" : "Create Tab"}
+                                    {isSavingTab ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : editingCategory ? "Save Changes" : "Create Category"}
                                 </Button>
                             </div>
                         </form>
@@ -819,3 +817,4 @@ function AdminTeamsPage() {
         </div>
     );
 }
+

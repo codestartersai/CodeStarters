@@ -1,23 +1,18 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/browser";
-import { Button } from "@/components/codestarters/Button";
 import {
     Loader2,
-    Mail,
     Lock,
     User,
-    ShieldCheck,
-    Sparkles,
-    AlertCircle,
-    Copy,
-    Check,
-    KeyRound,
-    ArrowRight,
-    CheckCircle2,
+    Mail,
     Eye,
     EyeOff,
-    ShieldAlert,
+    Check,
+    Copy,
+    ArrowRight,
+    AlertCircle,
+    CheckCircle2,
 } from "lucide-react";
 
 type LoginSearchParams = {
@@ -35,16 +30,15 @@ export const Route = createFileRoute("/admin/login")({
 
 function AdminLoginPage() {
     const search = useSearch({ from: "/admin/login" });
+    const [mode, setMode] = useState<"signin" | "setup">("signin");
     const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(search.error || null);
 
-    // Initial Setup state (when 0 admins exist)
-    const [isCheckingSetup, setIsCheckingSetup] = useState(true);
-    const [setupRequired, setSetupRequired] = useState(false);
-    const [setupUsername, setSetupUsername] = useState("");
+    // Initial Setup state
+    const [setupName, setSetupName] = useState("codestartersai");
     const [setupEmail, setSetupEmail] = useState("codestartersai@gmail.com");
     const [setupPassword, setSetupPassword] = useState("");
     const [setupConfirm, setSetupConfirm] = useState("");
@@ -60,7 +54,7 @@ function AdminLoginPage() {
         error?: string;
     } | null>(null);
 
-    // Invite redemption form state
+    // Invite redemption state
     const [inviteUsername, setInviteUsername] = useState("");
     const [invitePassword, setInvitePassword] = useState("");
     const [inviteConfirm, setInviteConfirm] = useState("");
@@ -71,16 +65,15 @@ function AdminLoginPage() {
     } | null>(null);
     const [copiedCreds, setCopiedCreds] = useState(false);
 
-    // 1. Check if initial bootstrap is needed OR validate invite token
+    // Check setup status and invite on load
     useEffect(() => {
         let isMounted = true;
 
-        async function init() {
+        async function checkState() {
             if (search.invite) {
                 const token = search.invite.trim();
                 setInviteToken(token);
                 setIsValidatingInvite(true);
-
                 try {
                     const res = await fetch(`/api/admin/redeem-invite?token=${encodeURIComponent(token)}`);
                     const data = await res.json().catch(() => ({}));
@@ -98,28 +91,25 @@ function AdminLoginPage() {
                     if (isMounted) setIsValidatingInvite(false);
                 }
             } else {
-                // Check if system needs first-user setup
                 try {
                     const res = await fetch("/api/admin/initial-setup");
                     const data = await res.json().catch(() => ({}));
                     if (isMounted && data.setupRequired) {
-                        setSetupRequired(true);
+                        setMode("setup");
                     }
-                } catch (err) {
-                    console.warn("Failed to check setup status:", err);
-                } finally {
-                    if (isMounted) setIsCheckingSetup(false);
+                } catch {
+                    // Ignore network error on check; user can still switch modes manually
                 }
             }
         }
 
-        void init();
+        void checkState();
         return () => {
             isMounted = false;
         };
     }, [search.invite]);
 
-    // Handle Standard Login (Username or Email + Password)
+    // Handle Standard Login
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -133,7 +123,7 @@ function AdminLoginPage() {
 
             let loginEmail = rawId;
 
-            // If identifier does not contain '@', resolve email via username lookup
+            // Resolve email if username was provided
             if (!rawId.includes("@")) {
                 const lookupRes = await fetch("/api/admin/lookup-username", {
                     method: "POST",
@@ -142,30 +132,29 @@ function AdminLoginPage() {
                 });
                 const lookupData = await lookupRes.json().catch(() => ({}));
                 if (!lookupRes.ok || !lookupData.email) {
-                    throw new Error(`No account found with username "${rawId}". Please check your spelling or sign in with your email.`);
+                    throw new Error(`Account "${rawId}" not found. Please verify your spelling or enter your email address.`);
                 }
                 loginEmail = lookupData.email;
             }
 
-            // Authenticate with Supabase
             const { error: signInErr } = await supabase.auth.signInWithPassword({
                 email: loginEmail,
                 password,
             });
 
             if (signInErr) {
-                throw new Error(signInErr.message === "Invalid login credentials"
-                    ? "Invalid credentials. Please verify your email/username and password."
-                    : signInErr.message);
+                if (signInErr.message.toLowerCase().includes("invalid login credentials")) {
+                    throw new Error("Invalid email or password. If you haven't set up your Super Admin password yet, click 'Setup Super Admin' below.");
+                }
+                throw signInErr;
             }
 
-            // Strict authorization check: ensure user exists in admin_users table
+            // Verify admin role in admin_users table
             const verifyRes = await fetch("/api/admin/auth-verify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({}),
             });
-
             const verifyData = await verifyRes.json().catch(() => ({}));
 
             if (!verifyRes.ok || !verifyData.authorized) {
@@ -173,16 +162,15 @@ function AdminLoginPage() {
                 throw new Error(verifyData.error || "Access denied. Your account is not authorized as an administrator.");
             }
 
-            // Successfully authenticated as an authorized admin
-            window.location.href = "/admin";
+            window.location.replace("/admin");
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Authentication failed.");
+            setError(err instanceof Error ? err.message : "Sign in failed.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // Handle First-User Super Admin Setup
+    // Handle Initial Super Admin Setup
     const handleInitialSetup = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -205,7 +193,7 @@ function AdminLoginPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    username: setupUsername.trim(),
+                    username: setupName.trim(),
                     email: setupEmail.trim(),
                     password: setupPassword,
                 }),
@@ -213,20 +201,20 @@ function AdminLoginPage() {
 
             const data = await res.json().catch(() => ({}));
             if (!res.ok || !data.ok) {
-                throw new Error(data.error || "Failed to initialize super admin.");
+                throw new Error(data.error || "Failed to configure Super Admin account.");
             }
 
-            // Log in immediately
+            // Sign in immediately with newly configured credentials
             const { error: signInErr } = await supabase.auth.signInWithPassword({
                 email: setupEmail.trim(),
                 password: setupPassword,
             });
 
             if (signInErr) {
-                console.warn("Auto-signin error:", signInErr);
+                console.warn("Auto-signin warning:", signInErr);
             }
 
-            window.location.href = "/admin";
+            window.location.replace("/admin");
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : "Failed to set up Super Admin.");
         } finally {
@@ -234,7 +222,7 @@ function AdminLoginPage() {
         }
     };
 
-    // Handle One-Time Invite Redemption (Set username & password)
+    // Handle One-Time Invite Link Redemption
     const handleRedeemInvite = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inviteToken || !inviteData?.email) return;
@@ -270,24 +258,18 @@ function AdminLoginPage() {
                 throw new Error(data.error || "Failed to activate invitation.");
             }
 
-            // Store credentials to show copy screen
             setSavedCredentials({
                 username: inviteUsername.trim() || inviteData.email.split("@")[0],
                 email: inviteData.email,
                 password: invitePassword,
             });
 
-            // Automatically sign in
-            const { error: signInErr } = await supabase.auth.signInWithPassword({
+            await supabase.auth.signInWithPassword({
                 email: inviteData.email,
                 password: invitePassword,
             });
-
-            if (signInErr) {
-                console.warn("Auto sign-in warning:", signInErr);
-            }
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Error setting up account.");
+            setError(err instanceof Error ? err.message : "Failed to activate account.");
         } finally {
             setIsSubmitting(false);
         }
@@ -295,401 +277,350 @@ function AdminLoginPage() {
 
     const copyCredentials = () => {
         if (!savedCredentials) return;
-        const text = `CodeStarters Admin Credentials\nUsername: ${savedCredentials.username}\nEmail: ${savedCredentials.email}\nPassword: ${savedCredentials.password}\nLogin URL: ${window.location.origin}/admin/login`;
+        const text = `CodeStarters Admin\nUsername: ${savedCredentials.username}\nEmail: ${savedCredentials.email}\nPassword: ${savedCredentials.password}\nLogin URL: ${window.location.origin}/admin/login`;
         navigator.clipboard.writeText(text);
         setCopiedCreds(true);
         setTimeout(() => setCopiedCreds(false), 2500);
     };
 
-    const generateStrongPassword = (target: "invite" | "setup") => {
-        const rand = Math.random().toString(36).slice(-8) + "!CS" + Math.floor(100 + Math.random() * 900);
-        if (target === "invite") {
-            setInvitePassword(rand);
-            setInviteConfirm(rand);
-        } else {
-            setSetupPassword(rand);
-            setSetupConfirm(rand);
-        }
-    };
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 flex items-center justify-center p-6 relative overflow-hidden">
-            {/* Background ambient accents */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-10 right-10 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="w-full max-w-md bg-white rounded-[2.75rem] shadow-2xl p-8 sm:p-12 relative z-10 border border-slate-100">
-                {/* Brand Header */}
-                <div className="text-center mb-8">
-                    <div className="w-16 h-16 rounded-2xl bg-brand-50 mx-auto mb-5 flex items-center justify-center shadow-inner">
-                        <span className="text-brand-700 font-black text-2xl tracking-tighter">CS</span>
+        <div className="min-h-screen bg-[#090a0f] text-zinc-100 flex flex-col items-center justify-center p-4 selection:bg-zinc-800">
+            {/* Minimal Brand Mark */}
+            <div className="w-full max-w-[380px] mb-6 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-md bg-zinc-800 border border-zinc-700/80 flex items-center justify-center">
+                        <span className="text-xs font-bold text-zinc-100 font-mono">CS</span>
                     </div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">CodeStarters</h1>
-                    <p className="text-slate-500 text-sm font-medium">Administrator & Leadership Portal</p>
+                    <span className="text-sm font-semibold tracking-tight text-zinc-200">CodeStarters</span>
                 </div>
+                <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Admin</span>
+            </div>
 
-                {/* Error Banner */}
-                {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                        <div>
-                            <p className="text-xs font-bold text-red-900">Authentication Alert</p>
-                            <p className="text-xs text-red-700 leading-relaxed mt-0.5">{error}</p>
-                        </div>
-                    </div>
-                )}
-
-                {/* VIEW 1: ONE-TIME LINK ACTIVATED - CREDENTIALS CREATED CONFIRMATION */}
+            {/* Main Card */}
+            <div className="w-full max-w-[380px] bg-[#111318] border border-zinc-800 rounded-xl p-6 sm:p-7 shadow-2xl">
+                {/* 1. SAVED CREDENTIALS (SUCCESS SCREEN) */}
                 {savedCredentials ? (
-                    <div className="space-y-6">
-                        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div className="space-y-5">
+                        <div className="flex items-start gap-3 p-3.5 bg-emerald-950/30 border border-emerald-800/40 rounded-lg">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                             <div>
-                                <p className="text-sm font-bold text-emerald-900">Account Activated!</p>
-                                <p className="text-xs text-emerald-700 leading-relaxed mt-0.5">
-                                    Your username and password have been saved. You can now use them anytime to sign in.
+                                <p className="text-xs font-medium text-emerald-200">Account Activated</p>
+                                <p className="text-[11px] text-emerald-400/80 mt-0.5 leading-relaxed">
+                                    Your username and password are ready. Save them for future sign-ins.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                            <div>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Username</p>
-                                <p className="text-sm font-bold text-slate-900 font-mono">{savedCredentials.username}</p>
+                        <div className="space-y-2.5 bg-zinc-900/70 border border-zinc-800 rounded-lg p-3 text-xs font-mono">
+                            <div className="flex justify-between py-1 border-b border-zinc-800/80">
+                                <span className="text-zinc-500">Username</span>
+                                <span className="text-zinc-200 font-medium">{savedCredentials.username}</span>
                             </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email</p>
-                                <p className="text-sm font-bold text-slate-900 font-mono">{savedCredentials.email}</p>
+                            <div className="flex justify-between py-1 border-b border-zinc-800/80">
+                                <span className="text-zinc-500">Email</span>
+                                <span className="text-zinc-200 font-medium">{savedCredentials.email}</span>
                             </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Password</p>
-                                <p className="text-sm font-bold text-slate-900 font-mono bg-white p-2 rounded-lg border border-slate-200">
-                                    {savedCredentials.password}
-                                </p>
+                            <div className="flex justify-between py-1">
+                                <span className="text-zinc-500">Password</span>
+                                <span className="text-zinc-200 font-medium">{savedCredentials.password}</span>
                             </div>
-
-                            <button
-                                type="button"
-                                onClick={copyCredentials}
-                                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow-xs"
-                            >
-                                {copiedCreds ? (
-                                    <>
-                                        <Check className="w-4 h-4 text-emerald-400" />
-                                        <span>Copied to Clipboard!</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Copy className="w-4 h-4" />
-                                        <span>Copy Credentials</span>
-                                    </>
-                                )}
-                            </button>
                         </div>
 
-                        <Button
-                            onClick={() => (window.location.href = "/admin")}
-                            className="w-full h-14 text-base font-bold shadow-lg shadow-brand-100 flex items-center justify-center gap-2"
+                        <button
+                            type="button"
+                            onClick={copyCredentials}
+                            className="w-full h-9 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-2"
                         >
-                            <span>Enter Admin Dashboard</span>
-                            <ArrowRight className="w-4 h-4" />
-                        </Button>
+                            {copiedCreds ? (
+                                <>
+                                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span>Copied</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Copy className="w-3.5 h-3.5" />
+                                    <span>Copy Credentials</span>
+                                </>
+                            )}
+                        </button>
+
+                        <button
+                            onClick={() => window.location.replace("/admin")}
+                            className="w-full h-10 bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                        >
+                            <span>Enter Dashboard</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
                     </div>
                 ) : inviteToken ? (
-                    /* VIEW 2: ONE-TIME INVITE LINK REDEMPTION FORM */
+                    /* 2. ONE-TIME INVITE REDEMPTION */
                     isValidatingInvite ? (
-                        <div className="py-12 flex flex-col items-center justify-center gap-3">
-                            <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
-                            <p className="text-xs font-medium text-slate-500">Verifying your invitation link...</p>
+                        <div className="py-12 flex flex-col items-center justify-center gap-2.5">
+                            <Loader2 className="w-5 h-5 text-zinc-400 animate-spin" />
+                            <p className="text-xs text-zinc-500">Validating invitation link...</p>
                         </div>
                     ) : inviteData?.valid ? (
                         <form onSubmit={handleRedeemInvite} className="space-y-4">
-                            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
-                                <Sparkles className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-sm font-bold text-emerald-900">You've Been Invited!</p>
-                                    <p className="text-xs text-emerald-700 leading-relaxed mt-0.5">
-                                        Assigned Role: <strong>{inviteData.role}</strong> ({inviteData.email})
-                                    </p>
-                                </div>
+                            <div>
+                                <h1 className="text-base font-semibold text-zinc-100 tracking-tight">Accept Invitation</h1>
+                                <p className="text-xs text-zinc-400 mt-1">
+                                    Invited as <span className="text-zinc-200 font-medium">{inviteData.role}</span> ({inviteData.email})
+                                </p>
                             </div>
 
-                            <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                    Choose Username
+                            {error && (
+                                <div className="p-3 bg-red-950/40 border border-red-800/40 rounded-lg text-xs text-red-300">
+                                    {error}
+                                </div>
+                            )}
+
+                            <div className="space-y-1.5">
+                                <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                    Your Username
+                                </label>
+                                <input
+                                    required
+                                    type="text"
+                                    value={inviteUsername}
+                                    onChange={(e) => setInviteUsername(e.target.value)}
+                                    className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-600 transition-colors"
+                                    placeholder="e.g. codestarters"
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                    Choose Password
                                 </label>
                                 <div className="relative">
-                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                    <input
-                                        required
-                                        type="text"
-                                        value={inviteUsername}
-                                        onChange={(e) => setInviteUsername(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                        placeholder="e.g. jdoe or Jane Doe"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                    <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                        Create Password
-                                    </label>
-                                    <button
-                                        type="button"
-                                        onClick={() => generateStrongPassword("invite")}
-                                        className="text-[11px] font-bold text-brand-600 hover:underline"
-                                    >
-                                        Suggest Password
-                                    </button>
-                                </div>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                     <input
                                         required
                                         type={showPassword ? "text" : "password"}
                                         value={invitePassword}
                                         onChange={(e) => setInvitePassword(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                        placeholder="At least 6 characters"
+                                        className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 pr-9 text-xs text-zinc-100 placeholder:text-zinc-600 font-mono transition-colors"
+                                        placeholder="Min 6 characters"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
                                     >
-                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                        {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <div className="space-y-1.5">
+                                <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
                                     Confirm Password
                                 </label>
-                                <div className="relative">
-                                    <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                    <input
-                                        required
-                                        type={showPassword ? "text" : "password"}
-                                        value={inviteConfirm}
-                                        onChange={(e) => setInviteConfirm(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                        placeholder="Confirm your password"
-                                    />
-                                </div>
+                                <input
+                                    required
+                                    type={showPassword ? "text" : "password"}
+                                    value={inviteConfirm}
+                                    onChange={(e) => setInviteConfirm(e.target.value)}
+                                    className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-600 font-mono transition-colors"
+                                    placeholder="Repeat password"
+                                />
                             </div>
 
-                            <Button
+                            <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full h-13 text-sm font-bold bg-slate-900 hover:bg-black shadow-md shadow-slate-200 flex items-center justify-center gap-2 mt-4"
+                                className="w-full h-9 bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 mt-2"
                             >
-                                {isSubmitting ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                    <>
-                                        <ShieldCheck className="w-4 h-4" />
-                                        <span>Create Account & Join Dashboard</span>
-                                    </>
-                                )}
-                            </Button>
+                                {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Activate & Sign In"}
+                            </button>
                         </form>
                     ) : (
-                        <div className="text-center py-6 space-y-4">
-                            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center">
-                                <ShieldAlert className="w-6 h-6" />
-                            </div>
+                        <div className="py-6 text-center space-y-3">
+                            <AlertCircle className="w-6 h-6 text-zinc-500 mx-auto" />
                             <div>
-                                <h3 className="text-base font-bold text-slate-900">Invalid or Expired Invitation</h3>
-                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                    {inviteData?.error || "This invitation link has either already been used or has expired."}
+                                <h3 className="text-sm font-semibold text-zinc-200">Link Invalid or Expired</h3>
+                                <p className="text-xs text-zinc-500 mt-1">
+                                    {inviteData?.error || "This invitation link has expired or has already been redeemed."}
                                 </p>
                             </div>
-                            <Button
-                                onClick={() => (window.location.href = "/admin/login")}
-                                variant="outline"
-                                className="text-xs font-bold"
+                            <button
+                                onClick={() => window.location.replace("/admin/login")}
+                                className="text-xs text-zinc-400 hover:text-zinc-200 underline"
                             >
-                                Back to Sign In
-                            </Button>
+                                Return to sign in
+                            </button>
                         </div>
                     )
-                ) : setupRequired ? (
-                    /* VIEW 3: INITIAL SETUP - CREATE SUPER ADMIN ACCOUNT */
+                ) : mode === "setup" ? (
+                    /* 3. SUPER ADMIN INITIAL SETUP */
                     <form onSubmit={handleInitialSetup} className="space-y-4">
-                        <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
-                            <ShieldCheck className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="text-xs font-bold text-amber-900">Initial Setup Required</p>
-                                <p className="text-xs text-amber-700 leading-relaxed mt-0.5">
-                                    Create the initial <strong>Super Admin</strong> account. Afterwards, self-registration is permanently locked.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                Full Name / Username
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <input
-                                    required
-                                    type="text"
-                                    value={setupUsername}
-                                    onChange={(e) => setSetupUsername(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="e.g. CodeStarters Admin"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                Super Admin Email
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <input
-                                    required
-                                    type="email"
-                                    value={setupEmail}
-                                    onChange={(e) => setSetupEmail(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="codestartersai@gmail.com"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-1">
+                        <div>
                             <div className="flex items-center justify-between">
-                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                    Password
-                                </label>
+                                <h1 className="text-base font-semibold text-zinc-100 tracking-tight">Super Admin Setup</h1>
                                 <button
                                     type="button"
-                                    onClick={() => generateStrongPassword("setup")}
-                                    className="text-[11px] font-bold text-brand-600 hover:underline"
+                                    onClick={() => { setMode("signin"); setError(null); }}
+                                    className="text-[11px] text-zinc-400 hover:text-zinc-200"
                                 >
-                                    Suggest Password
+                                    Switch to Sign In
                                 </button>
                             </div>
+                            <p className="text-xs text-zinc-400 mt-1">
+                                Configure the root administrator credentials.
+                            </p>
+                        </div>
+
+                        {error && (
+                            <div className="p-3 bg-red-950/40 border border-red-800/40 rounded-lg text-xs text-red-300">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                Username
+                            </label>
+                            <input
+                                required
+                                type="text"
+                                value={setupName}
+                                onChange={(e) => setSetupName(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-600 transition-colors"
+                                placeholder="codestartersai"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                Super Admin Email
+                            </label>
+                            <input
+                                required
+                                type="email"
+                                value={setupEmail}
+                                onChange={(e) => setSetupEmail(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-600 transition-colors"
+                                placeholder="codestartersai@gmail.com"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                Password
+                            </label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 <input
                                     required
                                     type={showPassword ? "text" : "password"}
                                     value={setupPassword}
                                     onChange={(e) => setSetupPassword(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="At least 6 characters"
+                                    className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 pr-9 text-xs text-zinc-100 placeholder:text-zinc-600 font-mono transition-colors"
+                                    placeholder="Min 6 characters"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
                                 >
-                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
                                 Confirm Password
                             </label>
-                            <div className="relative">
-                                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <input
-                                    required
-                                    type={showPassword ? "text" : "password"}
-                                    value={setupConfirm}
-                                    onChange={(e) => setSetupConfirm(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500 text-slate-900"
-                                    placeholder="Repeat your password"
-                                />
-                            </div>
+                            <input
+                                required
+                                type={showPassword ? "text" : "password"}
+                                value={setupConfirm}
+                                onChange={(e) => setSetupConfirm(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-600 font-mono transition-colors"
+                                placeholder="Repeat password"
+                            />
                         </div>
 
-                        <Button
+                        <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full h-13 text-sm font-bold bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-200 flex items-center justify-center gap-2 mt-4"
+                            className="w-full h-9 bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 mt-2"
                         >
-                            {isSubmitting ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                                <>
-                                    <ShieldCheck className="w-4 h-4" />
-                                    <span>Create Super Admin & Lock Portal</span>
-                                </>
-                            )}
-                        </Button>
+                            {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Save Super Admin & Enter"}
+                        </button>
                     </form>
                 ) : (
-                    /* VIEW 4: STANDARD ADMIN LOGIN */
+                    /* 4. STANDARD SIGN IN */
                     <form onSubmit={handleLogin} className="space-y-4">
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                Username or Email
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <input
-                                    required
-                                    type="text"
-                                    value={identifier}
-                                    onChange={(e) => setIdentifier(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white text-slate-900 transition-all"
-                                    placeholder="Username or email address"
-                                />
-                            </div>
+                        <div>
+                            <h1 className="text-base font-semibold text-zinc-100 tracking-tight">Sign In</h1>
+                            <p className="text-xs text-zinc-400 mt-1">
+                                Enter your credentials to access the admin dashboard.
+                            </p>
                         </div>
 
-                        <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                Password
+                        {error && (
+                            <div className="p-3 bg-red-950/40 border border-red-800/40 rounded-lg text-xs text-red-300 leading-relaxed">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                Email or Username
                             </label>
+                            <input
+                                required
+                                type="text"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-600 transition-colors"
+                                placeholder="codestartersai@gmail.com"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider block">
+                                    Password
+                                </label>
+                            </div>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 <input
                                     required
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white text-slate-900 transition-all"
+                                    className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-500 focus:outline-none rounded-lg px-3 py-2 pr-9 text-xs text-zinc-100 placeholder:text-zinc-600 font-mono transition-colors"
                                     placeholder="Enter your password"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
                                 >
-                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                 </button>
                             </div>
                         </div>
 
-                        <Button
+                        <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full h-13 text-sm font-bold bg-slate-900 hover:bg-black shadow-lg shadow-slate-200 flex items-center justify-center gap-2 mt-4"
+                            className="w-full h-9 bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 mt-2"
                         >
-                            {isSubmitting ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                                <>
-                                    <Lock className="w-4 h-4" />
-                                    <span>Sign In to Dashboard</span>
-                                </>
-                            )}
-                        </Button>
+                            {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Sign In"}
+                        </button>
 
-                        <p className="text-center text-[11px] text-slate-400 leading-relaxed pt-2">
-                            Dashboard access is restricted to verified administrators. Invitations are delivered via email.
-                        </p>
+                        <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-500">
+                            <span>First-time setup?</span>
+                            <button
+                                type="button"
+                                onClick={() => { setMode("setup"); setError(null); }}
+                                className="text-zinc-400 hover:text-zinc-200 underline font-medium"
+                            >
+                                Setup Super Admin
+                            </button>
+                        </div>
                     </form>
                 )}
             </div>

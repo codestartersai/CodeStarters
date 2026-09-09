@@ -75,7 +75,12 @@ function AdminLayout() {
             try {
                 const supabase = getSupabase();
                 const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
+                if (!user) {
+                    if (typeof window !== "undefined") {
+                        window.location.replace("/admin/login");
+                    }
+                    return;
+                }
 
                 const { data: row } = await supabase
                     .from("admin_users")
@@ -104,7 +109,7 @@ function AdminLayout() {
                         // Access denied - clear session and redirect to login
                         await supabase.auth.signOut();
                         if (typeof window !== "undefined") {
-                            window.location.href = "/admin/login?error=" + encodeURIComponent(verifyData.error || "Access Denied: You have not been invited to this admin portal.");
+                            window.location.replace("/admin/login?error=" + encodeURIComponent(verifyData.error || "Access Denied: You have not been invited to this admin portal."));
                         }
                     }
                 }
@@ -129,6 +134,14 @@ function AdminLayout() {
         );
     }
 
+    if (isLoading || !admin) {
+        return (
+            <div className="min-h-screen bg-[#0c0d12] flex items-center justify-center">
+                <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-300 rounded-full animate-spin" />
+            </div>
+        );
+    }
+
     const can = (permission: AdminPermission) => {
         if (!admin) return false;
         return hasPermission(admin.permissions, permission);
@@ -136,10 +149,10 @@ function AdminLayout() {
 
     return (
         <AdminSessionContext.Provider value={{ admin, isLoading, can }}>
-            <div className="min-h-screen bg-slate-50 flex">
+            <div className="min-h-screen bg-[#fafafa] flex">
                 <AdminSidebar />
-                <main className="flex-1 lg:ml-72 min-h-screen">
-                    <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto">
+                <main className="flex-1 lg:ml-64 min-h-screen">
+                    <div className="p-6 md:p-8 lg:p-10 max-w-6xl mx-auto">
                         <Outlet />
                     </div>
                 </main>

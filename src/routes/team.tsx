@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowLeft, Loader2, Sparkles, Layers } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { TeamCategory, TeamMember } from "@/routes/api/admin/teams";
 
