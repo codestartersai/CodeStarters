@@ -4,13 +4,18 @@ import { ExternalLink, Mail, FileText } from "lucide-react";
 const sponsors = [
   { name: "CodeCrafters", url: "https://codecrafters.io/", img: "/sponsors/codecrafters.svg" },
   { name: "Gen.xyz", url: "https://gen.xyz/", img: "/sponsors/genxyz.png" },
-  { name: "Relay", url: "https://relay.app/", img: "/sponsors/relay.webp" },
   { name: "Medo", url: "https://medo.com/", img: "/sponsors/medo.png" },
   { name: "Featherless AI", url: "https://featherless.ai/", img: "/sponsors/featherless.png" },
   { name: "n8n", url: "https://n8n.io/", img: "/sponsors/n8n.png" },
   { name: "Publick", url: "https://publick.xyz/", img: "/sponsors/publick.png" },
   { name: "Guild.ai", url: "https://www.guild.ai/" },
-  { name: "Zo Computer", url: "https://zo.computer/", img: "/sponsors/zo-computer.svg", imageClassName: "brightness-0" },
+  { name: "Rork", url: "https://rork.com/", img: "/sponsors/rork.avif" },
+  { name: "Render", url: "https://render.com", img: "/sponsors/adrender.avif" },
+  {
+    name: "Better Design",
+    url: "https://better-design.com/",
+    img: "/sponsors/better-design.svg",
+  },
 ];
 
 export function Sponsors() {
@@ -45,7 +50,11 @@ export function Sponsors() {
                   src={s.img}
                   alt={s.name}
                   loading="lazy"
-                  className={`max-h-10 max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100 ${s.imageClassName ?? ""}`}
+                  className={`max-w-full object-contain opacity-80 transition-opacity group-hover:opacity-100 ${
+                    s.name === "Better Design"
+                      ? "h-12 w-12 sm:h-14 sm:w-14 rounded-xl"
+                      : "max-h-10"
+                  }`}
                 />
               ) : (
                 <span className="text-xl font-black tracking-tight text-red-950">{s.name}</span>

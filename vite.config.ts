@@ -8,6 +8,9 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   cloudflare: false,
+  vite: {
+    envPrefix: ["VITE_", "NEXT_PUBLIC_"],
+  },
   tanstackStart: {
     server: { preset: "vercel" },
   },

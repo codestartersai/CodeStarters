@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
+import { FIREHACKS_EVENT_DATE_LABEL, FIREHACKS_VENUE } from "@/lib/firehacks/event";
 
 const faqs = [
   [
     "What is Fire Hacks?",
     "Fire Hacks is a one-day in-person hackathon for high school students in the Bay Area. It's organized by CodeStarters and focused entirely on software — web, mobile, and AI/ML. You'll build a project from scratch, attend workshops, eat great food, and compete for $30K+ in prizes.",
+  ],
+  [
+    "When and where is it?",
+    `Fire Hacks is on ${FIREHACKS_EVENT_DATE_LABEL} at ${FIREHACKS_VENUE}. It's a full-day, in-person event in the East Bay.`,
   ],
   [
     "Who can attend?",
@@ -17,7 +22,7 @@ const faqs = [
   ],
   [
     "What should I build?",
-    "Anything software-based. You can choose from tracks like Web Development, AI/ML, Mobile App Dev, Cybersecurity, or Game Dev. Build something that solves a real problem, explores a new technology, or is just plain fun.",
+    "Pick a track that fits your project: AI Track, Developer Tools Track, Research & Innovation Track, or Open Track. Each has dedicated sponsors and prizes — build something that solves a real problem, explores new tech, or is just plain fun.",
   ],
   [
     "How do I become a sponsor?",

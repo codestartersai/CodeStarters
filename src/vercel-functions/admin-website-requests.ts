@@ -2,7 +2,8 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { getAdminClient, getAdminEnv, json, readJson, verifyAdmin } from "./admin-utils";
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (req.method !== "GET" && req.method !== "PATCH") return json(res, 405, { error: "Method not allowed" });
+  if (req.method !== "GET" && req.method !== "PATCH")
+    return json(res, 405, { error: "Method not allowed" });
   try {
     const env = getAdminEnv();
     const isAdmin = await verifyAdmin(req, env);

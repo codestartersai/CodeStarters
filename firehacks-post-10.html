@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'Arial Black', sans-serif; background: #0a0a0a; }
+
+  .bg {
+    width: 1080px;
+    height: 1080px;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 52px 60px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .handle {
+    position: absolute;
+    top: 46px; right: 58px;
+    font-size: 20px; color: rgba(255,255,255,0.2);
+    letter-spacing: 3px; font-weight: 700;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .header {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 32px;
+  }
+  .top-fire { font-size: 40px; margin-bottom: 10px; }
+  .title {
+    font-size: 72px; font-weight: 900; color: #fff;
+    text-transform: uppercase; letter-spacing: 0px;
+    text-align: center; line-height: 1;
+  }
+  .title span { color: #ff4500; }
+  .subtitle {
+    font-size: 26px; color: #555; font-family: 'Arial', sans-serif;
+    letter-spacing: 4px; margin-top: 10px;
+  }
+
+  /* tier grid fills remaining space */
+  .tier-grid {
+    display: flex; flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    flex: 1;
+    margin-bottom: 100px; /* leave room for bottom bar */
+  }
+
+  .tier-row {
+    display: flex; align-items: stretch;
+    border-radius: 18px; overflow: hidden;
+    flex: 1;
+    border: 2px solid #1e1e1e;
+    min-height: 0;
+  }
+
+  .tier-label {
+    width: 110px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px; font-weight: 900; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tier-s .tier-label { background: #ff4500; color: #fff; }
+  .tier-a .tier-label { background: #ff8c00; color: #fff; }
+  .tier-b .tier-label { background: #ffc000; color: #000; }
+  .tier-c .tier-label { background: #44aa44; color: #fff; }
+  .tier-f .tier-label { background: #2a2a2a; color: #666; }
+
+  .tier-items {
+    flex: 1; background: #141414;
+    display: flex; align-items: center;
+    padding: 0 28px; gap: 14px; flex-wrap: wrap;
+  }
+
+  .tier-item {
+    background: #202020; border-radius: 30px;
+    padding: 10px 22px;
+    font-size: 23px; color: #ddd;
+    font-family: 'Arial', sans-serif; font-weight: 700;
+    white-space: nowrap;
+  }
+  .tier-s .tier-item { border: 1px solid rgba(255,69,0,0.35); }
+  .tier-a .tier-item { border: 1px solid rgba(255,140,0,0.35); }
+  .tier-b .tier-item { border: 1px solid rgba(255,192,0,0.35); }
+  .tier-c .tier-item { border: 1px solid rgba(68,170,68,0.35); }
+  .tier-f .tier-items { opacity: 0.45; }
+  .tier-f .tier-item { border: 1px solid rgba(255,255,255,0.1); }
+
+  .bottom-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 92px;
+    background: linear-gradient(135deg, #ff4500, #ff8c00);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bottom-text {
+    font-size: 32px; font-weight: 900; color: #fff; letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="handle">@codestarters_cupertino</div>
+
+  <div class="header">
+    <div class="top-fire">🔥🔥🔥</div>
+    <div class="title">fire hacks <span>tier list</span></div>
+    <div class="subtitle">objectively correct. no debate.</div>
+  </div>
+
+  <div class="tier-grid">
+    <div class="tier-row tier-s">
+      <div class="tier-label">S</div>
+      <div class="tier-items">
+        <div class="tier-item">shipping before deadline</div>
+        <div class="tier-item">free pizza</div>
+        <div class="tier-item">winning 🏆</div>
+      </div>
+    </div>
+    <div class="tier-row tier-a">
+      <div class="tier-label">A</div>
+      <div class="tier-items">
+        <div class="tier-item">finding a great team</div>
+        <div class="tier-item">late-night coding flow</div>
+        <div class="tier-item">cool project idea</div>
+      </div>
+    </div>
+    <div class="tier-row tier-b">
+      <div class="tier-label">B</div>
+      <div class="tier-items">
+        <div class="tier-item">decent demo</div>
+        <div class="tier-item">free swag</div>
+        <div class="tier-item">new GitHub repo</div>
+      </div>
+    </div>
+    <div class="tier-row tier-c">
+      <div class="tier-label">C</div>
+      <div class="tier-items">
+        <div class="tier-item">it technically runs</div>
+        <div class="tier-item">copy-pasted stack overflow</div>
+        <div class="tier-item">vibes-only readme</div>
+      </div>
+    </div>
+    <div class="tier-row tier-f">
+      <div class="tier-label">F</div>
+      <div class="tier-items">
+        <div class="tier-item">not registering</div>
+        <div class="tier-item">staying home</div>
+        <div class="tier-item">missing out</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="bottom-text">🔥 codestarters.xyz/firehacks — register now</span>
+  </div>
+</div>
+</body>
+</html>

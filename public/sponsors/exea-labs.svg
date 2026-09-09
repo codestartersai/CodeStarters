@@ -1,0 +1,9 @@
+<svg width="480" height="160" viewBox="0 0 480 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="160" rx="24" fill="black" fill-opacity="0"/>
+  <text x="240" y="72" text-anchor="middle" fill="black" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="800" letter-spacing="8">
+    EXEA
+  </text>
+  <text x="240" y="116" text-anchor="middle" fill="black" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="10">
+    LABS
+  </text>
+</svg>

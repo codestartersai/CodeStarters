@@ -2,19 +2,16 @@ import { motion } from "framer-motion";
 
 const coreTeam = [
   { name: "Smaran Aramballi Sandarsh", role: "President", img: "/smaran.png" },
-  { name: "Aidan Kwan", role: "Vice President", img: "/aidan.webp" },
-  { name: "Arnav Ghildiyal", role: "Vice President", img: "/arnav.webp" },
-  { name: "Amogh Bhatta", role: "Vice President", img: "/amogh.webp" },
-  { name: "Sai Sanjit Reddy Vallapureddy", role: "Head of Marketing", img: "/sai.webp" },
+  { name: "Amogh Bhatta", role: "Director of Robotics", img: "/amogh.webp" },
+  { name: "Sai Sanjit Reddy Vallapureddy", role: "Director of Marketing", img: "/sai.webp" },
 ];
 
 const extendedTeam = [
   { name: "Reyansh Nankani", role: "UI/UX Designer", img: "/team/reyansh-nankani.png" },
-  { name: "Arham Desai", role: "CS & AI Instructor", img: "/team/arham-desai.png" },
+  { name: "Arnav Ghildiyal", role: "Basic CS Mentor", img: "/arnav.webp" },
   { name: "Shaurya Gakhar", role: "CS & AI Instructor", img: "/team/shaurya-gakhar.png" },
   { name: "Robin Zhou", role: "Social Media Manager", img: "/team/robin-zhou.png" },
-  { name: "Pranav C", role: "AI Lead & Vibe Coder", img: "/team/pranav-c.png" },
-  { name: "Shreesh Basu", role: "Social Media Manager", img: "/team/shreesh-basu.png" },
+  { name: "Pranav C", role: "Founder & Head of AI, Finance, and Legal", img: "/team/pranav-c.png" },
   { name: "Michael Cutsail", role: "CS & AI Instructor", img: "/team/michael-cutsail.png" },
 ];
 

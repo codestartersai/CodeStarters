@@ -73,7 +73,7 @@ export function About() {
           <p className="mt-4 text-sm text-gray-500">
             Hosted by{" "}
             <a
-              href="https://codestarters.xyz"
+              href="https://codestarters.org"
               target="_blank"
               rel="noreferrer"
               className="text-red-500 hover:underline"

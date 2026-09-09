@@ -32,11 +32,40 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     if (!isAdmin) return json(res, 401, { error: "Unauthorized" });
 
     const admin: SupabaseClient = getAdminClient(env);
+    const volunteerApplicationFilter = <T extends { not: (col: string, op: string, val: string) => T }>(
+      query: T,
+    ) => query.not("interest", "like", "Summer Program:%");
+
     const [requests, pendingRequests, pendingApps, teamMembers] = await Promise.all([
-      safeCount("requests", admin.from("website_requests").select("*", { count: "exact", head: true })),
-      safeCount("pendingRequests", admin.from("website_requests").select("*", { count: "exact", head: true }).eq("status", "pending")),
-      safeCount("pendingApps", admin.from("volunteers").select("*", { count: "exact", head: true }).eq("status", "pending")),
-      safeCount("teamMembers", admin.from("volunteers").select("*", { count: "exact", head: true }).eq("status", "completed")),
+      safeCount(
+        "requests",
+        admin.from("website_requests").select("*", { count: "exact", head: true }),
+      ),
+      safeCount(
+        "pendingRequests",
+        admin
+          .from("website_requests")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "pending"),
+      ),
+      safeCount(
+        "pendingApps",
+        volunteerApplicationFilter(
+          admin
+            .from("volunteers")
+            .select("*", { count: "exact", head: true })
+            .eq("status", "pending"),
+        ),
+      ),
+      safeCount(
+        "teamMembers",
+        volunteerApplicationFilter(
+          admin
+            .from("volunteers")
+            .select("*", { count: "exact", head: true })
+            .eq("status", "completed"),
+        ),
+      ),
     ]);
 
     return json(res, 200, { requests, pendingRequests, pendingApps, teamMembers });

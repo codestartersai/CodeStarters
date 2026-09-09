@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown, Ticket, Flame } from "lucide-react";
+import { FIREHACKS_EVENT_DATE_LABEL, FIREHACKS_VENUE } from "@/lib/firehacks/event";
 
 export function Hero() {
   return (
@@ -77,7 +78,9 @@ export function Hero() {
           className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
         >
           <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-sm text-gray-300 font-medium">June 6, 2026</span>
+          <span className="text-sm text-gray-300 font-medium">{FIREHACKS_EVENT_DATE_LABEL}</span>
+          <span className="text-gray-600">·</span>
+          <span className="text-sm text-gray-400 font-medium">{FIREHACKS_VENUE}</span>
         </motion.div>
 
         {/* Subtitle */}
