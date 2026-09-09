@@ -15,6 +15,14 @@ CREATE TABLE IF NOT EXISTS admin_users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Ensure all columns exist even if the table already existed previously
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS avatar_url TEXT;
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS role TEXT NOT NULL DEFAULT 'editor';
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS permissions JSONB NOT NULL DEFAULT '["manage_team", "manage_requests"]'::jsonb;
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
 CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users (email);
 
 -- 2. Admin Invitations Table (One-use secure access tokens)
@@ -250,3 +258,6 @@ CREATE POLICY "Public insert for volunteer applications"
 CREATE POLICY "Admins can view and manage volunteer applications"
     ON volunteers FOR ALL
     USING (is_admin());
+
+-- Reload PostgREST schema cache so newly added columns are instantly recognized
+NOTIFY pgrst, 'reload schema';

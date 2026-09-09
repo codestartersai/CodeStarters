@@ -64,3 +64,44 @@ export function getSupabaseAdminClient(): SupabaseClient {
   });
   return _admin;
 }
+
+/**
+ * Adaptively upserts an admin user record into the admin_users table.
+ * If the user's Supabase table schema lacks certain optional columns (e.g. 'name', 'permissions'),
+ * it automatically identifies the missing column from PostgREST, strips it from the payload, and retries.
+ */
+export async function adaptiveUpsertAdminUser(
+  client: SupabaseClient,
+  initialPayload: Record<string, any>
+): Promise<{ data: any; error: any }> {
+  let currentPayload = { ...initialPayload };
+
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const { data, error } = await client
+      .from("admin_users")
+      .upsert(currentPayload);
+
+    if (!error) {
+      return { data, error: null };
+    }
+
+    const msg = error.message || "";
+    // Match "Could not find the 'xyz' column of 'admin_users' in the schema cache"
+    const match = msg.match(/Could not find the '([^']+)' column/i);
+    if (match && match[1]) {
+      const missingColumn = match[1];
+      console.warn(`[Supabase] Column '${missingColumn}' not in 'admin_users' table. Retrying without it...`);
+      delete currentPayload[missingColumn];
+      continue;
+    }
+
+    return { data: null, error };
+  }
+
+  // Fallback to absolute minimum columns { id, email }
+  const minimalPayload: Record<string, any> = {
+    id: initialPayload.id,
+    email: initialPayload.email,
+  };
+  return await client.from("admin_users").upsert(minimalPayload);
+}

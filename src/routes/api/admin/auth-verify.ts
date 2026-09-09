@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getSupabaseServerClient, jsonWithCookies } from "@/lib/supabase/server";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { getSupabaseAdminClient, adaptiveUpsertAdminUser } from "@/lib/supabase/admin";
 import { extractErrorMessage } from "@/lib/error-utils";
 import type { AdminRole, AdminPermission } from "@/lib/admin-auth";
 
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                     // 1. Check if user is already an active admin (by auth UUID or email)
                     const { data: byId } = await admin
                         .from("admin_users")
-                        .select("id, email, name, avatar_url, role, permissions")
+                        .select("*")
                         .eq("id", user.id)
                         .maybeSingle();
 
@@ -35,28 +35,35 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                         return jsonWithCookies(bundle, {
                             authorized: true,
                             isFirstUser: false,
-                            admin: byId,
+                            admin: {
+                                id: byId.id || user.id,
+                                email: byId.email || userEmail,
+                                name: byId.name || userName,
+                                avatar_url: byId.avatar_url || avatarUrl,
+                                role: byId.role || "super_admin",
+                                permissions: byId.permissions || ["all"],
+                            },
                         });
                     }
 
                     // Check by email in case record was created prior to first OAuth login
                     const { data: byEmail } = await admin
                         .from("admin_users")
-                        .select("id, email, name, avatar_url, role, permissions")
+                        .select("*")
                         .eq("email", userEmail)
                         .maybeSingle();
 
                     if (byEmail) {
-                        // Re-bind ID to current auth.users.id so RLS auth.uid() matches
-                        await admin
-                            .from("admin_users")
-                            .update({
-                                id: user.id,
-                                name: byEmail.name || userName,
-                                avatar_url: byEmail.avatar_url || avatarUrl,
-                                updated_at: new Date().toISOString(),
-                            })
-                            .eq("id", byEmail.id);
+                        // Re-bind ID to current auth.users.id
+                        await adaptiveUpsertAdminUser(admin, {
+                            id: user.id,
+                            email: userEmail,
+                            name: byEmail.name || userName,
+                            avatar_url: byEmail.avatar_url || avatarUrl,
+                            role: byEmail.role || "editor",
+                            permissions: byEmail.permissions || ["manage_team", "manage_requests"],
+                            updated_at: new Date().toISOString(),
+                        });
 
                         return jsonWithCookies(bundle, {
                             authorized: true,
@@ -83,12 +90,10 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                             permissions: ["all"] as AdminPermission[],
                         };
 
-                        const { error: insertError } = await admin
-                            .from("admin_users")
-                            .insert(newAdmin);
+                        const { error: insertError } = await adaptiveUpsertAdminUser(admin, newAdmin);
 
                         if (insertError) {
-                            return jsonWithCookies(bundle, { authorized: false, error: insertError.message }, { status: 500 });
+                            return jsonWithCookies(bundle, { authorized: false, error: extractErrorMessage(insertError) }, { status: 500 });
                         }
 
                         return jsonWithCookies(bundle, {
@@ -152,12 +157,10 @@ export const Route = createFileRoute("/api/admin/auth-verify")({
                         permissions,
                     };
 
-                    const { error: insertAdminErr } = await admin
-                        .from("admin_users")
-                        .insert(newAdmin);
+                    const { error: insertAdminErr } = await adaptiveUpsertAdminUser(admin, newAdmin);
 
                     if (insertAdminErr) {
-                        return jsonWithCookies(bundle, { authorized: false, error: insertAdminErr.message }, { status: 500 });
+                        return jsonWithCookies(bundle, { authorized: false, error: extractErrorMessage(insertAdminErr) }, { status: 500 });
                     }
 
                     // Mark invite as used (single use)

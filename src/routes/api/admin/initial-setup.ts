@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getSupabaseServerClient, jsonWithCookies } from "@/lib/supabase/server";
-import { getSupabaseAdminClient, isServiceRoleConfigured } from "@/lib/supabase/admin";
+import { getSupabaseAdminClient, isServiceRoleConfigured, adaptiveUpsertAdminUser } from "@/lib/supabase/admin";
 import { extractErrorMessage } from "@/lib/error-utils";
 import type { AdminRole, AdminPermission } from "@/lib/admin-auth";
 
@@ -169,15 +169,11 @@ export const Route = createFileRoute("/api/admin/initial-setup")({
                         updated_at: new Date().toISOString(),
                     };
 
-                    let { error: insertErr } = await admin
-                        .from("admin_users")
-                        .upsert(newAdmin);
+                    let { error: insertErr } = await adaptiveUpsertAdminUser(admin, newAdmin);
 
                     if (insertErr) {
                         // If admin client upsert failed (e.g. RLS with anon key), try bundle client
-                        const { error: clientInsertErr } = await bundle.client
-                            .from("admin_users")
-                            .upsert(newAdmin);
+                        const { error: clientInsertErr } = await adaptiveUpsertAdminUser(bundle.client, newAdmin);
 
                         if (!clientInsertErr) {
                             insertErr = null;

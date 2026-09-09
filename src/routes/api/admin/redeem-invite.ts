@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { getSupabaseAdminClient, adaptiveUpsertAdminUser } from "@/lib/supabase/admin";
 import { getSupabaseServerClient, jsonWithCookies } from "@/lib/supabase/server";
 import { extractErrorMessage } from "@/lib/error-utils";
 import type { AdminRole, AdminPermission } from "@/lib/admin-auth";
@@ -123,17 +123,15 @@ export const Route = createFileRoute("/api/admin/redeem-invite")({
                         userId = newUser.user.id;
                     }
 
-                    // 2. Upsert admin_users
-                    const { error: adminUpsertErr } = await admin
-                        .from("admin_users")
-                        .upsert({
-                            id: userId,
-                            email,
-                            name: displayName,
-                            role,
-                            permissions,
-                            updated_at: new Date().toISOString(),
-                        });
+                    // 2. Upsert admin_users adaptively
+                    const { error: adminUpsertErr } = await adaptiveUpsertAdminUser(admin, {
+                        id: userId,
+                        email,
+                        name: displayName,
+                        role,
+                        permissions,
+                        updated_at: new Date().toISOString(),
+                    });
 
                     if (adminUpsertErr) {
                         throw adminUpsertErr;
