@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { parse, serialize } from "cookie";
+import type { AdminPermission, AdminRole } from "@/lib/admin-auth";
 
 type CookieMutation = { name: string; value: string; options: CookieOptions };
 
@@ -8,6 +9,13 @@ export type ServerSupabaseBundle = {
     client: SupabaseClient;
     /** Apply queued cookie mutations to an outgoing Response. */
     commit: (response: Response) => Response;
+};
+
+export type VerifiedAdmin = {
+    user: User;
+    bundle: ServerSupabaseBundle;
+    role: AdminRole;
+    permissions: AdminPermission[];
 };
 
 function readEnv(): { url: string; key: string } {
@@ -28,8 +36,9 @@ export function getSupabaseServerClient(request: Request): ServerSupabaseBundle 
     const client = createServerClient(url, key, {
         cookies: {
             get(name: string) {
-                const fresh = queued.findLast?.((c) => c.name === name);
-                if (fresh) return fresh.value;
+                for (let i = queued.length - 1; i >= 0; i--) {
+                    if (queued[i].name === name) return queued[i].value;
+                }
                 return incoming[name];
             },
             set(name: string, value: string, options: CookieOptions) {
@@ -57,19 +66,32 @@ export function getSupabaseServerClient(request: Request): ServerSupabaseBundle 
     return { client, commit };
 }
 
-/** Verify the current request belongs to an admin_users user. */
+/** Verify the current request belongs to an admin_users user with role & permissions. */
 export async function verifyAdminUser(
     request: Request,
-): Promise<{ user: User; bundle: ServerSupabaseBundle } | null> {
+): Promise<VerifiedAdmin | null> {
     const bundle = getSupabaseServerClient(request);
     const { data: { user } } = await bundle.client.auth.getUser();
     if (!user) return null;
     const { data: adminRow } = await bundle.client
         .from("admin_users")
-        .select("id")
+        .select("id, role, permissions")
         .eq("id", user.id)
         .maybeSingle();
-    return adminRow ? { user, bundle } : null;
+
+    if (!adminRow) return null;
+
+    const role = (adminRow.role as AdminRole) || "editor";
+    const permissions = Array.isArray(adminRow.permissions)
+        ? (adminRow.permissions as AdminPermission[])
+        : ["manage_team", "manage_requests", "manage_applications"];
+
+    return {
+        user,
+        bundle,
+        role,
+        permissions,
+    };
 }
 
 /** JSON helper that also commits any queued cookie mutations. */

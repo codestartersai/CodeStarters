@@ -18,7 +18,7 @@ export function QrPanel({ passToken, fullName }: Props) {
             errorCorrectionLevel: "M",
             color: { dark: "#0a0a0a", light: "#ffffff" },
         })
-            .then((url) => {
+            .then((url: string) => {
                 if (!cancelled) setDataUrl(url);
             })
             .catch(() => {

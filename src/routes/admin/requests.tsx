@@ -14,6 +14,13 @@ import {
     MessageSquare,
     ChevronDown,
     ChevronUp,
+    Calendar,
+    Building2,
+    Check,
+    Trash2,
+    FileEdit,
+    ExternalLink,
+    Send,
 } from "lucide-react";
 import { Button } from "@/components/codestarters/Button";
 
@@ -28,6 +35,7 @@ type WebsiteRequestRow = {
     needs?: string | null;
     cupertino_consent?: boolean | null;
     status: string;
+    notes?: string | null;
     created_at: string;
 };
 
@@ -42,19 +50,24 @@ function WebsiteRequestsPage() {
     const [statusFilter, setStatusFilter] = useState("all");
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [fetchError, setFetchError] = useState<string | null>(null);
+    const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
+    const [notesDraft, setNotesDraft] = useState("");
 
     const fetchRequests = async () => {
         setIsLoading(true);
         setFetchError(null);
-        const res = await fetch("/api/admin/website-requests");
-        const data = await res.json().catch(() => null);
-        if (!res.ok) {
-            setRequests([]);
-            setFetchError(typeof data?.error === "string" ? data.error : "Could not load requests.");
-        } else {
+        try {
+            const res = await fetch("/api/admin/website-requests");
+            const data = await res.json().catch(() => null);
+            if (!res.ok) {
+                throw new Error(typeof data?.error === "string" ? data.error : "Could not load requests.");
+            }
             setRequests(Array.isArray(data) ? (data as WebsiteRequestRow[]) : []);
+        } catch (err: unknown) {
+            setFetchError(err instanceof Error ? err.message : "Error fetching requests.");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -62,47 +75,106 @@ function WebsiteRequestsPage() {
     }, []);
 
     const updateStatus = async (id: string, newStatus: string) => {
-        const res = await fetch("/api/admin/website-requests", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, status: newStatus }),
-        });
-        if (!res.ok) return;
-        setRequests(requests.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
+        try {
+            const res = await fetch("/api/admin/website-requests", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status: newStatus }),
+            });
+            if (!res.ok) throw new Error("Failed to update status.");
+            setRequests(requests.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
+        } catch (err: unknown) {
+            alert(err instanceof Error ? err.message : "Error updating status.");
+        }
+    };
+
+    const saveNotes = async (id: string) => {
+        try {
+            const res = await fetch("/api/admin/website-requests", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, notes: notesDraft }),
+            });
+            if (!res.ok) throw new Error("Failed to save note.");
+            setRequests(requests.map((r) => (r.id === id ? { ...r, notes: notesDraft } : r)));
+            setEditingNotesId(null);
+        } catch (err: unknown) {
+            alert(err instanceof Error ? err.message : "Error saving note.");
+        }
+    };
+
+    const deleteRequest = async (id: string, name: string) => {
+        if (!confirm(`Delete website request from "${name}"?`)) return;
+        try {
+            const res = await fetch(`/api/admin/website-requests?id=${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Failed to delete request.");
+            setRequests(requests.filter((r) => r.id !== id));
+        } catch (err: unknown) {
+            alert(err instanceof Error ? err.message : "Error deleting request.");
+        }
     };
 
     const filteredRequests = requests.filter((req) => {
-        const matchesSearch = req.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        const matchesSearch =
+            req.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             req.owner_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            req.email?.toLowerCase().includes(searchTerm.toLowerCase());
+            req.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            req.business_type?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === "all" || req.status === statusFilter;
         return matchesSearch && matchesStatus;
     });
 
     const pendingCount = requests.filter((r) => r.status === "pending").length;
+    const inProgressCount = requests.filter((r) => r.status === "in_progress").length;
+    const completedCount = requests.filter((r) => r.status === "completed").length;
 
     return (
         <div className="space-y-8">
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 mb-1">Website Requests</h1>
-                    <p className="text-slate-500">
-                        {pendingCount > 0
-                            ? <span><span className="text-amber-600 font-bold">{pendingCount} pending</span> requests from local businesses.</span>
-                            : "All caught up. No pending requests."}
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                        Website Requests
+                        <span className="text-xs font-bold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+                            {requests.length} Submissions
+                        </span>
+                    </h1>
+                    <p className="text-slate-500 text-sm mt-1">
+                        Inquiries from local Cupertino businesses looking for custom websites.
                     </p>
                 </div>
-                <Button onClick={fetchRequests} variant="secondary" className="bg-white border-slate-200">
-                    Refresh
+                <Button onClick={fetchRequests} variant="secondary" className="bg-white border-slate-200 text-xs font-bold h-11">
+                    Refresh Pipeline
                 </Button>
             </div>
 
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Received</p>
+                    <p className="text-2xl font-black text-slate-900 mt-1">{requests.length}</p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <p className="text-[11px] font-bold text-amber-500 uppercase tracking-wider">Needs Review</p>
+                    <p className="text-2xl font-black text-amber-600 mt-1">{pendingCount}</p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <p className="text-[11px] font-bold text-blue-500 uppercase tracking-wider">In Development</p>
+                    <p className="text-2xl font-black text-blue-600 mt-1">{inProgressCount}</p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <p className="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">Launched</p>
+                    <p className="text-2xl font-black text-emerald-600 mt-1">{completedCount}</p>
+                </div>
+            </div>
+
             {fetchError && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-800">
                     {fetchError}
                 </div>
             )}
 
+            {/* Search & Filter */}
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -111,158 +183,270 @@ function WebsiteRequestsPage() {
                         placeholder="Search by business, owner, or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-brand-500 transition-all font-medium"
+                        className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium shadow-sm"
                     />
                 </div>
-                <div className="relative min-w-[160px]">
-                    <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <div className="relative min-w-[170px]">
+                    <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-brand-500 transition-all font-bold text-slate-700 appearance-none"
+                        className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-brand-500 text-sm font-bold text-slate-700 shadow-sm cursor-pointer"
                     >
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="in_progress">In Progress</option>
+                        <option value="all">All Status ({requests.length})</option>
+                        <option value="pending">Pending ({pendingCount})</option>
+                        <option value="in_progress">In Progress ({inProgressCount})</option>
                         <option value="contacted">Contacted</option>
-                        <option value="completed">Completed</option>
+                        <option value="completed">Completed ({completedCount})</option>
                         <option value="rejected">Rejected</option>
                     </select>
                 </div>
             </div>
 
+            {/* List Content */}
             {isLoading ? (
-                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border border-slate-100 border-dashed">
-                    <Loader2 className="w-10 h-10 text-brand-500 animate-spin mb-4" />
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Loading requests...</p>
+                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 border-dashed">
+                    <Loader2 className="w-8 h-8 text-brand-500 animate-spin mb-3" />
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Loading requests...</p>
                 </div>
             ) : filteredRequests.length === 0 ? (
-                <div className="text-center py-20 bg-white rounded-[2.5rem] border border-slate-100">
-                    <p className="text-slate-400 font-medium">No requests found.</p>
+                <div className="text-center py-20 bg-white rounded-3xl border border-slate-200/80 shadow-sm p-8">
+                    <p className="text-slate-400 font-medium text-sm">No website requests found matching your filters.</p>
                 </div>
             ) : (
-                <RequestsList items={filteredRequests} expandedId={expandedId} setExpandedId={setExpandedId} updateStatus={updateStatus} />
-            )}
-        </div>
-    );
-}
+                <div className="grid gap-5">
+                    {filteredRequests.map((req) => {
+                        const isExpanded = expandedId === req.id;
+                        const isEditingNotes = editingNotesId === req.id;
 
-function RequestsList({
-    items,
-    expandedId,
-    setExpandedId,
-    updateStatus,
-}: {
-    items: WebsiteRequestRow[];
-    expandedId: string | null;
-    setExpandedId: (id: string | null) => void;
-    updateStatus: (id: string, status: string) => void | Promise<void>;
-}) {
-    return (
-        <div className="grid gap-5">
-            {items.map((req) => {
-                const isExpanded = expandedId === req.id;
-                return (
-                    <div key={req.id} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
-                        <div className="p-6 md:p-8">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                                <div>
-                                    <h3 className="text-xl font-black text-slate-900">{req.business_name}</h3>
-                                    <p className="text-sm text-slate-500 font-medium">
-                                        {req.owner_name} · {req.business_type}
-                                    </p>
-                                </div>
-                                <StatusBadge status={req.status} />
-                            </div>
-
-                            <div className="flex flex-wrap gap-3 mb-5">
-                                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-xl text-sm font-bold">
-                                    <Mail className="w-3.5 h-3.5" /> {req.email}
-                                </span>
-                                {req.phone && (
-                                    <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-xl text-sm font-bold">
-                                        <Phone className="w-3.5 h-3.5" /> {req.phone}
-                                    </span>
-                                )}
-                                {req.business_type && (
-                                    <span className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 rounded-xl text-sm font-bold">
-                                        <Globe className="w-3.5 h-3.5" /> {req.business_type}
-                                    </span>
-                                )}
-                            </div>
-
-                            {req.description && (
-                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-5">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">What they need</p>
-                                    <p className="text-slate-700 text-sm leading-relaxed">{req.description}</p>
-                                </div>
-                            )}
-
-                            {isExpanded && (
-                                <div className="space-y-4 mb-5">
-                                    {req.needs && (
-                                        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Specific Features</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {req.needs.split(",").map((need: string) => (
-                                                    <span key={need} className="px-3 py-1 bg-white text-slate-700 rounded-lg text-xs font-bold border border-slate-200">
-                                                        {need.trim()}
+                        return (
+                            <div
+                                key={req.id}
+                                className="bg-white rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all overflow-hidden"
+                            >
+                                <div className="p-6 md:p-8">
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+                                        <div>
+                                            <div className="flex items-center gap-2.5">
+                                                <h3 className="text-xl font-black text-slate-900">{req.business_name}</h3>
+                                                {req.cupertino_consent && (
+                                                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md text-[10px] font-bold border border-emerald-200">
+                                                        Cupertino Verified
                                                     </span>
-                                                ))}
+                                                )}
+                                            </div>
+                                            <p className="text-sm text-slate-500 font-medium mt-0.5">
+                                                Owner: <strong>{req.owner_name}</strong> {req.business_type && `· ${req.business_type}`}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center gap-3">
+                                            <StatusBadge status={req.status} />
+                                            <button
+                                                onClick={() => deleteRequest(req.id, req.business_name)}
+                                                className="p-1.5 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete request"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Contact Chips */}
+                                    <div className="flex flex-wrap items-center gap-2.5 mb-4">
+                                        <a
+                                            href={`mailto:${req.email}`}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-100 transition-colors"
+                                        >
+                                            <Mail className="w-3.5 h-3.5 text-brand-600" />
+                                            <span>{req.email}</span>
+                                        </a>
+
+                                        {req.phone && (
+                                            <a
+                                                href={`tel:${req.phone}`}
+                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-100 transition-colors"
+                                            >
+                                                <Phone className="w-3.5 h-3.5 text-slate-500" />
+                                                <span>{req.phone}</span>
+                                            </a>
+                                        )}
+
+                                        <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-500 rounded-xl text-xs font-medium">
+                                            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                                            <span>{new Date(req.created_at).toLocaleDateString()}</span>
+                                        </span>
+                                    </div>
+
+                                    {/* Business description */}
+                                    {req.description && (
+                                        <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-100 mb-4">
+                                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+                                                Project Description
+                                            </p>
+                                            <p className="text-slate-700 text-sm leading-relaxed">{req.description}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Expanded features & notes */}
+                                    {isExpanded && (
+                                        <div className="space-y-4 mb-4">
+                                            {req.needs && (
+                                                <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-100">
+                                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                                                        Requested Features
+                                                    </p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {req.needs.split(",").map((n) => (
+                                                            <span
+                                                                key={n}
+                                                                className="px-2.5 py-1 bg-white border border-slate-200 text-slate-700 rounded-lg text-xs font-bold shadow-xs"
+                                                            >
+                                                                {n.trim()}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Internal notes */}
+                                            <div className="p-4 bg-amber-50/40 rounded-2xl border border-amber-200/60">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <p className="text-[11px] font-bold text-amber-900 uppercase tracking-widest flex items-center gap-1.5">
+                                                        <FileEdit className="w-3.5 h-3.5" /> Internal Notes
+                                                    </p>
+                                                    {!isEditingNotes && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setNotesDraft(req.notes || "");
+                                                                setEditingNotesId(req.id);
+                                                            }}
+                                                            className="text-xs font-bold text-amber-700 hover:underline"
+                                                        >
+                                                            {req.notes ? "Edit Note" : "+ Add Note"}
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                {isEditingNotes ? (
+                                                    <div className="space-y-2">
+                                                        <textarea
+                                                            rows={2}
+                                                            value={notesDraft}
+                                                            onChange={(e) => setNotesDraft(e.target.value)}
+                                                            className="w-full bg-white border border-amber-300 rounded-xl p-3 text-xs text-slate-900 outline-none"
+                                                            placeholder="Add internal notes about this client..."
+                                                        />
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => saveNotes(req.id)}
+                                                                className="px-3 py-1 bg-amber-600 text-white rounded-lg text-xs font-bold hover:bg-amber-700"
+                                                            >
+                                                                Save Note
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setEditingNotesId(null)}
+                                                                className="px-3 py-1 text-slate-500 rounded-lg text-xs font-medium hover:bg-slate-100"
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs text-slate-700 italic">
+                                                        {req.notes || "No internal notes recorded yet."}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     )}
-                                    <p className="text-xs text-slate-400">
-                                        Submitted {new Date(req.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                                        {req.cupertino_consent && " · Confirmed Cupertino business"}
-                                    </p>
+
+                                    {/* Action Bar */}
+                                    <div className="flex flex-wrap items-center gap-2.5 pt-4 border-t border-slate-100">
+                                        {req.status === "pending" ? (
+                                            <>
+                                                <button
+                                                    onClick={() => updateStatus(req.id, "in_progress")}
+                                                    className="flex items-center gap-1.5 px-4 py-2 bg-brand-600 text-white rounded-xl font-bold text-xs hover:bg-brand-700 transition-colors shadow-sm shadow-brand-100"
+                                                >
+                                                    <PlayCircle className="w-4 h-4" /> Accept & Start
+                                                </button>
+                                                <button
+                                                    onClick={() => updateStatus(req.id, "contacted")}
+                                                    className="flex items-center gap-1.5 px-4 py-2 bg-white text-purple-700 border border-purple-200 rounded-xl font-bold text-xs hover:bg-purple-50 transition-colors"
+                                                >
+                                                    <MessageSquare className="w-4 h-4" /> Contacted
+                                                </button>
+                                                <button
+                                                    onClick={() => updateStatus(req.id, "rejected")}
+                                                    className="flex items-center gap-1.5 px-3 py-2 bg-white text-red-600 border border-red-200 rounded-xl font-bold text-xs hover:bg-red-50 transition-colors"
+                                                >
+                                                    <XCircle className="w-4 h-4" /> Decline
+                                                </button>
+                                            </>
+                                        ) : req.status === "in_progress" ? (
+                                            <>
+                                                <button
+                                                    onClick={() => updateStatus(req.id, "completed")}
+                                                    className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 transition-colors shadow-sm"
+                                                >
+                                                    <CheckCircle2 className="w-4 h-4" /> Mark Complete
+                                                </button>
+                                                <select
+                                                    value={req.status}
+                                                    onChange={(e) => updateStatus(req.id, e.target.value)}
+                                                    className="px-3 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl outline-none"
+                                                >
+                                                    <option value="pending">Move to Pending</option>
+                                                    <option value="in_progress">In Progress</option>
+                                                    <option value="contacted">Contacted</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="rejected">Rejected</option>
+                                                </select>
+                                            </>
+                                        ) : (
+                                            <select
+                                                value={req.status}
+                                                onChange={(e) => updateStatus(req.id, e.target.value)}
+                                                className="px-3 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl outline-none"
+                                            >
+                                                <option value="pending">Pending</option>
+                                                <option value="in_progress">In Progress</option>
+                                                <option value="contacted">Contacted</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="rejected">Rejected</option>
+                                            </select>
+                                        )}
+
+                                        <a
+                                            href={`mailto:${req.email}?subject=CodeStarters%20Website%20Inquiry%20-%20${encodeURIComponent(req.business_name)}`}
+                                            className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-colors"
+                                        >
+                                            <Send className="w-3.5 h-3.5 text-brand-600" />
+                                            <span>Email Client</span>
+                                        </a>
+
+                                        <button
+                                            onClick={() => setExpandedId(isExpanded ? null : req.id)}
+                                            className="ml-auto flex items-center gap-1 px-3 py-2 text-slate-400 hover:text-slate-600 text-xs font-bold uppercase tracking-wider transition-colors"
+                                        >
+                                            {isExpanded ? (
+                                                <>
+                                                    <ChevronUp className="w-3.5 h-3.5" /> Less
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ChevronDown className="w-3.5 h-3.5" /> Details
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
-                            )}
-
-                            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-100">
-                                {req.status === "pending" ? (
-                                    <>
-                                        <button onClick={() => updateStatus(req.id, "in_progress")} className="flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white rounded-xl font-bold text-sm hover:bg-brand-700 transition-colors">
-                                            <PlayCircle className="w-4 h-4" /> Accept & Start
-                                        </button>
-                                        <button onClick={() => updateStatus(req.id, "rejected")} className="flex items-center gap-2 px-5 py-2.5 bg-white text-red-600 border border-red-200 rounded-xl font-bold text-sm hover:bg-red-50 transition-colors">
-                                            <XCircle className="w-4 h-4" /> Decline
-                                        </button>
-                                        <button onClick={() => updateStatus(req.id, "contacted")} className="flex items-center gap-2 px-5 py-2.5 bg-white text-purple-600 border border-purple-200 rounded-xl font-bold text-sm hover:bg-purple-50 transition-colors">
-                                            <MessageSquare className="w-4 h-4" /> Contacted
-                                        </button>
-                                    </>
-                                ) : req.status === "in_progress" ? (
-                                    <>
-                                        <button onClick={() => updateStatus(req.id, "completed")} className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-colors">
-                                            <CheckCircle2 className="w-4 h-4" /> Mark Complete
-                                        </button>
-                                        <select className="px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold rounded-xl outline-none focus:ring-2 focus:ring-brand-500 appearance-none cursor-pointer" value={req.status} onChange={(e) => updateStatus(req.id, e.target.value)}>
-                                            <option value="pending">Set Pending</option>
-                                            <option value="in_progress">In Progress</option>
-                                            <option value="contacted">Set Contacted</option>
-                                            <option value="completed">Set Completed</option>
-                                            <option value="rejected">Set Rejected</option>
-                                        </select>
-                                    </>
-                                ) : (
-                                    <select className="px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold rounded-xl outline-none focus:ring-2 focus:ring-brand-500 appearance-none cursor-pointer" value={req.status} onChange={(e) => updateStatus(req.id, e.target.value)}>
-                                        <option value="pending">Set Pending</option>
-                                        <option value="in_progress">Set In Progress</option>
-                                        <option value="contacted">Set Contacted</option>
-                                        <option value="completed">Set Completed</option>
-                                        <option value="rejected">Set Rejected</option>
-                                    </select>
-                                )}
-
-                                <button onClick={() => setExpandedId(isExpanded ? null : req.id)} className="ml-auto flex items-center gap-1.5 px-3 py-2 text-slate-400 hover:text-slate-600 text-xs font-bold uppercase tracking-widest transition-colors">
-                                    {isExpanded ? <><ChevronUp className="w-3.5 h-3.5" /> Less</> : <><ChevronDown className="w-3.5 h-3.5" /> More</>}
-                                </button>
                             </div>
-                        </div>
-                    </div>
-                );
-            })}
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }

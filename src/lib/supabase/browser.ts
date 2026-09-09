@@ -24,3 +24,22 @@ export const supabase = new Proxy({} as SupabaseClient, {
     return (getSupabase() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
+
+/** Initiates Google SSO login via Supabase Auth */
+export async function signInWithGoogle(redirectTo?: string) {
+  const client = getSupabase();
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const target = redirectTo || `${origin}/admin/auth/callback`;
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: target,
+      queryParams: {
+        access_type: "offline",
+        prompt: "select_account",
+      },
+    },
+  });
+  if (error) throw error;
+  return data;
+}

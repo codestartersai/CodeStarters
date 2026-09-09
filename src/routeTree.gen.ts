@@ -9,43 +9,49 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TeamRouteImport } from './routes/team'
-import { Route as FirehacksRouteImport } from './routes/firehacks'
-import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FirehacksIndexRouteImport } from './routes/firehacks.index'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as FirehacksRouteImport } from './routes/firehacks'
+import { Route as TeamRouteImport } from './routes/team'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as FirehacksPortalRouteImport } from './routes/firehacks.portal'
-import { Route as FirehacksMemberRouteImport } from './routes/firehacks.member'
-import { Route as ApiTeamRouteImport } from './routes/api/team'
-import { Route as AdminTeamRouteImport } from './routes/admin/team'
-import { Route as AdminSetupRouteImport } from './routes/admin/setup'
-import { Route as AdminScannerRouteImport } from './routes/admin/scanner'
-import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
-import { Route as AdminLoginRouteImport } from './routes/admin/login'
-import { Route as AdminFirehacksPortalRouteImport } from './routes/admin/firehacks-portal'
-import { Route as AdminFirehacksMembersRouteImport } from './routes/admin/firehacks-members'
 import { Route as AdminApplicationsRouteImport } from './routes/admin/applications'
+import { Route as AdminFirehacksMembersRouteImport } from './routes/admin/firehacks-members'
+import { Route as AdminFirehacksPortalRouteImport } from './routes/admin/firehacks-portal'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminMembersRouteImport } from './routes/admin/members'
+import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
+import { Route as AdminScannerRouteImport } from './routes/admin/scanner'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminSetupRouteImport } from './routes/admin/setup'
+import { Route as AdminSummerScannerRouteImport } from './routes/admin/summer-scanner'
+import { Route as AdminTeamRouteImport } from './routes/admin/team'
+import { Route as ApiSummerSignupsRouteImport } from './routes/api/summer-signups'
+import { Route as ApiTeamRouteImport } from './routes/api/team'
+import { Route as FirehacksIndexRouteImport } from './routes/firehacks.index'
+import { Route as FirehacksMemberRouteImport } from './routes/firehacks.member'
+import { Route as FirehacksPortalRouteImport } from './routes/firehacks.portal'
+import { Route as AdminAuthCallbackRouteImport } from './routes/admin/auth.callback'
+import { Route as ApiAdminAuthVerifyRouteImport } from './routes/api/admin/auth-verify'
+import { Route as ApiAdminDashboardStatsRouteImport } from './routes/api/admin/dashboard-stats'
+import { Route as ApiAdminEmailConnectorRouteImport } from './routes/api/admin/email-connector'
+import { Route as ApiAdminMembersRouteImport } from './routes/api/admin/members'
+import { Route as ApiAdminRedeemInviteRouteImport } from './routes/api/admin/redeem-invite'
+import { Route as ApiAdminSummerSignupsRouteImport } from './routes/api/admin/summer-signups'
+import { Route as ApiAdminTeamsRouteImport } from './routes/api/admin/teams'
+import { Route as ApiAdminVolunteersRouteImport } from './routes/api/admin/volunteers'
+import { Route as ApiAdminWebsiteRequestsRouteImport } from './routes/api/admin/website-requests'
+import { Route as ApiFirehacksWaiverRouteImport } from './routes/api/firehacks/waiver'
+import { Route as FirehacksMemberLoginRouteImport } from './routes/firehacks.member.login'
 import { Route as FirehacksPortalIndexRouteImport } from './routes/firehacks.portal.index'
 import { Route as FirehacksPortalLoginRouteImport } from './routes/firehacks.portal.login'
-import { Route as FirehacksMemberLoginRouteImport } from './routes/firehacks.member.login'
-import { Route as ApiFirehacksWaiverRouteImport } from './routes/api/firehacks/waiver'
-import { Route as ApiAdminWebsiteRequestsRouteImport } from './routes/api/admin/website-requests'
-import { Route as ApiAdminVolunteersRouteImport } from './routes/api/admin/volunteers'
-import { Route as ApiAdminDashboardStatsRouteImport } from './routes/api/admin/dashboard-stats'
-import { Route as ApiFirehacksMemberRedeemRouteImport } from './routes/api/firehacks/member/redeem'
-import { Route as ApiFirehacksMemberLookupRouteImport } from './routes/api/firehacks/member/lookup'
-import { Route as ApiAdminFirehacksProvisionPortalRouteImport } from './routes/api/admin/firehacks/provision-portal'
 import { Route as ApiAdminFirehacksProvisionMemberRouteImport } from './routes/api/admin/firehacks/provision-member'
+import { Route as ApiAdminFirehacksProvisionPortalRouteImport } from './routes/api/admin/firehacks/provision-portal'
+import { Route as ApiFirehacksMemberLookupRouteImport } from './routes/api/firehacks/member/lookup'
+import { Route as ApiFirehacksMemberRedeemRouteImport } from './routes/api/firehacks/member/redeem'
 
-const TeamRoute = TeamRouteImport.update({
-  id: '/team',
-  path: '/team',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FirehacksRoute = FirehacksRouteImport.update({
-  id: '/firehacks',
-  path: '/firehacks',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
@@ -53,64 +59,24 @@ const AdminRouteRoute = AdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const FirehacksRoute = FirehacksRouteImport.update({
+  id: '/firehacks',
+  path: '/firehacks',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FirehacksIndexRoute = FirehacksIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => FirehacksRoute,
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const FirehacksPortalRoute = FirehacksPortalRouteImport.update({
-  id: '/portal',
-  path: '/portal',
-  getParentRoute: () => FirehacksRoute,
-} as any)
-const FirehacksMemberRoute = FirehacksMemberRouteImport.update({
-  id: '/member',
-  path: '/member',
-  getParentRoute: () => FirehacksRoute,
-} as any)
-const ApiTeamRoute = ApiTeamRouteImport.update({
-  id: '/api/team',
-  path: '/api/team',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminTeamRoute = AdminTeamRouteImport.update({
-  id: '/team',
-  path: '/team',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminSetupRoute = AdminSetupRouteImport.update({
-  id: '/setup',
-  path: '/setup',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminScannerRoute = AdminScannerRouteImport.update({
-  id: '/scanner',
-  path: '/scanner',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminRequestsRoute = AdminRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminFirehacksPortalRoute = AdminFirehacksPortalRouteImport.update({
-  id: '/firehacks-portal',
-  path: '/firehacks-portal',
+const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminFirehacksMembersRoute = AdminFirehacksMembersRouteImport.update({
@@ -118,10 +84,135 @@ const AdminFirehacksMembersRoute = AdminFirehacksMembersRouteImport.update({
   path: '/firehacks-members',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
-  id: '/applications',
-  path: '/applications',
+const AdminFirehacksPortalRoute = AdminFirehacksPortalRouteImport.update({
+  id: '/firehacks-portal',
+  path: '/firehacks-portal',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMembersRoute = AdminMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminRequestsRoute = AdminRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminScannerRoute = AdminScannerRouteImport.update({
+  id: '/scanner',
+  path: '/scanner',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSetupRoute = AdminSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSummerScannerRoute = AdminSummerScannerRouteImport.update({
+  id: '/summer-scanner',
+  path: '/summer-scanner',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminTeamRoute = AdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const ApiSummerSignupsRoute = ApiSummerSignupsRouteImport.update({
+  id: '/api/summer-signups',
+  path: '/api/summer-signups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTeamRoute = ApiTeamRouteImport.update({
+  id: '/api/team',
+  path: '/api/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FirehacksIndexRoute = FirehacksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FirehacksRoute,
+} as any)
+const FirehacksMemberRoute = FirehacksMemberRouteImport.update({
+  id: '/member',
+  path: '/member',
+  getParentRoute: () => FirehacksRoute,
+} as any)
+const FirehacksPortalRoute = FirehacksPortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => FirehacksRoute,
+} as any)
+const AdminAuthCallbackRoute = AdminAuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const ApiAdminAuthVerifyRoute = ApiAdminAuthVerifyRouteImport.update({
+  id: '/api/admin/auth-verify',
+  path: '/api/admin/auth-verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDashboardStatsRoute = ApiAdminDashboardStatsRouteImport.update({
+  id: '/api/admin/dashboard-stats',
+  path: '/api/admin/dashboard-stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminEmailConnectorRoute = ApiAdminEmailConnectorRouteImport.update({
+  id: '/api/admin/email-connector',
+  path: '/api/admin/email-connector',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminMembersRoute = ApiAdminMembersRouteImport.update({
+  id: '/api/admin/members',
+  path: '/api/admin/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminRedeemInviteRoute = ApiAdminRedeemInviteRouteImport.update({
+  id: '/api/admin/redeem-invite',
+  path: '/api/admin/redeem-invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminSummerSignupsRoute = ApiAdminSummerSignupsRouteImport.update({
+  id: '/api/admin/summer-signups',
+  path: '/api/admin/summer-signups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminTeamsRoute = ApiAdminTeamsRouteImport.update({
+  id: '/api/admin/teams',
+  path: '/api/admin/teams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminVolunteersRoute = ApiAdminVolunteersRouteImport.update({
+  id: '/api/admin/volunteers',
+  path: '/api/admin/volunteers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminWebsiteRequestsRoute = ApiAdminWebsiteRequestsRouteImport.update({
+  id: '/api/admin/website-requests',
+  path: '/api/admin/website-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFirehacksWaiverRoute = ApiFirehacksWaiverRouteImport.update({
+  id: '/api/firehacks/waiver',
+  path: '/api/firehacks/waiver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FirehacksMemberLoginRoute = FirehacksMemberLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => FirehacksMemberRoute,
 } as any)
 const FirehacksPortalIndexRoute = FirehacksPortalIndexRouteImport.update({
   id: '/',
@@ -133,41 +224,10 @@ const FirehacksPortalLoginRoute = FirehacksPortalLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => FirehacksPortalRoute,
 } as any)
-const FirehacksMemberLoginRoute = FirehacksMemberLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => FirehacksMemberRoute,
-} as any)
-const ApiFirehacksWaiverRoute = ApiFirehacksWaiverRouteImport.update({
-  id: '/api/firehacks/waiver',
-  path: '/api/firehacks/waiver',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAdminWebsiteRequestsRoute = ApiAdminWebsiteRequestsRouteImport.update({
-  id: '/api/admin/website-requests',
-  path: '/api/admin/website-requests',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAdminVolunteersRoute = ApiAdminVolunteersRouteImport.update({
-  id: '/api/admin/volunteers',
-  path: '/api/admin/volunteers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAdminDashboardStatsRoute = ApiAdminDashboardStatsRouteImport.update({
-  id: '/api/admin/dashboard-stats',
-  path: '/api/admin/dashboard-stats',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiFirehacksMemberRedeemRoute =
-  ApiFirehacksMemberRedeemRouteImport.update({
-    id: '/api/firehacks/member/redeem',
-    path: '/api/firehacks/member/redeem',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiFirehacksMemberLookupRoute =
-  ApiFirehacksMemberLookupRouteImport.update({
-    id: '/api/firehacks/member/lookup',
-    path: '/api/firehacks/member/lookup',
+const ApiAdminFirehacksProvisionMemberRoute =
+  ApiAdminFirehacksProvisionMemberRouteImport.update({
+    id: '/api/admin/firehacks/provision-member',
+    path: '/api/admin/firehacks/provision-member',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiAdminFirehacksProvisionPortalRoute =
@@ -176,10 +236,16 @@ const ApiAdminFirehacksProvisionPortalRoute =
     path: '/api/admin/firehacks/provision-portal',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiAdminFirehacksProvisionMemberRoute =
-  ApiAdminFirehacksProvisionMemberRouteImport.update({
-    id: '/api/admin/firehacks/provision-member',
-    path: '/api/admin/firehacks/provision-member',
+const ApiFirehacksMemberLookupRoute =
+  ApiFirehacksMemberLookupRouteImport.update({
+    id: '/api/firehacks/member/lookup',
+    path: '/api/firehacks/member/lookup',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiFirehacksMemberRedeemRoute =
+  ApiFirehacksMemberRedeemRouteImport.update({
+    id: '/api/firehacks/member/redeem',
+    path: '/api/firehacks/member/redeem',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -192,16 +258,27 @@ export interface FileRoutesByFullPath {
   '/admin/firehacks-members': typeof AdminFirehacksMembersRoute
   '/admin/firehacks-portal': typeof AdminFirehacksPortalRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/members': typeof AdminMembersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/admin/scanner': typeof AdminScannerRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
+  '/admin/summer-scanner': typeof AdminSummerScannerRoute
   '/admin/team': typeof AdminTeamRoute
+  '/api/summer-signups': typeof ApiSummerSignupsRoute
   '/api/team': typeof ApiTeamRoute
   '/firehacks/member': typeof FirehacksMemberRouteWithChildren
   '/firehacks/portal': typeof FirehacksPortalRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/firehacks/': typeof FirehacksIndexRoute
+  '/admin/auth/callback': typeof AdminAuthCallbackRoute
+  '/api/admin/auth-verify': typeof ApiAdminAuthVerifyRoute
   '/api/admin/dashboard-stats': typeof ApiAdminDashboardStatsRoute
+  '/api/admin/email-connector': typeof ApiAdminEmailConnectorRoute
+  '/api/admin/members': typeof ApiAdminMembersRoute
+  '/api/admin/redeem-invite': typeof ApiAdminRedeemInviteRoute
+  '/api/admin/summer-signups': typeof ApiAdminSummerSignupsRoute
+  '/api/admin/teams': typeof ApiAdminTeamsRoute
   '/api/admin/volunteers': typeof ApiAdminVolunteersRoute
   '/api/admin/website-requests': typeof ApiAdminWebsiteRequestsRoute
   '/api/firehacks/waiver': typeof ApiFirehacksWaiverRoute
@@ -220,15 +297,26 @@ export interface FileRoutesByTo {
   '/admin/firehacks-members': typeof AdminFirehacksMembersRoute
   '/admin/firehacks-portal': typeof AdminFirehacksPortalRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/members': typeof AdminMembersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/admin/scanner': typeof AdminScannerRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
+  '/admin/summer-scanner': typeof AdminSummerScannerRoute
   '/admin/team': typeof AdminTeamRoute
+  '/api/summer-signups': typeof ApiSummerSignupsRoute
   '/api/team': typeof ApiTeamRoute
   '/firehacks/member': typeof FirehacksMemberRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/firehacks': typeof FirehacksIndexRoute
+  '/admin/auth/callback': typeof AdminAuthCallbackRoute
+  '/api/admin/auth-verify': typeof ApiAdminAuthVerifyRoute
   '/api/admin/dashboard-stats': typeof ApiAdminDashboardStatsRoute
+  '/api/admin/email-connector': typeof ApiAdminEmailConnectorRoute
+  '/api/admin/members': typeof ApiAdminMembersRoute
+  '/api/admin/redeem-invite': typeof ApiAdminRedeemInviteRoute
+  '/api/admin/summer-signups': typeof ApiAdminSummerSignupsRoute
+  '/api/admin/teams': typeof ApiAdminTeamsRoute
   '/api/admin/volunteers': typeof ApiAdminVolunteersRoute
   '/api/admin/website-requests': typeof ApiAdminWebsiteRequestsRoute
   '/api/firehacks/waiver': typeof ApiFirehacksWaiverRoute
@@ -250,16 +338,27 @@ export interface FileRoutesById {
   '/admin/firehacks-members': typeof AdminFirehacksMembersRoute
   '/admin/firehacks-portal': typeof AdminFirehacksPortalRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/members': typeof AdminMembersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/admin/scanner': typeof AdminScannerRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
+  '/admin/summer-scanner': typeof AdminSummerScannerRoute
   '/admin/team': typeof AdminTeamRoute
+  '/api/summer-signups': typeof ApiSummerSignupsRoute
   '/api/team': typeof ApiTeamRoute
   '/firehacks/member': typeof FirehacksMemberRouteWithChildren
   '/firehacks/portal': typeof FirehacksPortalRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/firehacks/': typeof FirehacksIndexRoute
+  '/admin/auth/callback': typeof AdminAuthCallbackRoute
+  '/api/admin/auth-verify': typeof ApiAdminAuthVerifyRoute
   '/api/admin/dashboard-stats': typeof ApiAdminDashboardStatsRoute
+  '/api/admin/email-connector': typeof ApiAdminEmailConnectorRoute
+  '/api/admin/members': typeof ApiAdminMembersRoute
+  '/api/admin/redeem-invite': typeof ApiAdminRedeemInviteRoute
+  '/api/admin/summer-signups': typeof ApiAdminSummerSignupsRoute
+  '/api/admin/teams': typeof ApiAdminTeamsRoute
   '/api/admin/volunteers': typeof ApiAdminVolunteersRoute
   '/api/admin/website-requests': typeof ApiAdminWebsiteRequestsRoute
   '/api/firehacks/waiver': typeof ApiFirehacksWaiverRoute
@@ -282,16 +381,27 @@ export interface FileRouteTypes {
     | '/admin/firehacks-members'
     | '/admin/firehacks-portal'
     | '/admin/login'
+    | '/admin/members'
     | '/admin/requests'
     | '/admin/scanner'
+    | '/admin/settings'
     | '/admin/setup'
+    | '/admin/summer-scanner'
     | '/admin/team'
+    | '/api/summer-signups'
     | '/api/team'
     | '/firehacks/member'
     | '/firehacks/portal'
     | '/admin/'
     | '/firehacks/'
+    | '/admin/auth/callback'
+    | '/api/admin/auth-verify'
     | '/api/admin/dashboard-stats'
+    | '/api/admin/email-connector'
+    | '/api/admin/members'
+    | '/api/admin/redeem-invite'
+    | '/api/admin/summer-signups'
+    | '/api/admin/teams'
     | '/api/admin/volunteers'
     | '/api/admin/website-requests'
     | '/api/firehacks/waiver'
@@ -310,15 +420,26 @@ export interface FileRouteTypes {
     | '/admin/firehacks-members'
     | '/admin/firehacks-portal'
     | '/admin/login'
+    | '/admin/members'
     | '/admin/requests'
     | '/admin/scanner'
+    | '/admin/settings'
     | '/admin/setup'
+    | '/admin/summer-scanner'
     | '/admin/team'
+    | '/api/summer-signups'
     | '/api/team'
     | '/firehacks/member'
     | '/admin'
     | '/firehacks'
+    | '/admin/auth/callback'
+    | '/api/admin/auth-verify'
     | '/api/admin/dashboard-stats'
+    | '/api/admin/email-connector'
+    | '/api/admin/members'
+    | '/api/admin/redeem-invite'
+    | '/api/admin/summer-signups'
+    | '/api/admin/teams'
     | '/api/admin/volunteers'
     | '/api/admin/website-requests'
     | '/api/firehacks/waiver'
@@ -339,16 +460,27 @@ export interface FileRouteTypes {
     | '/admin/firehacks-members'
     | '/admin/firehacks-portal'
     | '/admin/login'
+    | '/admin/members'
     | '/admin/requests'
     | '/admin/scanner'
+    | '/admin/settings'
     | '/admin/setup'
+    | '/admin/summer-scanner'
     | '/admin/team'
+    | '/api/summer-signups'
     | '/api/team'
     | '/firehacks/member'
     | '/firehacks/portal'
     | '/admin/'
     | '/firehacks/'
+    | '/admin/auth/callback'
+    | '/api/admin/auth-verify'
     | '/api/admin/dashboard-stats'
+    | '/api/admin/email-connector'
+    | '/api/admin/members'
+    | '/api/admin/redeem-invite'
+    | '/api/admin/summer-signups'
+    | '/api/admin/teams'
     | '/api/admin/volunteers'
     | '/api/admin/website-requests'
     | '/api/firehacks/waiver'
@@ -366,8 +498,15 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   FirehacksRoute: typeof FirehacksRouteWithChildren
   TeamRoute: typeof TeamRoute
+  ApiSummerSignupsRoute: typeof ApiSummerSignupsRoute
   ApiTeamRoute: typeof ApiTeamRoute
+  ApiAdminAuthVerifyRoute: typeof ApiAdminAuthVerifyRoute
   ApiAdminDashboardStatsRoute: typeof ApiAdminDashboardStatsRoute
+  ApiAdminEmailConnectorRoute: typeof ApiAdminEmailConnectorRoute
+  ApiAdminMembersRoute: typeof ApiAdminMembersRoute
+  ApiAdminRedeemInviteRoute: typeof ApiAdminRedeemInviteRoute
+  ApiAdminSummerSignupsRoute: typeof ApiAdminSummerSignupsRoute
+  ApiAdminTeamsRoute: typeof ApiAdminTeamsRoute
   ApiAdminVolunteersRoute: typeof ApiAdminVolunteersRoute
   ApiAdminWebsiteRequestsRoute: typeof ApiAdminWebsiteRequestsRoute
   ApiFirehacksWaiverRoute: typeof ApiFirehacksWaiverRoute
@@ -379,18 +518,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/team': {
-      id: '/team'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof TeamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/firehacks': {
-      id: '/firehacks'
-      path: '/firehacks'
-      fullPath: '/firehacks'
-      preLoaderRoute: typeof FirehacksRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -400,19 +532,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/firehacks': {
+      id: '/firehacks'
+      path: '/firehacks'
+      fullPath: '/firehacks'
+      preLoaderRoute: typeof FirehacksRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/firehacks/': {
-      id: '/firehacks/'
-      path: '/'
-      fullPath: '/firehacks/'
-      preLoaderRoute: typeof FirehacksIndexRouteImport
-      parentRoute: typeof FirehacksRoute
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
@@ -421,67 +553,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/firehacks/portal': {
-      id: '/firehacks/portal'
-      path: '/portal'
-      fullPath: '/firehacks/portal'
-      preLoaderRoute: typeof FirehacksPortalRouteImport
-      parentRoute: typeof FirehacksRoute
-    }
-    '/firehacks/member': {
-      id: '/firehacks/member'
-      path: '/member'
-      fullPath: '/firehacks/member'
-      preLoaderRoute: typeof FirehacksMemberRouteImport
-      parentRoute: typeof FirehacksRoute
-    }
-    '/api/team': {
-      id: '/api/team'
-      path: '/api/team'
-      fullPath: '/api/team'
-      preLoaderRoute: typeof ApiTeamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/team': {
-      id: '/admin/team'
-      path: '/team'
-      fullPath: '/admin/team'
-      preLoaderRoute: typeof AdminTeamRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/setup': {
-      id: '/admin/setup'
-      path: '/setup'
-      fullPath: '/admin/setup'
-      preLoaderRoute: typeof AdminSetupRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/scanner': {
-      id: '/admin/scanner'
-      path: '/scanner'
-      fullPath: '/admin/scanner'
-      preLoaderRoute: typeof AdminScannerRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/requests': {
-      id: '/admin/requests'
-      path: '/requests'
-      fullPath: '/admin/requests'
-      preLoaderRoute: typeof AdminRequestsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/firehacks-portal': {
-      id: '/admin/firehacks-portal'
-      path: '/firehacks-portal'
-      fullPath: '/admin/firehacks-portal'
-      preLoaderRoute: typeof AdminFirehacksPortalRouteImport
+    '/admin/applications': {
+      id: '/admin/applications'
+      path: '/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AdminApplicationsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/firehacks-members': {
@@ -491,12 +567,187 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFirehacksMembersRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/applications': {
-      id: '/admin/applications'
-      path: '/applications'
-      fullPath: '/admin/applications'
-      preLoaderRoute: typeof AdminApplicationsRouteImport
+    '/admin/firehacks-portal': {
+      id: '/admin/firehacks-portal'
+      path: '/firehacks-portal'
+      fullPath: '/admin/firehacks-portal'
+      preLoaderRoute: typeof AdminFirehacksPortalRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/members': {
+      id: '/admin/members'
+      path: '/members'
+      fullPath: '/admin/members'
+      preLoaderRoute: typeof AdminMembersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/requests': {
+      id: '/admin/requests'
+      path: '/requests'
+      fullPath: '/admin/requests'
+      preLoaderRoute: typeof AdminRequestsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/scanner': {
+      id: '/admin/scanner'
+      path: '/scanner'
+      fullPath: '/admin/scanner'
+      preLoaderRoute: typeof AdminScannerRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/setup': {
+      id: '/admin/setup'
+      path: '/setup'
+      fullPath: '/admin/setup'
+      preLoaderRoute: typeof AdminSetupRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/summer-scanner': {
+      id: '/admin/summer-scanner'
+      path: '/summer-scanner'
+      fullPath: '/admin/summer-scanner'
+      preLoaderRoute: typeof AdminSummerScannerRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/team': {
+      id: '/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AdminTeamRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/api/summer-signups': {
+      id: '/api/summer-signups'
+      path: '/api/summer-signups'
+      fullPath: '/api/summer-signups'
+      preLoaderRoute: typeof ApiSummerSignupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/team': {
+      id: '/api/team'
+      path: '/api/team'
+      fullPath: '/api/team'
+      preLoaderRoute: typeof ApiTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/firehacks/': {
+      id: '/firehacks/'
+      path: '/'
+      fullPath: '/firehacks/'
+      preLoaderRoute: typeof FirehacksIndexRouteImport
+      parentRoute: typeof FirehacksRoute
+    }
+    '/firehacks/member': {
+      id: '/firehacks/member'
+      path: '/member'
+      fullPath: '/firehacks/member'
+      preLoaderRoute: typeof FirehacksMemberRouteImport
+      parentRoute: typeof FirehacksRoute
+    }
+    '/firehacks/portal': {
+      id: '/firehacks/portal'
+      path: '/portal'
+      fullPath: '/firehacks/portal'
+      preLoaderRoute: typeof FirehacksPortalRouteImport
+      parentRoute: typeof FirehacksRoute
+    }
+    '/admin/auth/callback': {
+      id: '/admin/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/admin/auth/callback'
+      preLoaderRoute: typeof AdminAuthCallbackRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/api/admin/auth-verify': {
+      id: '/api/admin/auth-verify'
+      path: '/api/admin/auth-verify'
+      fullPath: '/api/admin/auth-verify'
+      preLoaderRoute: typeof ApiAdminAuthVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/dashboard-stats': {
+      id: '/api/admin/dashboard-stats'
+      path: '/api/admin/dashboard-stats'
+      fullPath: '/api/admin/dashboard-stats'
+      preLoaderRoute: typeof ApiAdminDashboardStatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/email-connector': {
+      id: '/api/admin/email-connector'
+      path: '/api/admin/email-connector'
+      fullPath: '/api/admin/email-connector'
+      preLoaderRoute: typeof ApiAdminEmailConnectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/members': {
+      id: '/api/admin/members'
+      path: '/api/admin/members'
+      fullPath: '/api/admin/members'
+      preLoaderRoute: typeof ApiAdminMembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/redeem-invite': {
+      id: '/api/admin/redeem-invite'
+      path: '/api/admin/redeem-invite'
+      fullPath: '/api/admin/redeem-invite'
+      preLoaderRoute: typeof ApiAdminRedeemInviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/summer-signups': {
+      id: '/api/admin/summer-signups'
+      path: '/api/admin/summer-signups'
+      fullPath: '/api/admin/summer-signups'
+      preLoaderRoute: typeof ApiAdminSummerSignupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/teams': {
+      id: '/api/admin/teams'
+      path: '/api/admin/teams'
+      fullPath: '/api/admin/teams'
+      preLoaderRoute: typeof ApiAdminTeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/volunteers': {
+      id: '/api/admin/volunteers'
+      path: '/api/admin/volunteers'
+      fullPath: '/api/admin/volunteers'
+      preLoaderRoute: typeof ApiAdminVolunteersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/website-requests': {
+      id: '/api/admin/website-requests'
+      path: '/api/admin/website-requests'
+      fullPath: '/api/admin/website-requests'
+      preLoaderRoute: typeof ApiAdminWebsiteRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/firehacks/waiver': {
+      id: '/api/firehacks/waiver'
+      path: '/api/firehacks/waiver'
+      fullPath: '/api/firehacks/waiver'
+      preLoaderRoute: typeof ApiFirehacksWaiverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/firehacks/member/login': {
+      id: '/firehacks/member/login'
+      path: '/login'
+      fullPath: '/firehacks/member/login'
+      preLoaderRoute: typeof FirehacksMemberLoginRouteImport
+      parentRoute: typeof FirehacksMemberRoute
     }
     '/firehacks/portal/': {
       id: '/firehacks/portal/'
@@ -512,53 +763,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FirehacksPortalLoginRouteImport
       parentRoute: typeof FirehacksPortalRoute
     }
-    '/firehacks/member/login': {
-      id: '/firehacks/member/login'
-      path: '/login'
-      fullPath: '/firehacks/member/login'
-      preLoaderRoute: typeof FirehacksMemberLoginRouteImport
-      parentRoute: typeof FirehacksMemberRoute
-    }
-    '/api/firehacks/waiver': {
-      id: '/api/firehacks/waiver'
-      path: '/api/firehacks/waiver'
-      fullPath: '/api/firehacks/waiver'
-      preLoaderRoute: typeof ApiFirehacksWaiverRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/website-requests': {
-      id: '/api/admin/website-requests'
-      path: '/api/admin/website-requests'
-      fullPath: '/api/admin/website-requests'
-      preLoaderRoute: typeof ApiAdminWebsiteRequestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/volunteers': {
-      id: '/api/admin/volunteers'
-      path: '/api/admin/volunteers'
-      fullPath: '/api/admin/volunteers'
-      preLoaderRoute: typeof ApiAdminVolunteersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/dashboard-stats': {
-      id: '/api/admin/dashboard-stats'
-      path: '/api/admin/dashboard-stats'
-      fullPath: '/api/admin/dashboard-stats'
-      preLoaderRoute: typeof ApiAdminDashboardStatsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/firehacks/member/redeem': {
-      id: '/api/firehacks/member/redeem'
-      path: '/api/firehacks/member/redeem'
-      fullPath: '/api/firehacks/member/redeem'
-      preLoaderRoute: typeof ApiFirehacksMemberRedeemRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/firehacks/member/lookup': {
-      id: '/api/firehacks/member/lookup'
-      path: '/api/firehacks/member/lookup'
-      fullPath: '/api/firehacks/member/lookup'
-      preLoaderRoute: typeof ApiFirehacksMemberLookupRouteImport
+    '/api/admin/firehacks/provision-member': {
+      id: '/api/admin/firehacks/provision-member'
+      path: '/api/admin/firehacks/provision-member'
+      fullPath: '/api/admin/firehacks/provision-member'
+      preLoaderRoute: typeof ApiAdminFirehacksProvisionMemberRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/firehacks/provision-portal': {
@@ -568,11 +777,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminFirehacksProvisionPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/admin/firehacks/provision-member': {
-      id: '/api/admin/firehacks/provision-member'
-      path: '/api/admin/firehacks/provision-member'
-      fullPath: '/api/admin/firehacks/provision-member'
-      preLoaderRoute: typeof ApiAdminFirehacksProvisionMemberRouteImport
+    '/api/firehacks/member/lookup': {
+      id: '/api/firehacks/member/lookup'
+      path: '/api/firehacks/member/lookup'
+      fullPath: '/api/firehacks/member/lookup'
+      preLoaderRoute: typeof ApiFirehacksMemberLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/firehacks/member/redeem': {
+      id: '/api/firehacks/member/redeem'
+      path: '/api/firehacks/member/redeem'
+      fullPath: '/api/firehacks/member/redeem'
+      preLoaderRoute: typeof ApiFirehacksMemberRedeemRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -583,11 +799,15 @@ interface AdminRouteRouteChildren {
   AdminFirehacksMembersRoute: typeof AdminFirehacksMembersRoute
   AdminFirehacksPortalRoute: typeof AdminFirehacksPortalRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminMembersRoute: typeof AdminMembersRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
   AdminScannerRoute: typeof AdminScannerRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSetupRoute: typeof AdminSetupRoute
+  AdminSummerScannerRoute: typeof AdminSummerScannerRoute
   AdminTeamRoute: typeof AdminTeamRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminAuthCallbackRoute: typeof AdminAuthCallbackRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
@@ -595,11 +815,15 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminFirehacksMembersRoute: AdminFirehacksMembersRoute,
   AdminFirehacksPortalRoute: AdminFirehacksPortalRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminMembersRoute: AdminMembersRoute,
   AdminRequestsRoute: AdminRequestsRoute,
   AdminScannerRoute: AdminScannerRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminSetupRoute: AdminSetupRoute,
+  AdminSummerScannerRoute: AdminSummerScannerRoute,
   AdminTeamRoute: AdminTeamRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminAuthCallbackRoute: AdminAuthCallbackRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
@@ -653,8 +877,15 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   FirehacksRoute: FirehacksRouteWithChildren,
   TeamRoute: TeamRoute,
+  ApiSummerSignupsRoute: ApiSummerSignupsRoute,
   ApiTeamRoute: ApiTeamRoute,
+  ApiAdminAuthVerifyRoute: ApiAdminAuthVerifyRoute,
   ApiAdminDashboardStatsRoute: ApiAdminDashboardStatsRoute,
+  ApiAdminEmailConnectorRoute: ApiAdminEmailConnectorRoute,
+  ApiAdminMembersRoute: ApiAdminMembersRoute,
+  ApiAdminRedeemInviteRoute: ApiAdminRedeemInviteRoute,
+  ApiAdminSummerSignupsRoute: ApiAdminSummerSignupsRoute,
+  ApiAdminTeamsRoute: ApiAdminTeamsRoute,
   ApiAdminVolunteersRoute: ApiAdminVolunteersRoute,
   ApiAdminWebsiteRequestsRoute: ApiAdminWebsiteRequestsRoute,
   ApiFirehacksWaiverRoute: ApiFirehacksWaiverRoute,
