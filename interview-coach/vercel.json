@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/transcribe/route.ts": { "maxDuration": 60 },
+    "app/api/grade/route.ts": { "maxDuration": 60 },
+    "app/api/roles/[id]/generate-questions/route.ts": { "maxDuration": 60 }
+  }
+}

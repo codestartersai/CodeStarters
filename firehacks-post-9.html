@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'Arial Black', sans-serif; background: #0a0a0a; }
+  .bg {
+    width: 1080px; height: 1080px;
+    background: #0a0a0a;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px; position: relative; overflow: hidden;
+  }
+  /* big blurred fire emoji bg */
+  .bg-fire {
+    position: absolute; font-size: 700px; opacity: 0.04;
+    top: 50%; left: 50%; transform: translate(-50%, -48%);
+    filter: blur(2px); pointer-events: none; user-select: none;
+    line-height: 1;
+  }
+  .quote-mark {
+    font-size: 200px; color: #ff4500; line-height: 0.5;
+    margin-bottom: 10px; opacity: 0.6;
+    font-family: Georgia, serif;
+  }
+  .quote-text {
+    font-size: 66px; font-weight: 900; color: #fff;
+    text-align: center; line-height: 1.15; letter-spacing: -1px;
+    margin-bottom: 40px; max-width: 900px;
+    text-transform: uppercase;
+  }
+  .quote-text em { color: #ff4500; font-style: normal; }
+  .quote-close {
+    font-size: 200px; color: #ff4500; line-height: 0.5;
+    opacity: 0.6; font-family: Georgia, serif;
+    align-self: flex-end; margin-right: 60px;
+  }
+  .attribution {
+    font-size: 30px; color: #666; font-family: 'Arial', sans-serif;
+    font-weight: 400; letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 50px; margin-top: 10px;
+  }
+  .cta-pill {
+    background: linear-gradient(135deg, #ff4500, #ff8c00);
+    border-radius: 60px; padding: 18px 60px;
+    box-shadow: 0 0 50px rgba(255,100,0,0.4);
+  }
+  .cta-text {
+    font-size: 32px; font-weight: 900; color: #fff; letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .handle { position: absolute; bottom: 50px; right: 60px; font-size: 20px; color: rgba(255,255,255,0.2); letter-spacing: 3px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-fire">🔥</div>
+  <div class="handle">@codestarters_cupertino</div>
+
+  <div class="quote-mark">"</div>
+  <div class="quote-text">
+    the best time to<br>
+    build your first project<br>
+    was yesterday.<br>
+    the second best time is<br>
+    <em>fire hacks.</em>
+  </div>
+  <div class="attribution">— every dev who wished they started sooner</div>
+
+  <div class="cta-pill">
+    <div class="cta-text">🔥 codestarters.xyz/firehacks</div>
+  </div>
+</div>
+</body>
+</html>

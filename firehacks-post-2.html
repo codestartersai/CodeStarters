@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    background: #0d0d0d;
+  }
+  .bg {
+    width: 1080px;
+    height: 1080px;
+    background: #0d0d0d;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .pov-label {
+    font-size: 52px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    font-family: 'Arial Black', sans-serif;
+  }
+  .pov-label span {
+    color: #ff4500;
+  }
+  .meme-box {
+    background: #1a1a1a;
+    border: 3px solid #333;
+    border-radius: 20px;
+    padding: 50px 70px;
+    max-width: 900px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 60px rgba(255,69,0,0.15);
+  }
+  .big-emoji {
+    font-size: 120px;
+    display: block;
+    margin-bottom: 20px;
+  }
+  .meme-text {
+    font-size: 52px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.15;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+  .meme-text .highlight {
+    color: #ff4500;
+  }
+  .meme-subtext {
+    font-size: 30px;
+    color: #888;
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(135deg, #ff4500, #ff8c00);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  .bottom-url {
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    font-family: 'Arial Black', sans-serif;
+  }
+  .bottom-emoji {
+    font-size: 40px;
+  }
+  .top-tag {
+    position: absolute;
+    top: 50px;
+    left: 60px;
+    font-size: 22px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="top-tag">@codestarters_cupertino</div>
+
+  <div class="pov-label">POV: you <span>still</span> haven't registered 💀</div>
+
+  <div class="meme-box">
+    <span class="big-emoji">😭</span>
+    <div class="meme-text">
+      fire hacks is happening<br>
+      <span class="highlight">with or without you</span>
+    </div>
+    <div class="meme-subtext">
+      everyone else is building sick projects<br>
+      winning prizes & getting clout<br>
+      and you're sitting there… doing nothing
+    </div>
+  </div>
+
+  <div style="height: 140px;"></div>
+
+  <div class="bottom-bar">
+    <span class="bottom-emoji">🔥</span>
+    <span class="bottom-url">codestarters.xyz/firehacks</span>
+    <span class="bottom-emoji">🔥</span>
+  </div>
+</div>
+</body>
+</html>

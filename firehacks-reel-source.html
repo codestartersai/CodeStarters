@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1920px;
+    overflow: hidden;
+    background: #090909;
+    font-family: 'Arial Black', Impact, sans-serif;
+  }
+  #root {
+    width: 1080px; height: 1920px;
+    position: relative;
+    overflow: hidden;
+    background: #090909;
+  }
+  .layer {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// ── helpers ────────────────────────────────────────────────────────────────
+const FPS = 30;
+const TOTAL = 450; // 15s
+
+const params = new URLSearchParams(location.search);
+const FRAME = Math.min(parseInt(params.get('f') || '0', 10), TOTAL - 1);
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
+function interp(frame, [f0, f1], [v0, v1]) {
+  if (frame <= f0) return v0;
+  if (frame >= f1) return v1;
+  const t = easeOut((frame - f0) / (f1 - f0));
+  return lerp(v0, v1, t);
+}
+function interpLinear(frame, [f0, f1], [v0, v1]) {
+  if (frame <= f0) return v0;
+  if (frame >= f1) return v1;
+  return lerp(v0, v1, (frame - f0) / (f1 - f0));
+}
+
+// spring-ish: overshoot
+function spring(frame, start, { stiffness = 120, damping = 12 } = {}) {
+  if (frame < start) return 0;
+  const t = (frame - start) / FPS;
+  const omega = Math.sqrt(stiffness);
+  const zeta = damping / (2 * Math.sqrt(stiffness));
+  if (zeta < 1) {
+    const wd = omega * Math.sqrt(1 - zeta * zeta);
+    return 1 - Math.exp(-zeta * omega * t) * (Math.cos(wd * t) + (zeta * omega / wd) * Math.sin(wd * t));
+  }
+  return 1 - Math.exp(-omega * t) * (1 + omega * t);
+}
+
+// ── timeline sections ─────────────────────────────────────────────────────
+// 0-30:   fire emoji intro
+// 30-90:  "FIRE HACKS" title crashes in (FIRE=30, HACKS=55)
+// 90-150: subtitle + "CodeStarters Presents"
+// 150-200: reason 1
+// 200-250: reason 2
+// 250-300: reason 3
+// 300-350: reason 4
+// 350-400: reason 5
+// 400-430: CTA
+// 430-450: hold + fade
+
+const REASONS = [
+  { label: "FREE TO JOIN",       sub: "zero cost. just show up.",             color: "#00cc88", start: 155 },
+  { label: "ANY SKILL LEVEL",    sub: "n00b or nerd, all welcome.",           color: "#3b82f6", start: 205 },
+  { label: "FREE FOOD + SWAG",   sub: "eat good while you code good.",        color: "#ff8c00", start: 255 },
+  { label: "WIN PRIZES",         sub: "build something, take something home.",color: "#ffcc00", start: 305 },
+  { label: "PORTFOLIO BOOST",    sub: "real project. real clout. real fast.", color: "#cc44ff", start: 355 },
+];
+
+// master opacity
+const masterOpacity = interpLinear(FRAME, [430, 450], [1, 0]);
+
+// ── build DOM ─────────────────────────────────────────────────────────────
+const root = document.getElementById('root');
+root.style.opacity = masterOpacity;
+
+// BG glow
+const glowSize = 700 + Math.sin(FRAME * 0.04) * 60;
+const glow = document.createElement('div');
+glow.className = 'layer';
+glow.style.background = `radial-gradient(circle ${glowSize}px at 50% 45%, rgba(255,60,0,0.22) 0%, transparent 65%)`;
+root.appendChild(glow);
+
+// ── Particles ─────────────────────────────────────────────────────────────
+const pCanvas = document.createElement('canvas');
+pCanvas.width = 1080; pCanvas.height = 1920;
+pCanvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;';
+root.appendChild(pCanvas);
+const ctx = pCanvas.getContext('2d');
+const PARTICLES = Array.from({length: 28}, (_, i) => ({
+  x: 5 + (i * 67 % 90),
+  y: 5 + (i * 43 % 90),
+  size: 3 + i % 5,
+  speed: 0.3 + (i % 4) * 0.15,
+  delay: i * 6,
+  color: i % 3 === 0 ? '#ff8c00' : i % 3 === 1 ? '#ff4500' : '#ffcc00',
+}));
+PARTICLES.forEach(p => {
+  const t = (FRAME - p.delay) * p.speed;
+  const py = ((p.y - t * 0.06) % 110) - 5;
+  const op = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin((FRAME + p.size * 30) * 0.05));
+  ctx.globalAlpha = op * clamp(FRAME / 20, 0, 1);
+  ctx.fillStyle = p.color;
+  ctx.shadowColor = p.color;
+  ctx.shadowBlur = p.size * 4;
+  ctx.beginPath();
+  ctx.arc(p.x / 100 * 1080, py / 100 * 1920, p.size, 0, Math.PI * 2);
+  ctx.fill();
+});
+ctx.globalAlpha = 1;
+ctx.shadowBlur = 0;
+
+// ── white flash hits ───────────────────────────────────────────────────────
+function flashOpacity(at, dur = 10) {
+  if (FRAME < at || FRAME > at + dur) return 0;
+  return interpLinear(FRAME, [at, at + 2, at + dur], [1, 0.7, 0]);
+}
+const flashFrames = [28, 53, REASONS[0].start - 2, REASONS[1].start - 2,
+                     REASONS[2].start - 2, REASONS[3].start - 2, REASONS[4].start - 2, 400];
+const flashOp = Math.max(...flashFrames.map(f => flashOpacity(f)));
+if (flashOp > 0) {
+  const flash = document.createElement('div');
+  flash.className = 'layer';
+  flash.style.cssText = `background:white;opacity:${flashOp};pointer-events:none;z-index:100;`;
+  root.appendChild(flash);
+}
+
+// ── centre column ──────────────────────────────────────────────────────────
+const col = document.createElement('div');
+col.style.cssText = `
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:0; padding:80px 70px;
+`;
+root.appendChild(col);
+
+// ── fire emoji intro (0-45) ────────────────────────────────────────────────
+if (FRAME < 45) {
+  const fireOp = interpLinear(FRAME, [0, 15, 35, 45], [0, 1, 1, 0]);
+  const fireScale = interp(FRAME, [0, 20], [0.5, 1]);
+  const el = document.createElement('div');
+  el.style.cssText = `
+    font-size:220px; line-height:1; text-align:center;
+    opacity:${fireOp}; transform:scale(${fireScale});
+    filter:drop-shadow(0 0 60px rgba(255,100,0,0.9));
+  `;
+  el.textContent = '🔥';
+  col.appendChild(el);
+}
+
+// ── FIRE HACKS title (30+) ────────────────────────────────────────────────
+if (FRAME >= 28) {
+  const presentsOp = interp(FRAME, [90, 115], [0, 1]);
+  const presentsY = interp(FRAME, [90, 115], [40, 0]);
+
+  const fireS = clamp(spring(FRAME, 30, {stiffness:130, damping:11}), 0, 1.08);
+  const hacksS = clamp(spring(FRAME, 55, {stiffness:130, damping:11}), 0, 1.08);
+  const fireOp = interp(FRAME, [30, 40], [0, 1]);
+  const hacksOp = interp(FRAME, [55, 65], [0, 1]);
+
+  const titleWrap = document.createElement('div');
+  titleWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:0;';
+
+  // "CodeStarters Presents" label
+  if (FRAME >= 90) {
+    const pre = document.createElement('div');
+    pre.style.cssText = `
+      font-family:'Arial',sans-serif; font-size:38px; font-weight:900;
+      letter-spacing:10px; color:#ff6600; text-transform:uppercase;
+      margin-bottom:18px; opacity:${presentsOp}; transform:translateY(${presentsY}px);
+    `;
+    pre.textContent = 'CodeStarters Presents';
+    titleWrap.appendChild(pre);
+  }
+
+  // FIRE
+  const fireEl = document.createElement('div');
+  fireEl.style.cssText = `
+    font-size:320px; font-weight:900; line-height:0.85;
+    letter-spacing:-10px; text-transform:uppercase;
+    background:linear-gradient(180deg,#ffffff 0%,#ffaa00 40%,#ff3300 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    transform:scale(${fireS}); opacity:${fireOp};
+    filter:drop-shadow(0 0 50px rgba(255,100,0,0.7));
+  `;
+  fireEl.textContent = 'FIRE';
+  titleWrap.appendChild(fireEl);
+
+  // HACKS
+  if (FRAME >= 52) {
+    const hacksEl = document.createElement('div');
+    hacksEl.style.cssText = `
+      font-size:320px; font-weight:900; line-height:0.85;
+      letter-spacing:-10px; text-transform:uppercase;
+      background:linear-gradient(180deg,#ffffff 0%,#ffaa00 40%,#ff3300 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      transform:scale(${hacksS}); opacity:${hacksOp};
+      filter:drop-shadow(0 0 50px rgba(255,100,0,0.7));
+    `;
+    hacksEl.textContent = 'HACKS';
+    titleWrap.appendChild(hacksEl);
+  }
+
+  // subtitle "the hackathon that goes hard"
+  if (FRAME >= 110) {
+    const subOp = interp(FRAME, [110, 135], [0, 1]);
+    const subY  = interp(FRAME, [110, 135], [30, 0]);
+    const sub = document.createElement('div');
+    sub.style.cssText = `
+      font-family:'Arial',sans-serif; font-size:48px; color:rgba(255,255,255,0.65);
+      letter-spacing:3px; margin-top:28px;
+      opacity:${subOp}; transform:translateY(${subY}px); text-align:center;
+    `;
+    sub.textContent = 'the hackathon that goes hard';
+    titleWrap.appendChild(sub);
+  }
+
+  col.appendChild(titleWrap);
+}
+
+// ── Reason cards ──────────────────────────────────────────────────────────
+const activeReason = REASONS.find((r, i) => {
+  const next = REASONS[i + 1];
+  return FRAME >= r.start && (next ? FRAME < next.start : FRAME < 405);
+});
+
+if (activeReason) {
+  const { label, sub, color, start } = activeReason;
+  const lf = FRAME - start;
+  const cardOp = interpLinear(FRAME, [start, start + 12, start + 44, start + 50], [0, 1, 1, 0.95]);
+  const cardX  = interp(FRAME, [start, start + 14], [-160, 0]);
+  const cardS  = clamp(spring(FRAME, start, {stiffness:100, damping:12}), 0, 1.05);
+
+  const card = document.createElement('div');
+  card.style.cssText = `
+    width:100%; background:#141414; border-radius:40px;
+    padding:70px 80px;
+    border-left:10px solid ${color};
+    box-shadow:0 0 80px ${color}44;
+    opacity:${cardOp};
+    transform:translateX(${cardX}px) scale(${cardS});
+    display:flex; flex-direction:column; align-items:flex-start; gap:28px;
+    margin-top:60px;
+  `;
+
+  // number dot
+  const idx = REASONS.indexOf(activeReason) + 1;
+  const dot = document.createElement('div');
+  dot.style.cssText = `
+    width:80px; height:80px; border-radius:50%;
+    background:${color}; display:flex; align-items:center; justify-content:center;
+    font-size:40px; font-weight:900; color:#000;
+  `;
+  dot.textContent = idx;
+  card.appendChild(dot);
+
+  const lbl = document.createElement('div');
+  lbl.style.cssText = `
+    font-size:100px; font-weight:900; color:#fff;
+    text-transform:uppercase; letter-spacing:-2px; line-height:1;
+  `;
+  lbl.textContent = label;
+  card.appendChild(lbl);
+
+  const subEl = document.createElement('div');
+  subEl.style.cssText = `
+    font-family:'Arial',sans-serif; font-size:52px; color:${color}; font-weight:700;
+  `;
+  subEl.textContent = sub;
+  card.appendChild(subEl);
+
+  col.appendChild(card);
+
+  // progress dots
+  const dotsWrap = document.createElement('div');
+  dotsWrap.style.cssText = `
+    display:flex; gap:18px; margin-top:50px; align-items:center;
+  `;
+  REASONS.forEach((_, i) => {
+    const d = document.createElement('div');
+    const active = i === idx - 1;
+    d.style.cssText = `
+      width:${active ? 52 : 16}px; height:16px; border-radius:8px;
+      background:${active ? '#ff4500' : 'rgba(255,255,255,0.22)'};
+    `;
+    dotsWrap.appendChild(d);
+  });
+  col.appendChild(dotsWrap);
+}
+
+// ── CTA (400+) ────────────────────────────────────────────────────────────
+if (FRAME >= 400) {
+  const ctaS = clamp(spring(FRAME, 400, {stiffness:120, damping:13}), 0, 1.05);
+  const ctaOp = interp(FRAME, [400, 418], [0, 1]);
+
+  const cta = document.createElement('div');
+  cta.style.cssText = `
+    margin-top:${FRAME >= 155 ? 0 : 80}px;
+    display:flex; flex-direction:column; align-items:center; gap:32px;
+    transform:scale(${ctaS}); opacity:${ctaOp};
+  `;
+
+  const big = document.createElement('div');
+  big.style.cssText = `
+    font-size:130px; font-weight:900; color:#fff; text-transform:uppercase;
+    text-align:center; line-height:1; letter-spacing:-4px;
+  `;
+  big.innerHTML = 'REGISTER<br><span style="color:#ff4500">NOW.</span>';
+  cta.appendChild(big);
+
+  const btn = document.createElement('div');
+  btn.style.cssText = `
+    background:linear-gradient(135deg,#ff4500,#ff8c00);
+    border-radius:80px; padding:36px 110px;
+    box-shadow:0 0 90px rgba(255,100,0,0.6);
+  `;
+  btn.innerHTML = `<div style="font-size:44px;font-weight:900;color:#fff;letter-spacing:3px;">codestarters.xyz/firehacks</div>`;
+  cta.appendChild(btn);
+
+  col.appendChild(cta);
+}
+
+// ── bottom handle ──────────────────────────────────────────────────────────
+const handle = document.createElement('div');
+handle.style.cssText = `
+  position:absolute; bottom:70px; left:0; right:0; text-align:center;
+  font-family:'Arial',sans-serif; font-size:34px; font-weight:700;
+  color:rgba(255,255,255,0.25); letter-spacing:5px;
+`;
+handle.textContent = '@codestarters_cupertino';
+root.appendChild(handle);
+</script>
+</body>
+</html>

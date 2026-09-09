@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'Arial Black', sans-serif; background: #0a0a0a; }
+  .bg {
+    width: 1080px; height: 1080px;
+    background: #0a0a0a;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  /* Radial gradient bg glow */
+  .glow1 { position: absolute; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(circle, rgba(255,50,0,0.18) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+  .inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0; z-index: 1;
+  }
+
+  .top-pill {
+    background: #1a1a1a; border: 2px solid #2a2a2a; border-radius: 50px;
+    padding: 12px 36px; font-size: 24px; color: #ff6600; letter-spacing: 5px;
+    font-weight: 900; text-transform: uppercase; margin-bottom: 36px;
+  }
+
+  .countdown-label {
+    font-size: 34px; font-weight: 900; color: #888; letter-spacing: 6px;
+    text-transform: uppercase; margin-bottom: 30px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .boxes {
+    display: flex; gap: 24px; margin-bottom: 44px;
+  }
+  .box {
+    background: #161616; border-radius: 20px; padding: 28px 0; width: 200px;
+    text-align: center; border: 2px solid #222;
+    box-shadow: 0 0 30px rgba(255,69,0,0.1);
+  }
+  .box-num {
+    font-size: 100px; font-weight: 900; color: #fff;
+    background: linear-gradient(180deg, #fff 0%, #ff8c00 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1;
+  }
+  .box-label {
+    font-size: 22px; color: #555; font-family: 'Arial', sans-serif;
+    font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .colon {
+    font-size: 90px; color: #ff4500; display: flex; align-items: center;
+    padding-bottom: 20px;
+  }
+
+  .big-cta {
+    font-size: 60px; font-weight: 900; color: #fff; text-transform: uppercase;
+    letter-spacing: 2px; text-align: center; line-height: 1.1; margin-bottom: 32px;
+  }
+  .big-cta span { color: #ff4500; }
+
+  .reg-btn {
+    background: linear-gradient(135deg, #ff4500, #ff8c00);
+    border-radius: 70px; padding: 22px 80px;
+    box-shadow: 0 0 60px rgba(255,100,0,0.5);
+    margin-bottom: 28px;
+  }
+  .reg-text { font-size: 40px; font-weight: 900; color: #fff; letter-spacing: 3px; text-transform: uppercase; }
+
+  .url { font-size: 28px; color: #ff9944; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+  .handle { position: absolute; top: 48px; left: 60px; font-size: 20px; color: rgba(255,255,255,0.2); letter-spacing: 3px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="glow1"></div>
+  <div class="handle">@codestarters_cupertino</div>
+
+  <div class="inner">
+    <div class="top-pill">🔥 Fire Hacks — Coming Soon</div>
+    <div class="countdown-label">Spots are filling up</div>
+
+    <div class="boxes">
+      <div class="box">
+        <div class="box-num">??</div>
+        <div class="box-label">Days</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="box">
+        <div class="box-num">??</div>
+        <div class="box-label">Hours</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="box">
+        <div class="box-num">??</div>
+        <div class="box-label">Mins</div>
+      </div>
+    </div>
+
+    <div class="big-cta">
+      don't wait until<br>
+      <span>it's too late.</span>
+    </div>
+
+    <div class="reg-btn">
+      <div class="reg-text">Register Now →</div>
+    </div>
+    <div class="url">codestarters.xyz/firehacks</div>
+  </div>
+</div>
+</body>
+</html>

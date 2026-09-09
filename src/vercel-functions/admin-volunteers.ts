@@ -1,10 +1,19 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { getAdminClient, getAdminEnv, getRequestUrl, json, readJson, verifyAdmin } from "./admin-utils";
+import {
+  getAdminClient,
+  getAdminEnv,
+  getRequestUrl,
+  json,
+  readJson,
+  verifyAdmin,
+} from "./admin-utils";
+import { attachResumeUrls } from "../lib/volunteer-resumes";
 
 const VOLUNTEER_STATUSES = new Set(["pending", "contacted", "rejected", "completed"]);
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (req.method !== "GET" && req.method !== "PATCH") return json(res, 405, { error: "Method not allowed" });
+  if (req.method !== "GET" && req.method !== "PATCH")
+    return json(res, 405, { error: "Method not allowed" });
   try {
     const env = getAdminEnv();
     const isAdmin = await verifyAdmin(req, env);
@@ -18,10 +27,14 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       }
 
       let query = admin.from("volunteers").select("*").order("created_at", { ascending: false });
-      query = scope === "applications" ? query.neq("status", "completed") : query.eq("status", "completed");
+      query =
+        scope === "applications"
+          ? query.neq("status", "completed").not("interest", "like", "Summer Program:%")
+          : query.eq("status", "completed").not("interest", "like", "Summer Program:%");
       const { data, error } = await query;
       if (error) return json(res, 500, { error: error.message });
-      return json(res, 200, data ?? []);
+      const withResumes = await attachResumeUrls(admin, data ?? []);
+      return json(res, 200, withResumes);
     }
 
     const body = await readJson(req).catch(() => ({}));

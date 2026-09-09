@@ -12,6 +12,7 @@ dist
 dist-ssr
 .output
 .vinxi
+.next
 .tanstack/**
 .nitro
 *.local
@@ -38,3 +39,14 @@ dist/
 *.log
 package-lock.json
 .vercel
+
+# Standalone bot — lives in its own repo (github.com/smaranz/notionbot)
+codestarters-discord-bot/
+
+# Local / generated
+.antigravitycli/
+supabase/.temp/
+tsconfig.tsbuildinfo
+
+# Attendee email exports — do not publish
+scripts/data/*.txt

@@ -1,0 +1,21 @@
+{
+  "name": "firehacks-reels",
+  "version": "1.0.0",
+  "description": "Fire Hacks Remotion reels",
+  "scripts": {
+    "dev": "npx remotion studio src/index.jsx",
+    "render:reel1": "npx remotion render src/index.jsx HypeTrailer --output ../firehacks-reel1.mp4",
+    "render:reel2": "npx remotion render src/index.jsx WhyJoin --output ../firehacks-reel2.mp4",
+    "render:reel3": "npx remotion render src/index.jsx RealizationReel --output ../firehacks-reel3.mp4",
+    "render:reel4": "npx remotion render src/index.jsx TaylorSwiftLore --output ../firehacks-reel4.mp4",
+    "render:all": "npm run render:reel1 && npm run render:reel2 && npm run render:reel3 && npm run render:reel4"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.0",
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "@remotion/cli": "^4.0.0"
+  }
+}

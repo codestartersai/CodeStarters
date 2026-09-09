@@ -48,14 +48,19 @@ export async function verifyAdmin(req: IncomingMessage, env: AdminEnv): Promise<
     const cookies = parse(req.headers.cookie ?? "");
     const supabase = createServerClient(env.url, env.anonKey, {
       cookies: {
-        get(name: string) { return cookies[name]; },
+        get(name: string) {
+          return cookies[name];
+        },
         set() {},
         remove() {},
       },
     });
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return false;
-    const { data: adminRow, error } = await supabase
+    const admin = getAdminClient(env);
+    const { data: adminRow, error } = await admin
       .from("admin_users")
       .select("id")
       .eq("id", user.id)

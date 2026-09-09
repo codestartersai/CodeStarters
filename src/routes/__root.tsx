@@ -74,7 +74,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Student-led initiative teaching CS and AI to younger students, building free websites for local Cupertino businesses, and hosting Fire Hacks — the Bay Area's premier high school hackathon.",
+          "Student-led initiative teaching CS and AI to younger students, building free websites for businesses, and hosting classes and events.",
       },
     ],
     links: [

@@ -6,7 +6,7 @@ export function Footer() {
       </p>
       <div className="flex items-center gap-6">
         <a
-          href="https://codestarters.xyz"
+          href="https://codestarters.org"
           className="text-muted-foreground text-sm hover:text-foreground transition-colors"
         >
           CodeStarters
@@ -18,6 +18,12 @@ export function Footer() {
           className="text-muted-foreground text-sm hover:text-foreground transition-colors"
         >
           Discord
+        </a>
+        <a
+          href="/branding"
+          className="text-muted-foreground text-sm hover:text-foreground transition-colors"
+        >
+          Brand
         </a>
         <a
           href="mailto:codestarters26@gmail.com"
