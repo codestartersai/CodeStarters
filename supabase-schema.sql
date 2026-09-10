@@ -51,19 +51,20 @@ CREATE TABLE IF NOT EXISTS team_categories (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Default Department Tabs (clean categories with no mock names)
+-- Default Department Tabs
 INSERT INTO team_categories (id, name, description, order_index) VALUES
     ('leadership', 'Leadership', 'Executive team and organization leads', 1),
-    ('robotics', 'Robotics Team', 'Robotics hardware, engineering, and mentors', 2),
-    ('webdev', 'Web Development', 'Developers creating websites for local businesses', 3),
-    ('education', 'Education & AI', 'Mentors teaching computer science and AI', 4),
-    ('marketing', 'Marketing & Outreach', 'Community outreach, growth, and partnerships', 5)
+    ('ai', 'AI Team', 'AI mentors and curriculum developers', 2),
+    ('python', 'Python Team', 'Python instructors and team leads', 3),
+    ('robotics', 'Robotics Team', 'Robotics hardware, engineering, and mentors', 4),
+    ('webdev', 'Web Development', 'Developers creating websites for local businesses', 5),
+    ('marketing', 'Marketing & Outreach', 'Community outreach, growth, and partnerships', 6)
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,
     order_index = EXCLUDED.order_index;
 
--- 4. Team Members Table (Populated exclusively via Dashboard)
+-- 4. Team Members Table (Manageable via /admin/team)
 CREATE TABLE IF NOT EXISTS team_members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
@@ -80,6 +81,18 @@ CREATE TABLE IF NOT EXISTS team_members (
 
 CREATE INDEX IF NOT EXISTS idx_team_members_category ON team_members (category_id);
 CREATE INDEX IF NOT EXISTS idx_team_members_order ON team_members (order_index);
+
+-- Seed initial team members matching codestarters.org
+INSERT INTO team_members (id, name, role, category_id, image_url, order_index) VALUES
+    ('11111111-1111-1111-1111-111111111101', 'Smaran Aramballi Sandarsh', 'Founder & President', 'leadership', '/smaran.png', 1),
+    ('11111111-1111-1111-1111-111111111102', 'Amogh Bhatta', 'Founder & Director of Robotics', 'leadership', '/amogh.webp', 2),
+    ('11111111-1111-1111-1111-111111111103', 'Reyansh Nankani', 'Founder & Vice-President', 'leadership', '/team/reyansh-nankani.png', 3),
+    ('11111111-1111-1111-1111-111111111104', 'Pranav C', 'Founder & Head of AI, Finance, and Legal', 'leadership', '/team/pranav-c.png', 4),
+    ('11111111-1111-1111-1111-111111111105', 'Aljer Almazan', 'Director of Python', 'leadership', '/team/aljer-almazan.webp', 5),
+    ('11111111-1111-1111-1111-111111111106', 'Carter Chang', 'AI Mentor', 'ai', '/team/carter-chang.png', 1),
+    ('11111111-1111-1111-1111-111111111107', 'Jahan Vora', 'Marketing Team Member', 'python', NULL, 1),
+    ('11111111-1111-1111-1111-111111111108', 'Mridhula Ganesh Kumar', 'Marketing Team Member', 'robotics', '/team/mridhula-ganesh-kumar.webp', 1)
+ON CONFLICT (id) DO NOTHING;
 
 -- 5. Website Requests Table (Client pipeline)
 CREATE TABLE IF NOT EXISTS website_requests (

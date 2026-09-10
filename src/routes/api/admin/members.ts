@@ -17,6 +17,7 @@ export const Route = createFileRoute("/api/admin/members")({
 
                 const admin = getSupabaseAdminClient();
 
+                let invitesTableMissing = false;
                 const [
                     { data: members, error: membersError },
                     { data: invites, error: invitesError },
@@ -25,6 +26,10 @@ export const Route = createFileRoute("/api/admin/members")({
                     admin.from("admin_invites").select("*").eq("used", false).order("created_at", { ascending: false }),
                 ]);
 
+                if (invitesError && (invitesError.code === "PGRST205" || invitesError.message?.includes("schema cache") || invitesError.message?.includes("admin_invites"))) {
+                    invitesTableMissing = true;
+                }
+
                 if (membersError) {
                     return jsonWithCookies(verified.bundle, { error: membersError.message }, { status: 500 });
                 }
@@ -32,6 +37,7 @@ export const Route = createFileRoute("/api/admin/members")({
                 return jsonWithCookies(verified.bundle, {
                     members: members ?? [],
                     invites: (invites ?? []).filter((inv: { expires_at: string }) => new Date(inv.expires_at) > new Date()),
+                    invitesTableMissing,
                     emailConfigured: isEmailConfigured(),
                     currentUserRole: verified.role,
                     currentUserPermissions: verified.permissions,
@@ -76,8 +82,12 @@ export const Route = createFileRoute("/api/admin/members")({
                     return jsonWithCookies(verified.bundle, { error: "This email is already an active administrator." }, { status: 400 });
                 }
 
-                // Invalidate any existing unused invites for this email
-                await admin.from("admin_invites").delete().eq("email", email);
+                // Invalidate any existing unused invites for this email safely
+                try {
+                    await admin.from("admin_invites").delete().eq("email", email);
+                } catch {
+                    // Ignore error if table not yet migrated
+                }
 
                 // Create cryptographic invite token
                 const token = crypto.randomBytes(24).toString("hex");
@@ -98,6 +108,13 @@ export const Route = createFileRoute("/api/admin/members")({
                     .insert(inviteRecord);
 
                 if (insertError) {
+                    if (insertError.code === "PGRST205" || insertError.message?.includes("schema cache") || insertError.message?.includes("admin_invites")) {
+                        return jsonWithCookies(verified.bundle, {
+                            error: "Database table 'admin_invites' does not exist in Supabase yet. Please run the SQL schema migration in Supabase SQL Editor.",
+                            code: "TABLE_NOT_FOUND",
+                            table: "admin_invites",
+                        }, { status: 400 });
+                    }
                     return jsonWithCookies(verified.bundle, { error: insertError.message }, { status: 500 });
                 }
 
@@ -208,6 +225,9 @@ export const Route = createFileRoute("/api/admin/members")({
                 if (inviteId) {
                     const { error } = await admin.from("admin_invites").delete().eq("id", inviteId);
                     if (error) {
+                        if (error.code === "PGRST205" || error.message?.includes("schema cache")) {
+                            return jsonWithCookies(verified.bundle, { ok: true, removed: "invite" });
+                        }
                         return jsonWithCookies(verified.bundle, { error: error.message }, { status: 500 });
                     }
                     return jsonWithCookies(verified.bundle, { ok: true, removed: "invite" });

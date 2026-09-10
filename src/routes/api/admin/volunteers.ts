@@ -59,44 +59,50 @@ export const Route = createFileRoute("/api/admin/volunteers")({
           volunteerId?: string;
           to?: string;
           name?: string;
+          interest?: string;
           subject?: string;
           message?: string;
+          callToActionText?: string;
+          callToActionUrl?: string;
           newStatus?: string;
         };
 
         if (body.action === "reply") {
-          const { volunteerId, to, name, subject, message } = body;
+          const { volunteerId, to, name, interest, subject, message } = body;
           if (!to || !subject || !message) {
             return jsonWithCookies(verified.bundle, { error: "Recipient, subject, and message are required." }, { status: 400 });
           }
 
           if (!isEmailConfigured()) {
-            return jsonWithCookies(verified.bundle, { error: "Gmail connector is not configured." }, { status: 503 });
+            return jsonWithCookies(verified.bundle, { error: "Gmail connector is not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD in settings." }, { status: 503 });
           }
 
           try {
-            await sendPlainEmail({
+            const { sendApplicantEmail } = await import("@/lib/server-email");
+            await sendApplicantEmail({
               to: to.trim(),
+              applicantName: name?.trim() || "there",
+              interest: interest?.trim(),
               subject: subject.trim(),
-              text: `Hi ${name || "there"},\n\n${message}\n\nBest regards,\nCodeStarters Team\ncodestarters26@gmail.com`,
-              html: `
-              <div style="font-family: -apple-system, sans-serif; padding: 28px; background: #f8fafc; color: #0f172a; max-width: 560px; margin: 0 auto; border-radius: 20px; border: 1px solid #e2e8f0;">
-                <h2 style="margin-top: 0; color: #1e293b;">CodeStarters Application Update</h2>
-                <p style="font-size: 15px; line-height: 1.6; color: #334155;">Hi ${name || "there"},</p>
-                <div style="font-size: 15px; line-height: 1.6; color: #334155; white-space: pre-wrap; margin: 20px 0;">${message.replace(/\n/g, "<br/>")}</div>
-                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-                <p style="font-size: 12px; color: #94a3b8; margin: 0;">CodeStarters Cupertino &bull; Empowering Youth in Computer Science</p>
-              </div>
-              `,
-              gmailFrom: "CodeStarters",
+              message: message.trim(),
+              senderName: verified.user.email ? `${verified.user.email} (CodeStarters)` : "The CodeStarters Team",
+              callToActionText: body.callToActionText?.trim() || undefined,
+              callToActionUrl: body.callToActionUrl?.trim() || undefined,
             });
 
-            if (volunteerId && body.newStatus && VOLUNTEER_STATUSES.has(body.newStatus)) {
+            if (volunteerId) {
+              const newStatus = body.newStatus && VOLUNTEER_STATUSES.has(body.newStatus) ? body.newStatus : "contacted";
               const admin = getSupabaseAdminClient();
-              await admin.from("volunteers").update({ status: body.newStatus }).eq("id", volunteerId);
+              await admin.from("volunteers").update({
+                status: newStatus,
+                updated_at: new Date().toISOString(),
+              }).eq("id", volunteerId);
             }
 
-            return jsonWithCookies(verified.bundle, { ok: true, message: `Email sent to ${to}` });
+            return jsonWithCookies(verified.bundle, {
+              ok: true,
+              message: `Email delivered to ${to} via Gmail connector!`,
+            });
           } catch (err: unknown) {
             const errorMsg = err instanceof Error ? err.message : "Failed to send email.";
             return jsonWithCookies(verified.bundle, { ok: false, error: errorMsg }, { status: 500 });

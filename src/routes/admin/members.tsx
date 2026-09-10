@@ -59,6 +59,23 @@ function AdminMembersPage() {
     const [isSavingEdit, setIsSavingEdit] = useState(false);
 
     const [copiedToken, setCopiedToken] = useState<string | null>(null);
+    const [invitesTableMissing, setInvitesTableMissing] = useState(false);
+    const [inviteModalError, setInviteModalError] = useState<string | null>(null);
+    const [copiedSql, setCopiedSql] = useState(false);
+
+    const ADMIN_INVITES_SQL = `-- Run in Supabase SQL Editor:
+CREATE TABLE IF NOT EXISTS admin_invites (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'editor',
+    permissions JSONB NOT NULL DEFAULT '["manage_team", "manage_requests"]'::jsonb,
+    token TEXT UNIQUE NOT NULL,
+    used BOOLEAN NOT NULL DEFAULT FALSE,
+    invited_by TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '7 days')
+);
+NOTIFY pgrst, 'reload schema';`;
 
     const fetchMembers = async () => {
         setIsLoading(true);
@@ -71,6 +88,9 @@ function AdminMembersPage() {
             setMembers(data.members || []);
             setInvites(data.invites || []);
             setEmailConfigured(Boolean(data.emailConfigured));
+            if (data.invitesTableMissing) {
+                setInvitesTableMissing(true);
+            }
         } catch (err: unknown) {
             setErrorMessage(err instanceof Error ? err.message : "Error fetching members.");
         } finally {
@@ -107,6 +127,7 @@ function AdminMembersPage() {
         e.preventDefault();
         setIsSendingInvite(true);
         setLastInviteResult(null);
+        setInviteModalError(null);
 
         try {
             const res = await fetch("/api/admin/members", {
@@ -120,7 +141,14 @@ function AdminMembersPage() {
             });
 
             const data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data.error || "Failed to send invitation.");
+            if (!res.ok) {
+                if (data.code === "TABLE_NOT_FOUND" || data.error?.includes("admin_invites")) {
+                    setInvitesTableMissing(true);
+                    setInviteModalError("The 'admin_invites' table does not exist in your Supabase database yet. Please copy the SQL below and run it in Supabase SQL Editor.");
+                    return;
+                }
+                throw new Error(data.error || "Failed to send invitation.");
+            }
 
             setLastInviteResult({
                 message: data.message,
@@ -131,7 +159,7 @@ function AdminMembersPage() {
             setInviteEmail("");
             await fetchMembers();
         } catch (err: unknown) {
-            alert(err instanceof Error ? err.message : "Error sending invitation.");
+            setInviteModalError(err instanceof Error ? err.message : "Error sending invitation.");
         } finally {
             setIsSendingInvite(false);
         }
@@ -246,6 +274,34 @@ function AdminMembersPage() {
                     Email Settings &rarr;
                 </a>
             </div>
+
+            {/* Missing Schema Banner */}
+            {invitesTableMissing && (
+                <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/90 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="space-y-1">
+                        <p className="text-xs font-semibold flex items-center gap-1.5 text-amber-900">
+                            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                            Supabase Database Table Missing: admin_invites
+                        </p>
+                        <p className="text-[11px] text-amber-800">
+                            The single-use invitations table has not been created in your Supabase database yet. Copy the SQL script and run it in your Supabase SQL Editor to enable invites.
+                        </p>
+                    </div>
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => {
+                            navigator.clipboard.writeText(ADMIN_INVITES_SQL);
+                            setCopiedSql(true);
+                            setTimeout(() => setCopiedSql(false), 2500);
+                        }}
+                        className="shrink-0 bg-white border-amber-300 text-amber-950 hover:bg-amber-100 font-medium"
+                    >
+                        {copiedSql ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedSql ? "Copied SQL Script!" : "Copy SQL Script"}</span>
+                    </Button>
+                </div>
+            )}
 
             {errorMessage && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs font-medium">
@@ -497,7 +553,33 @@ function AdminMembersPage() {
                                 </div>
                             </div>
                         ) : (
-                            <form onSubmit={handleSendInvite} className="space-y-4">
+                            <div>
+                                {inviteModalError && (
+                                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-xs space-y-2">
+                                        <p className="font-semibold text-red-800 flex items-center gap-1.5">
+                                            <AlertCircle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                                            {inviteModalError}
+                                        </p>
+                                        {inviteModalError.includes("admin_invites") && (
+                                            <div className="pt-1">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(ADMIN_INVITES_SQL);
+                                                        setCopiedSql(true);
+                                                        setTimeout(() => setCopiedSql(false), 2500);
+                                                    }}
+                                                    className="px-2.5 py-1 bg-white border border-red-300 hover:bg-red-100 rounded text-[11px] font-semibold text-red-900 flex items-center gap-1.5 transition-colors"
+                                                >
+                                                    {copiedSql ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                                                    <span>{copiedSql ? "Copied SQL to Clipboard!" : "Copy SQL Script to Fix"}</span>
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleSendInvite} className="space-y-4">
                                 <div>
                                     <label className="text-xs font-medium text-slate-700 block mb-1">
                                         Email Address *
@@ -600,6 +682,7 @@ function AdminMembersPage() {
                                     </Button>
                                 </div>
                             </form>
+                            </div>
                         )}
                     </div>
                 </div>

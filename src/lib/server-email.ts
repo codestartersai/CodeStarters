@@ -298,3 +298,109 @@ codestarters26@gmail.com
     });
 }
 
+/** Sends a branded applicant communication email (e.g. interview request, onboarding, follow-up). */
+export async function sendApplicantEmail({
+    to,
+    applicantName,
+    interest,
+    subject,
+    message,
+    senderName = "The CodeStarters Team",
+    callToActionText,
+    callToActionUrl,
+}: {
+    to: string;
+    applicantName: string;
+    interest?: string;
+    subject: string;
+    message: string;
+    senderName?: string;
+    callToActionText?: string;
+    callToActionUrl?: string;
+}): Promise<void> {
+    const formattedParagraphs = message
+        .split("\n\n")
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .map((p) => `<p style="font-size: 15px; line-height: 1.65; color: #334155; margin: 0 0 16px 0;">${p.replace(/\n/g, "<br/>")}</p>`)
+        .join("");
+
+    const ctaHtml = callToActionText && callToActionUrl
+        ? `
+        <div style="text-align: left; margin: 28px 0 24px 0;">
+            <a href="${callToActionUrl}" style="display: inline-block; background: #0f172a; color: #ffffff !important; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none;" target="_blank">
+                ${callToActionText} &rarr;
+            </a>
+        </div>
+        `
+        : "";
+
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>${subject}</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #0f172a; margin: 0; padding: 24px; }
+        .card { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 36px; box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04); }
+        .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid #f1f5f9; padding-bottom: 18px; }
+        .logo { width: 36px; height: 36px; background: #0f172a; color: #ffffff; border-radius: 8px; font-weight: 800; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; line-height: 36px; }
+        h1 { font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 16px 0; }
+        .footer { font-size: 12px; color: #94a3b8; margin-top: 32px; border-top: 1px solid #f1f5f9; padding-top: 20px; line-height: 1.5; }
+        .signoff { margin-top: 24px; font-size: 14px; color: #475569; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="header">
+          <div class="logo">CS</div>
+          <div>
+            <span style="font-size: 15px; font-weight: 700; color: #0f172a; display: block;">CodeStarters</span>
+            <span style="font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Student Tech Initiative &bull; Cupertino, CA</span>
+          </div>
+        </div>
+
+        ${interest ? `<div style="display: inline-block; background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Application: ${interest}</div>` : ""}
+
+        <h1>Hi ${applicantName || "there"},</h1>
+
+        ${formattedParagraphs}
+
+        ${ctaHtml}
+
+        <div class="signoff">
+          <p style="margin: 0; font-weight: 600; color: #1e293b;">Best regards,</p>
+          <p style="margin: 4px 0 0 0; color: #475569;">${senderName}</p>
+          <p style="margin: 2px 0 0 0; font-size: 12px; color: #94a3b8;">CodeStarters Cupertino &bull; codestarters26@gmail.com</p>
+        </div>
+
+        <div class="footer">
+          You received this message regarding your volunteer/mentor application to CodeStarters (<a href="https://codestarters.org" style="color: #0f172a; text-decoration: underline;">codestarters.org</a>).
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
+    const plainText = `
+Hi ${applicantName || "there"},
+
+${message}
+
+Best regards,
+${senderName}
+CodeStarters Cupertino
+codestarters26@gmail.com
+    `.trim();
+
+    await sendPlainEmail({
+        to,
+        subject,
+        text: plainText,
+        html,
+        gmailFrom: "CodeStarters",
+    });
+}
+
+

@@ -25,11 +25,79 @@ export type TeamMember = {
 };
 
 const DEFAULT_CATEGORIES: TeamCategory[] = [
-    { id: "leadership", name: "Leadership", description: "Executive team and department leads", order_index: 1 },
-    { id: "robotics", name: "Robotics Team", description: "Robotics hardware, engineering, and mentors", order_index: 2 },
-    { id: "webdev", name: "Web Development", description: "Developers building websites for local businesses", order_index: 3 },
-    { id: "education", name: "Education & AI", description: "Mentors teaching youth CS and AI", order_index: 4 },
-    { id: "marketing", name: "Marketing & Outreach", description: "Community outreach and partnerships", order_index: 5 },
+    { id: "leadership", name: "Leadership", description: "Executive team and organization leads", order_index: 1 },
+    { id: "ai", name: "AI Team", description: "AI mentors and curriculum developers", order_index: 2 },
+    { id: "python", name: "Python Team", description: "Python instructors and team leads", order_index: 3 },
+    { id: "robotics", name: "Robotics Team", description: "Robotics hardware, engineering, and mentors", order_index: 4 },
+    { id: "webdev", name: "Web Development", description: "Developers creating websites for local businesses", order_index: 5 },
+    { id: "marketing", name: "Marketing & Outreach", description: "Community outreach, growth, and partnerships", order_index: 6 },
+];
+
+const DEFAULT_ADMIN_MEMBERS: TeamMember[] = [
+    {
+        id: "11111111-1111-1111-1111-111111111101",
+        name: "Smaran Aramballi Sandarsh",
+        role: "Founder & President",
+        category_id: "leadership",
+        image_url: "/smaran.png",
+        order_index: 1,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111102",
+        name: "Amogh Bhatta",
+        role: "Founder & Director of Robotics",
+        category_id: "leadership",
+        image_url: "/amogh.webp",
+        order_index: 2,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111103",
+        name: "Reyansh Nankani",
+        role: "Founder & Vice-President",
+        category_id: "leadership",
+        image_url: "/team/reyansh-nankani.png",
+        order_index: 3,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111104",
+        name: "Pranav C",
+        role: "Founder & Head of AI, Finance, and Legal",
+        category_id: "leadership",
+        image_url: "/team/pranav-c.png",
+        order_index: 4,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111105",
+        name: "Aljer Almazan",
+        role: "Director of Python",
+        category_id: "leadership",
+        image_url: "/team/aljer-almazan.webp",
+        order_index: 5,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111106",
+        name: "Carter Chang",
+        role: "AI Mentor",
+        category_id: "ai",
+        image_url: "/team/carter-chang.png",
+        order_index: 1,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111107",
+        name: "Jahan Vora",
+        role: "Marketing Team Member",
+        category_id: "python",
+        image_url: null,
+        order_index: 1,
+    },
+    {
+        id: "11111111-1111-1111-1111-111111111108",
+        name: "Mridhula Ganesh Kumar",
+        role: "Marketing Team Member",
+        category_id: "robotics",
+        image_url: "/team/mridhula-ganesh-kumar.webp",
+        order_index: 1,
+    },
 ];
 
 export const Route = createFileRoute("/api/admin/teams")({
@@ -69,10 +137,19 @@ export const Route = createFileRoute("/api/admin/teams")({
                         .select("*")
                         .order("order_index", { ascending: true });
 
-                    members = memData ?? [];
+                    if (!memData || memData.length === 0) {
+                        for (const m of DEFAULT_ADMIN_MEMBERS) {
+                            try {
+                                await admin.from("team_members").upsert(m);
+                            } catch {}
+                        }
+                        members = DEFAULT_ADMIN_MEMBERS;
+                    } else {
+                        members = memData;
+                    }
                 } catch {
                     categories = DEFAULT_CATEGORIES;
-                    members = [];
+                    members = DEFAULT_ADMIN_MEMBERS;
                 }
 
                 return jsonWithCookies(verified.bundle, {

@@ -16,6 +16,9 @@ import {
   ChevronUp,
   Zap,
   Tag,
+  Send,
+  X,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/codestarters/Button";
 import { StatusBadge } from "@/components/codestarters/StatusBadge";
@@ -40,6 +43,8 @@ type VolunteerApplication = {
   created_at: string;
 };
 
+type ApplicantEmailTemplate = "interview" | "welcome" | "review" | "custom";
+
 export const Route = createFileRoute("/admin/applications")({
   component: ApplicationsPage,
 });
@@ -51,6 +56,18 @@ function ApplicationsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Email Modal State
+  const [replyingTo, setReplyingTo] = useState<VolunteerApplication | null>(null);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
+  const [emailCtaText, setEmailCtaText] = useState("");
+  const [emailCtaUrl, setEmailCtaUrl] = useState("");
+  const [autoMarkContacted, setAutoMarkContacted] = useState(true);
+  const [selectedTemplate, setSelectedTemplate] = useState<ApplicantEmailTemplate>("interview");
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const fetchVolunteers = async () => {
     setIsLoading(true);
@@ -81,6 +98,108 @@ function ApplicationsPage() {
       setVolunteers(volunteers.filter((v) => v.id !== id));
     } else {
       setVolunteers(volunteers.map((v) => (v.id === id ? { ...v, status: newStatus } : v)));
+    }
+  };
+
+  const openEmailModal = (vol: VolunteerApplication) => {
+    setReplyingTo(vol);
+    setSelectedTemplate("interview");
+    setEmailSuccess(null);
+    setEmailError(null);
+
+    const interest = vol.interest || "CodeStarters";
+    setEmailSubject("CodeStarters Application - Next Steps & Interview");
+    setEmailMessage(
+      `Thank you for applying to join the CodeStarters team! We reviewed your application for ${interest} and were impressed by your enthusiasm and background.\n\nWe'd love to schedule a brief 10–15 minute phone or Zoom chat this week to learn more about you, answer any questions you have, and discuss next steps.\n\nPlease let us know what days and times work best for you this week.`
+    );
+    setEmailCtaText("Schedule Interview");
+    setEmailCtaUrl("");
+    setAutoMarkContacted(true);
+  };
+
+  const applyTemplate = (template: ApplicantEmailTemplate) => {
+    if (!replyingTo) return;
+    setSelectedTemplate(template);
+    const interest = replyingTo.interest || "CodeStarters";
+
+    switch (template) {
+      case "interview":
+        setEmailSubject("CodeStarters Application - Next Steps & Interview");
+        setEmailMessage(
+          `Thank you for applying to join the CodeStarters team! We reviewed your application for ${interest} and were impressed by your enthusiasm and background.\n\nWe'd love to schedule a brief 10–15 minute phone or Zoom chat this week to learn more about you, answer any questions you have, and discuss next steps.\n\nPlease let us know what days and times work best for you this week.`
+        );
+        setEmailCtaText("Schedule Interview");
+        setEmailCtaUrl("");
+        break;
+      case "welcome":
+        setEmailSubject("Welcome to the CodeStarters Team!");
+        setEmailMessage(
+          `Congratulations! We are delighted to accept your application and welcome you to the CodeStarters team for ${interest}.\n\nYour passion for computer science education and community impact will be a wonderful addition to our upcoming workshops, hackathons, and projects.\n\nWe will follow up shortly with onboarding materials and our next team meeting schedule. Welcome aboard!`
+        );
+        setEmailCtaText("Join Workspace");
+        setEmailCtaUrl("");
+        break;
+      case "review":
+        setEmailSubject("CodeStarters Application - Under Review");
+        setEmailMessage(
+          `Thank you for applying to CodeStarters for ${interest}! We wanted to confirm that we have received your application and our leadership team is currently reviewing submissions.\n\nWe will be in touch with an update soon. Thank you for your patience and interest in CodeStarters!`
+        );
+        setEmailCtaText("");
+        setEmailCtaUrl("");
+        break;
+      case "custom":
+        setEmailSubject(`CodeStarters Application - ${replyingTo.name}`);
+        setEmailMessage("");
+        setEmailCtaText("");
+        setEmailCtaUrl("");
+        break;
+    }
+  };
+
+  const handleSendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyingTo) return;
+
+    setIsSendingEmail(true);
+    setEmailSuccess(null);
+    setEmailError(null);
+
+    try {
+      const res = await fetch("/api/admin/volunteers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "reply",
+          volunteerId: replyingTo.id,
+          to: replyingTo.email,
+          name: replyingTo.name,
+          interest: replyingTo.interest || undefined,
+          subject: emailSubject,
+          message: emailMessage,
+          callToActionText: emailCtaText || undefined,
+          callToActionUrl: emailCtaUrl || undefined,
+          newStatus: autoMarkContacted ? "contacted" : undefined,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Failed to deliver email.");
+      }
+
+      setEmailSuccess(data.message || `Email delivered to ${replyingTo.email} via Gmail connector!`);
+      if (autoMarkContacted) {
+        setVolunteers(volunteers.map((v) => (v.id === replyingTo.id ? { ...v, status: "contacted" } : v)));
+      }
+
+      setTimeout(() => {
+        setReplyingTo(null);
+        setEmailSuccess(null);
+      }, 1600);
+    } catch (err: unknown) {
+      setEmailError(err instanceof Error ? err.message : "Error sending email.");
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
@@ -169,7 +288,198 @@ function ApplicationsPage() {
           expandedId={expandedId}
           setExpandedId={setExpandedId}
           updateStatus={updateStatus}
+          onOpenEmailModal={openEmailModal}
         />
+      )}
+
+      {/* Email Applicant Modal */}
+      {replyingTo && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl border border-slate-200/80 shadow-2xl max-w-xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Email Applicant</h3>
+                  <p className="text-xs text-slate-500">
+                    Sending via Gmail SMTP to <span className="font-medium text-slate-700">{replyingTo.email}</span>
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setReplyingTo(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {emailSuccess && (
+              <div className="mt-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 font-medium">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                {emailSuccess}
+              </div>
+            )}
+
+            {emailError && (
+              <div className="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-800 text-xs font-medium">
+                {emailError}
+              </div>
+            )}
+
+            <form onSubmit={handleSendEmail} className="mt-4 space-y-4">
+              {/* Template selection tabs */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Quick Template</label>
+                <div className="flex flex-wrap gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => applyTemplate("interview")}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md border transition-colors ${
+                      selectedTemplate === "interview"
+                        ? "bg-slate-900 text-white border-slate-900"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    Interview Invitation
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyTemplate("welcome")}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md border transition-colors ${
+                      selectedTemplate === "welcome"
+                        ? "bg-slate-900 text-white border-slate-900"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    Acceptance / Welcome
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyTemplate("review")}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md border transition-colors ${
+                      selectedTemplate === "review"
+                        ? "bg-slate-900 text-white border-slate-900"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    Under Review
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyTemplate("custom")}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md border transition-colors ${
+                      selectedTemplate === "custom"
+                        ? "bg-slate-900 text-white border-slate-900"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    Custom
+                  </button>
+                </div>
+              </div>
+
+              {/* Subject */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Subject</label>
+                <input
+                  type="text"
+                  required
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  placeholder="Subject line..."
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-medium outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-slate-900"
+                />
+              </div>
+
+              {/* Message */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Message Body (Greeting "Hi {replyingTo.name}," is added automatically)
+                </label>
+                <textarea
+                  required
+                  rows={6}
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  placeholder="Write message to applicant..."
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs leading-relaxed font-medium outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-slate-900 resize-y"
+                />
+              </div>
+
+              {/* Optional Call to Action Button */}
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200/70 space-y-2.5">
+                <p className="text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
+                  Optional Action Button
+                </p>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  <div>
+                    <input
+                      type="text"
+                      value={emailCtaText}
+                      onChange={(e) => setEmailCtaText(e.target.value)}
+                      placeholder="Button text (e.g. Schedule Call)"
+                      className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-md text-xs font-medium outline-none focus:border-slate-400 text-slate-900"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="url"
+                      value={emailCtaUrl}
+                      onChange={(e) => setEmailCtaUrl(e.target.value)}
+                      placeholder="Link URL (https://...)"
+                      className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-md text-xs font-medium outline-none focus:border-slate-400 text-slate-900"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Auto update status */}
+              <label className="flex items-center gap-2 cursor-pointer pt-1">
+                <input
+                  type="checkbox"
+                  checked={autoMarkContacted}
+                  onChange={(e) => setAutoMarkContacted(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-slate-900/20"
+                />
+                <span className="text-xs text-slate-600 font-medium">
+                  Automatically set applicant status to <span className="font-semibold text-purple-700">Contacted</span>
+                </span>
+              </label>
+
+              {/* Footer buttons */}
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setReplyingTo(null)}
+                  className="px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSendingEmail}
+                  className="flex items-center gap-1.5 px-4 py-1.5 bg-slate-900 text-white rounded-lg font-medium text-xs hover:bg-slate-800 transition-colors disabled:opacity-50"
+                >
+                  {isSendingEmail ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      Send Email
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -180,11 +490,13 @@ function ApplicationsList({
   expandedId,
   setExpandedId,
   updateStatus,
+  onOpenEmailModal,
 }: {
   items: VolunteerApplication[];
   expandedId: string | null;
   setExpandedId: (id: string | null) => void;
   updateStatus: (id: string, status: string) => void | Promise<void>;
+  onOpenEmailModal: (applicant: VolunteerApplication) => void;
 }) {
   return (
     <div className="grid gap-3.5">
@@ -325,6 +637,14 @@ function ApplicationsList({
               )}
 
               <div className="flex flex-wrap items-center gap-2 pt-3.5 border-t border-slate-100">
+                {/* Email Applicant Button */}
+                <button
+                  onClick={() => onOpenEmailModal(vol)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white rounded-lg font-medium text-xs hover:bg-slate-800 transition-colors shadow-xs"
+                >
+                  <Mail className="w-3.5 h-3.5" /> Email Applicant
+                </button>
+
                 {vol.status === "pending" && (
                   <>
                     <button
