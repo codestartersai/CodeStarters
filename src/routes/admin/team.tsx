@@ -158,7 +158,8 @@ function AdminTeamsPage() {
                         },
                     }),
                 });
-                if (!res.ok) throw new Error("Failed to update team member.");
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || "Failed to update team member.");
             } else {
                 // Create
                 const res = await fetch("/api/admin/teams", {
@@ -177,7 +178,8 @@ function AdminTeamsPage() {
                         },
                     }),
                 });
-                if (!res.ok) throw new Error("Failed to add team member.");
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || "Failed to add team member.");
             }
 
             setIsMemberModalOpen(false);

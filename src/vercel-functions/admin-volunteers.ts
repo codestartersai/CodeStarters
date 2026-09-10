@@ -8,11 +8,12 @@ import {
   verifyAdmin,
 } from "./admin-utils";
 import { attachResumeUrls } from "../lib/volunteer-resumes";
+import { sendApplicantEmail, isEmailConfigured } from "../lib/server-email";
 
 const VOLUNTEER_STATUSES = new Set(["pending", "contacted", "rejected", "completed"]);
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (req.method !== "GET" && req.method !== "PATCH")
+  if (req.method !== "GET" && req.method !== "PATCH" && req.method !== "POST")
     return json(res, 405, { error: "Method not allowed" });
   try {
     const env = getAdminEnv();
@@ -35,6 +36,51 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       if (error) return json(res, 500, { error: error.message });
       const withResumes = await attachResumeUrls(admin, data ?? []);
       return json(res, 200, withResumes);
+    }
+
+    if (req.method === "POST") {
+      const body: Record<string, any> = await readJson(req).catch(() => ({}));
+      if (body.action === "reply") {
+        const { volunteerId, to, name, interest, subject, message, callToActionText, callToActionUrl, newStatus } = body;
+        if (!to || !subject || !message) {
+          return json(res, 400, { error: "Recipient, subject, and message are required." });
+        }
+
+        if (!isEmailConfigured()) {
+          return json(res, 503, { error: "Gmail connector is not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD in settings." });
+        }
+
+        try {
+          await sendApplicantEmail({
+            to: String(to).trim(),
+            applicantName: name ? String(name).trim() : "there",
+            interest: interest ? String(interest).trim() : undefined,
+            subject: String(subject).trim(),
+            message: String(message).trim(),
+            senderName: "The CodeStarters Team",
+            callToActionText: callToActionText ? String(callToActionText).trim() : undefined,
+            callToActionUrl: callToActionUrl ? String(callToActionUrl).trim() : undefined,
+          });
+
+          if (volunteerId) {
+            const statusToSet = newStatus && VOLUNTEER_STATUSES.has(newStatus) ? newStatus : "contacted";
+            await admin.from("volunteers").update({
+              status: statusToSet,
+              updated_at: new Date().toISOString(),
+            }).eq("id", volunteerId);
+          }
+
+          return json(res, 200, {
+            ok: true,
+            message: `Email delivered to ${to} via Gmail connector!`,
+          });
+        } catch (err: unknown) {
+          const errorMsg = err instanceof Error ? err.message : "Failed to send email.";
+          return json(res, 500, { ok: false, error: errorMsg });
+        }
+      }
+
+      return json(res, 400, { error: "Invalid action." });
     }
 
     const body: Record<string, any> = await readJson(req).catch(() => ({}));

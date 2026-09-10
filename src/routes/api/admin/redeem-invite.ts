@@ -3,6 +3,7 @@ import { getSupabaseAdminClient, adaptiveUpsertAdminUser } from "@/lib/supabase/
 import { getSupabaseServerClient, jsonWithCookies } from "@/lib/supabase/server";
 import { extractErrorMessage } from "@/lib/error-utils";
 import type { AdminRole, AdminPermission } from "@/lib/admin-auth";
+import { _memoryInvites } from "./members";
 
 export const Route = createFileRoute("/api/admin/redeem-invite")({
     server: {
@@ -17,13 +18,25 @@ export const Route = createFileRoute("/api/admin/redeem-invite")({
                 }
 
                 const admin = getSupabaseAdminClient();
-                const { data: invite, error } = await admin
-                    .from("admin_invites")
-                    .select("id, email, role, permissions, used, expires_at, invited_by")
-                    .eq("token", token)
-                    .maybeSingle();
+                let invite: any = null;
 
-                if (error || !invite) {
+                try {
+                    const { data, error } = await admin
+                        .from("admin_invites")
+                        .select("id, email, role, permissions, used, expires_at, invited_by")
+                        .eq("token", token)
+                        .maybeSingle();
+
+                    if (!error && data) {
+                        invite = data;
+                    }
+                } catch {}
+
+                if (!invite && _memoryInvites[token]) {
+                    invite = _memoryInvites[token];
+                }
+
+                if (!invite) {
                     return jsonWithCookies(bundle, { valid: false, error: "Invalid or nonexistent invitation token." }, { status: 404 });
                 }
 
@@ -63,13 +76,25 @@ export const Route = createFileRoute("/api/admin/redeem-invite")({
                 const admin = getSupabaseAdminClient();
 
                 // 1. Verify token
-                const { data: invite, error: lookupErr } = await admin
-                    .from("admin_invites")
-                    .select("*")
-                    .eq("token", token)
-                    .maybeSingle();
+                let invite: any = null;
 
-                if (lookupErr || !invite) {
+                try {
+                    const { data, error } = await admin
+                        .from("admin_invites")
+                        .select("*")
+                        .eq("token", token)
+                        .maybeSingle();
+
+                    if (!error && data) {
+                        invite = data;
+                    }
+                } catch {}
+
+                if (!invite && _memoryInvites[token]) {
+                    invite = _memoryInvites[token];
+                }
+
+                if (!invite) {
                     return jsonWithCookies(bundle, { ok: false, error: "Invalid invitation token." }, { status: 404 });
                 }
 

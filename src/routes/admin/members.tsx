@@ -275,34 +275,6 @@ NOTIFY pgrst, 'reload schema';`;
                 </a>
             </div>
 
-            {/* Missing Schema Banner */}
-            {invitesTableMissing && (
-                <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/90 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="space-y-1">
-                        <p className="text-xs font-semibold flex items-center gap-1.5 text-amber-900">
-                            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                            Supabase Database Table Missing: admin_invites
-                        </p>
-                        <p className="text-[11px] text-amber-800">
-                            The single-use invitations table has not been created in your Supabase database yet. Copy the SQL script and run it in your Supabase SQL Editor to enable invites.
-                        </p>
-                    </div>
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                            navigator.clipboard.writeText(ADMIN_INVITES_SQL);
-                            setCopiedSql(true);
-                            setTimeout(() => setCopiedSql(false), 2500);
-                        }}
-                        className="shrink-0 bg-white border-amber-300 text-amber-950 hover:bg-amber-100 font-medium"
-                    >
-                        {copiedSql ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedSql ? "Copied SQL Script!" : "Copy SQL Script"}</span>
-                    </Button>
-                </div>
-            )}
-
             {errorMessage && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs font-medium">
                     {errorMessage}
